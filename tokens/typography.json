@@ -1,0 +1,69 @@
+{
+  "font": {
+    "_meta": {
+      "value": "Stack A (gewaehlt S238): Geist + Source Serif 4 Italic. Stack D als Alternative.",
+      "spec_ref": "docs/superpowers/specs/2026-04-29-mn-design-system-v2-design.md §5.3-5.5"
+    },
+
+    "family": {
+      "sans":          { "value": "Geist" },
+      "italic-editorial": { "value": "SourceSerif4-Italic", "comment": "Drop-Cap, Zitate, Captions" },
+      "italic-ui":     { "value": "Geist-Medium", "comment": "Status-Markierung in UI" },
+      "mono":          { "value": "JetBrainsMono" },
+      "math":          { "value": "STIXTwoMath" },
+      "icon":          { "value": "Phosphor", "comment": "PUA E000-F8FF" }
+    },
+
+    "size": {
+      "h0":      { "value": "26pt", "rem": "1.625", "px": "26", "comment": "Page-Title" },
+      "h1":      { "value": "24pt", "rem": "1.5",   "px": "24" },
+      "h2":      { "value": "15pt", "rem": "0.9375","px": "15" },
+      "h3":      { "value": "13pt", "rem": "0.8125","px": "13" },
+      "body":    { "value": "10pt", "rem": "0.625", "px": "16", "comment": "Final V3' (KT-1 S238)" },
+      "lead":    { "value": "11pt", "rem": "0.6875","px": "17" },
+      "caption": { "value": "9pt",  "rem": "0.5625","px": "13" },
+      "code":    { "value": "9pt",  "rem": "0.5625","px": "13" },
+      "bibel":   { "value": "12pt", "rem": "0.75",  "px": "19" },
+      "math":    { "value": "12pt", "rem": "0.75",  "px": "19" }
+    },
+
+    "leading": {
+      "h0":      { "value": "31pt", "ratio": "1.19" },
+      "h1":      { "value": "28pt", "ratio": "1.17" },
+      "h2":      { "value": "19pt", "ratio": "1.27" },
+      "h3":      { "value": "17pt", "ratio": "1.31" },
+      "body":    { "value": "15.5pt", "ratio": "1.55", "comment": "Final V3' (KT-1 S238)" },
+      "lead":    { "value": "17pt", "ratio": "1.55" },
+      "caption": { "value": "12pt", "ratio": "1.33" },
+      "code":    { "value": "13pt", "ratio": "1.44" },
+      "bibel":   { "value": "17pt", "ratio": "1.42" },
+      "math":    { "value": "16pt", "ratio": "1.33" }
+    },
+
+    "weight": {
+      "light":    { "value": "300" },
+      "regular":  { "value": "400" },
+      "medium":   { "value": "500" },
+      "bold":     { "value": "700" }
+    },
+
+    "tracking": {
+      "tight":    { "value": "-0.02em", "comment": "H1, Display" },
+      "normal":   { "value": "0" },
+      "wide":     { "value": "0.04em", "comment": "Brand-Mark, Kicker" },
+      "extra":    { "value": "0.18em", "comment": "Mono-Kicker, Labels" }
+    },
+
+    "hyphenation": {
+      "_meta": {
+        "value": "KT-1-Wunsch S238: Hyphenation als verbindlicher Begleit-Token. Loest Blocksatz-Lueckenproblem bei groesserer Body-Schrift.",
+        "spec_ref": "Spec §5.5b"
+      },
+      "enabled":           { "value": true },
+      "lang":              { "value": "de_DE" },
+      "min-word-length":   { "value": 6 },
+      "min-chars-before":  { "value": 3 },
+      "min-chars-after":   { "value": 3 }
+    }
+  }
+}

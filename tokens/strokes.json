@@ -1,0 +1,17 @@
+{
+  "stroke": {
+    "_meta": { "value": "Strichstaerken — Hairlines, Lines, Borders." },
+    "hairline": { "value": "0.4pt", "comment": "Tabellen-Trenner, Footer-Line" },
+    "thin":     { "value": "0.5pt", "comment": "Section-Trenner" },
+    "default":  { "value": "1pt" },
+    "thick":    { "value": "1.5pt", "comment": "Brand-Strich (oben am Logo)" },
+    "heavy":    { "value": "2pt",   "comment": "Akzent-Strich an Sidenote-Boxen" }
+  },
+  "shadow": {
+    "_meta": { "value": "Schatten — sparsam, subtle." },
+    "none":   { "value": "none" },
+    "subtle": { "value": "0 1px 2px rgba(0,0,0,0.05)" },
+    "card":   { "value": "0 4px 16px rgba(0,0,0,0.08)" },
+    "modal":  { "value": "0 10px 40px rgba(0,0,0,0.12)" }
+  }
+}

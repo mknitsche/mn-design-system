@@ -1,0 +1,7 @@
+{
+  "_meta": {
+    "value": "Aktuelle Color-Familie: Indigo (gewaehlt S238). Wechsel-Optionen siehe families/*.json."
+  },
+  "_active_family": "indigo",
+  "_note": "Familien-Wechsel: cp tokens/families/<name>.json tokens/colors-active.json + Build."
+}

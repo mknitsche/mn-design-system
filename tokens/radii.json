@@ -1,0 +1,10 @@
+{
+  "radius": {
+    "_meta": { "value": "Border-Radius. Default 0 (Tufte: keine Dekoration). Wo noetig: subtle." },
+    "none":   { "value": "0",   "comment": "Cards, Buttons, Tabellen — Default Tufte" },
+    "subtle": { "value": "2px", "comment": "minimaler Anschliff falls noetig" },
+    "card":   { "value": "4px", "comment": "Cards, Sidenote-Boxen" },
+    "input":  { "value": "4px" },
+    "round":  { "value": "9999px", "comment": "Pillar-Buttons, Avatare" }
+  }
+}

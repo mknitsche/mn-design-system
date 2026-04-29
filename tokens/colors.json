@@ -1,0 +1,74 @@
+{
+  "color": {
+    "_meta": {
+      "value": "Tonale Indigo-Familie + Crimson (nur Logo) + Status-Farben. Light + Dark Mode.",
+      "spec_ref": "docs/superpowers/specs/2026-04-29-mn-design-system-v2-design.md §5.1"
+    },
+
+    "indigo": {
+      "50":  { "value": "#eef2ff", "comment": "Layer Tint" },
+      "100": { "value": "#e0e7ff", "comment": "Soft Surface, Hover" },
+      "300": { "value": "#a5b4fc", "comment": "Highlight (Dark)" },
+      "400": { "value": "#818cf8", "comment": "Action Dark (WCAG-AA gegen Dark-BG)" },
+      "500": { "value": "#6366f1", "comment": "(zu dunkel fuer Dark-Body — nicht als Action verwenden)" },
+      "600": { "value": "#4F46E5", "comment": "Action / Accent (Light)" },
+      "700": { "value": "#4338ca", "comment": "H2 / Italic-Akzent" },
+      "900": { "value": "#312e81", "comment": "H1 / Strong" },
+      "950": { "value": "#1e1b4b", "comment": "Body Text" }
+    },
+
+    "grey": {
+      "100": { "value": "#f3f4f6" },
+      "200": { "value": "#e5e7eb" },
+      "300": { "value": "#cbd5e1" },
+      "400": { "value": "#9ca3af" },
+      "500": { "value": "#6b7280", "comment": "Captions, Meta (Light)" },
+      "700": { "value": "#374151" }
+    },
+
+    "brand": {
+      "value": "#C8102E",
+      "comment": "Crimson — NUR Logo, Brand-Strich, Foto-Logo. Niemals UI-interaktiv."
+    },
+
+    "status": {
+      "success": { "value": "#2e7d32" },
+      "warning": { "value": "#f59e0b", "comment": "Amber, statt Orange" },
+      "error":   { "value": "#D32F2F", "comment": "klar abgegrenzt von Brand-Crimson" }
+    },
+
+    "light": {
+      "_meta": { "value": "Default-Mode" },
+      "bg":            { "value": "#fdfdfd" },
+      "surface":       { "value": "#ffffff" },
+      "surface-subtle":{ "value": "#f6f6f6" },
+      "surface-elev":  { "value": "#f6f6f6" },
+      "border":        { "value": "{color.grey.300.value}" },
+      "border-subtle": { "value": "#e5e7eb" },
+      "text":          { "value": "{color.indigo.950.value}" },
+      "text-muted":    { "value": "{color.grey.500.value}" },
+      "text-subtle":   { "value": "{color.grey.400.value}" },
+      "h1":            { "value": "{color.indigo.900.value}" },
+      "h2":            { "value": "{color.indigo.700.value}" },
+      "accent":        { "value": "{color.indigo.600.value}" },
+      "accent-soft":   { "value": "{color.indigo.100.value}" }
+    },
+
+    "dark": {
+      "_meta": { "value": "Web-App + Foto-Homepage" },
+      "bg":            { "value": "#0a0a0d" },
+      "surface":       { "value": "#14141a" },
+      "surface-subtle":{ "value": "#1a1a22" },
+      "surface-elev":  { "value": "#1f1f29" },
+      "border":        { "value": "#2d2d38" },
+      "border-subtle": { "value": "#1f1f29" },
+      "text":          { "value": "#f5f5f7" },
+      "text-muted":    { "value": "#888894" },
+      "text-subtle":   { "value": "#555560" },
+      "h1":            { "value": "#f5f5f7" },
+      "h2":            { "value": "{color.indigo.300.value}" },
+      "accent":        { "value": "{color.indigo.400.value}", "comment": "indigo-400, WCAG-AA gegen Dark-BG (4.5:1+)" },
+      "accent-soft":   { "value": "rgba(99,102,241,0.16)" }
+    }
+  }
+}

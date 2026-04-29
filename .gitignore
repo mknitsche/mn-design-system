@@ -1,0 +1,22 @@
+# Node
+node_modules/
+npm-debug.log*
+.npm/
+
+# Build artefacts: dist/ wird COMMITTED (Konsumenten brauchen es)
+# aber Lockfile und Caches bleiben drausen
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Fonts (TTFs aus Lizenzgruenden nicht im Repo, nur via install.sh nachgeladen)
+fonts/*.ttf
+fonts/*.otf
+fonts/*.woff*

@@ -1,0 +1,35 @@
+{
+  "name": "@mknitsche/mn-design-system",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MN PKA Design-System — Tokens, Typography, Components for the Personal Knowledge Assistant",
+  "license": "MIT",
+  "author": "Matthias Nitsche",
+  "main": "dist/json/tokens.json",
+  "files": [
+    "dist/",
+    "tokens/",
+    "components/_spec/"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "validate": "node scripts/validate-tokens.js",
+    "test": "npm run build && npm run validate"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mknitsche/mn-design-system.git"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "style-dictionary",
+    "pka"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

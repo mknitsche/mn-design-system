@@ -1,0 +1,125 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-indigo-50: #eef2ff; /** Layer Tint */
+  --color-indigo-100: #e0e7ff; /** Soft Surface, Hover */
+  --color-indigo-300: #a5b4fc; /** Highlight (Dark) */
+  --color-indigo-400: #818cf8; /** Action Dark (WCAG-AA gegen Dark-BG) */
+  --color-indigo-500: #6366f1; /** (zu dunkel fuer Dark-Body — nicht als Action verwenden) */
+  --color-indigo-600: #4F46E5; /** Action / Accent (Light) */
+  --color-indigo-700: #4338ca; /** H2 / Italic-Akzent */
+  --color-indigo-900: #312e81; /** H1 / Strong */
+  --color-indigo-950: #1e1b4b; /** Body Text */
+  --color-grey-100: #f3f4f6;
+  --color-grey-200: #e5e7eb;
+  --color-grey-300: #cbd5e1;
+  --color-grey-400: #9ca3af;
+  --color-grey-500: #6b7280; /** Captions, Meta (Light) */
+  --color-grey-700: #374151;
+  --color-brand: #C8102E; /** Crimson — NUR Logo, Brand-Strich, Foto-Logo. Niemals UI-interaktiv. */
+  --color-status-success: #2e7d32;
+  --color-status-warning: #f59e0b; /** Amber, statt Orange */
+  --color-status-error: #D32F2F; /** klar abgegrenzt von Brand-Crimson */
+  --color-light-bg: #fdfdfd;
+  --color-light-surface: #ffffff;
+  --color-light-surface-subtle: #f6f6f6;
+  --color-light-surface-elev: #f6f6f6;
+  --color-light-border: #cbd5e1;
+  --color-light-border-subtle: #e5e7eb;
+  --color-light-text: #1e1b4b;
+  --color-light-text-muted: #6b7280;
+  --color-light-text-subtle: #9ca3af;
+  --color-light-h1: #312e81;
+  --color-light-h2: #4338ca;
+  --color-light-accent: #4F46E5;
+  --color-light-accent-soft: #e0e7ff;
+  --color-dark-bg: #0a0a0d;
+  --color-dark-surface: #14141a;
+  --color-dark-surface-subtle: #1a1a22;
+  --color-dark-surface-elev: #1f1f29;
+  --color-dark-border: #2d2d38;
+  --color-dark-border-subtle: #1f1f29;
+  --color-dark-text: #f5f5f7;
+  --color-dark-text-muted: #888894;
+  --color-dark-text-subtle: #555560;
+  --color-dark-h1: #f5f5f7;
+  --color-dark-h2: #a5b4fc;
+  --color-dark-accent: #818cf8; /** indigo-400, WCAG-AA gegen Dark-BG (4.5:1+) */
+  --color-dark-accent-soft: rgba(99,102,241,0.16);
+  --radius-none: 0; /** Cards, Buttons, Tabellen — Default Tufte */
+  --radius-subtle: 2px; /** minimaler Anschliff falls noetig */
+  --radius-card: 4px; /** Cards, Sidenote-Boxen */
+  --radius-input: 4px;
+  --radius-round: 9999px; /** Pillar-Buttons, Avatare */
+  --space-1: 4px; /** Mikro */
+  --space-2: 8px; /** Inline */
+  --space-3: 12px; /** Component-Padding */
+  --space-4: 16px; /** Section-Spacing */
+  --space-5: 20px; /** Block-Spacing */
+  --space-6: 24px; /** Container */
+  --space-8: 32px; /** Section-Trenner */
+  --space-10: 40px;
+  --space-12: 48px; /** Page-Section-Trenner gross */
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-page-margin-top: 22mm; /** A4 Standard-Margin */
+  --space-page-margin-bottom: 22mm;
+  --space-page-margin-inner: 22mm; /** Bundsteg */
+  --space-page-margin-outer: 18mm;
+  --space-page-col-gutter: 8mm; /** Zwei-Spalten-Layout */
+  --stack-active: A; /** ENV-Override moeglich: MN_PKA_STACK=D */
+  --stack-available-a: Geist + Source Serif 4 Italic; /** Vercel + Adobe Mix, charakterstark, Logo-affin */
+  --stack-available-d: Source Sans 3 nativ; /** Adobe-DNA, kohaerent, +10% Skalierung */
+  --stack-size-factor-a: 1.0;
+  --stack-size-factor-d: 1.10; /** x-Hoehen-Normalisierung Source Sans 3 */
+  --stroke-hairline: 0.4pt; /** Tabellen-Trenner, Footer-Line */
+  --stroke-thin: 0.5pt; /** Section-Trenner */
+  --stroke-default: 1pt;
+  --stroke-thick: 1.5pt; /** Brand-Strich (oben am Logo) */
+  --stroke-heavy: 2pt; /** Akzent-Strich an Sidenote-Boxen */
+  --shadow-none: none;
+  --shadow-subtle: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-modal: 0 10px 40px rgba(0,0,0,0.12);
+  --font-family-sans: Geist;
+  --font-family-italic-editorial: SourceSerif4-Italic; /** Drop-Cap, Zitate, Captions */
+  --font-family-italic-ui: Geist-Medium; /** Status-Markierung in UI */
+  --font-family-mono: JetBrainsMono;
+  --font-family-math: STIXTwoMath;
+  --font-family-icon: Phosphor; /** PUA E000-F8FF */
+  --font-size-h0: 26pt; /** Page-Title */
+  --font-size-h1: 24pt;
+  --font-size-h2: 15pt;
+  --font-size-h3: 13pt;
+  --font-size-body: 10pt; /** Final V3' (KT-1 S238) */
+  --font-size-lead: 11pt;
+  --font-size-caption: 9pt;
+  --font-size-code: 9pt;
+  --font-size-bibel: 12pt;
+  --font-size-math: 12pt;
+  --font-leading-h0: 31pt;
+  --font-leading-h1: 28pt;
+  --font-leading-h2: 19pt;
+  --font-leading-h3: 17pt;
+  --font-leading-body: 15.5pt; /** Final V3' (KT-1 S238) */
+  --font-leading-lead: 17pt;
+  --font-leading-caption: 12pt;
+  --font-leading-code: 13pt;
+  --font-leading-bibel: 17pt;
+  --font-leading-math: 16pt;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-tracking-tight: -0.02em; /** H1, Display */
+  --font-tracking-normal: 0;
+  --font-tracking-wide: 0.04em; /** Brand-Mark, Kicker */
+  --font-tracking-extra: 0.18em; /** Mono-Kicker, Labels */
+  --font-hyphenation-enabled: true;
+  --font-hyphenation-lang: de_DE;
+  --font-hyphenation-min-word-length: 6;
+  --font-hyphenation-min-chars-before: 3;
+  --font-hyphenation-min-chars-after: 3;
+}

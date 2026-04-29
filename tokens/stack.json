@@ -1,0 +1,17 @@
+{
+  "stack": {
+    "_meta": {
+      "value": "Stack-Wahl — A oder D. Default ist Stack A (Geist + Source Serif Italic, KT-1-Wahl S238).",
+      "spec_ref": "ADR-008, Spec §3 + §15"
+    },
+    "active": { "value": "A", "comment": "ENV-Override moeglich: MN_PKA_STACK=D" },
+    "available": {
+      "A": { "value": "Geist + Source Serif 4 Italic", "comment": "Vercel + Adobe Mix, charakterstark, Logo-affin" },
+      "D": { "value": "Source Sans 3 nativ",          "comment": "Adobe-DNA, kohaerent, +10% Skalierung" }
+    },
+    "size_factor": {
+      "A": { "value": "1.0" },
+      "D": { "value": "1.10", "comment": "x-Hoehen-Normalisierung Source Sans 3" }
+    }
+  }
+}
