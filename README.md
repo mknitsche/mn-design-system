@@ -40,7 +40,7 @@ SCHICHT 2 — Typography + Symbole (Geist, Source Serif, JetBrains Mono, STIX, P
 SCHICHT 1 — Tokens (Color, Type, Spacing, Radii, Strokes — SSoT)
 ```
 
-Details: `ARCHITECTURE.md` (kommt bald) · Spec im claudeAI-Repo: `docs/superpowers/specs/2026-04-29-mn-design-system-v2-design.md`.
+Details: **`ARCHITECTURE.md`** · Spec im claudeAI-Repo: `docs/superpowers/specs/2026-04-29-mn-design-system-v3-konsolidierung-design.md`.
 
 ## Stack
 
@@ -83,18 +83,105 @@ Löst das Blocksatz-Lückenproblem bei Body-Größen ≥10pt.
 
 Quellenangaben + Lizenz-Texte: `CITATIONS.md`.
 
+## Python-Setup (claudeAI als Konsument)
+
+Das Repo liefert ein installierbares Python-Package `mn_design_system`. Konsumenten
+binden es als Submodul ein und installieren editable:
+
+```bash
+# Im Konsumenten-Repo (z.B. claudeAI)
+git submodule add https://github.com/mknitsche/mn-design-system.git system/design-system
+.venv/bin/pip install -e ./system/design-system/
+```
+
+Konsumieren:
+
+```python
+from mn_design_system.fonts import register_all_fonts
+from mn_design_system.tokens import get
+
+register_all_fonts()                  # ReportLab-Fonts registrieren
+text_color = get("color.light.text")  # "#1e1b4b"
+```
+
+Komplette Komponenten:
+
+```python
+from mn_design_system.components.pdf.kpi_card import build_kpi_card
+from mn_design_system.components._patterns.contracts import KpiCardInput
+
+flowables = build_kpi_card(KpiCardInput(
+    label="DAX",
+    value="18.234",
+    change_pct=1.23,
+    sparkline_values=[100, 101, 99, 102, 105],
+    caption="Stand 09:00",
+))
+```
+
+## Versionierungs-Politik
+
+**SemVer pre-1.0** (Solo-Maintainer-Modus):
+
+- `0.x.0` — neue Komponente, neue Token-Familie, ARCHITECTURE-Aenderung
+- `0.x.y` — Bugfix, Doku, kleine Token-Erweiterung
+- `1.0.0` — erst wenn zwei stabile externe Konsumenten leben (Foto-Homepage + Paper o.ae.)
+
+Tags werden im Submodul gesetzt. Konsumenten ziehen den Submodul-Pointer im selben
+Sprint per Commit nach. Drift-Schutz: Pre-Commit-Hook im Konsumenten-Repo warnt
+bei alten Pointern.
+
+## Konsumenten-Liste
+
+| Konsument | Status | Bindung |
+|---|---|---|
+| **claudeAI** | Aktiv (wesentlichster Konsument) | Submodul + `pip install -e` |
+| **Foto-Homepage** (mkn-fotografie.de) | Geplant (PRJ-9) | TBD |
+| **KI-News** | Aktiv (innerhalb claudeAI) | Indirekt |
+| **Paper / Newsletter** | Geplant | TBD |
+
+## Multi-KI-Edit-Workflow
+
+Das Repo ist **public** (MIT, ohne Logos). Damit koennen Browser-AI-Tools direkt
+am Token-Set arbeiten:
+
+- **Claude Design** (browser) — Token-/Komponenten-Edit ohne IDE-Roundtrip
+- **Codex Web** — gleiche Idee, andere KI
+- **Cursor / GitHub Copilot** — IDE-Integration mit Repo-Kontext
+- **Terminal-Sessions** — claudeAI-Hauptsession, Worktrees
+
+Jede dieser KI-Quellen committet auf `main`, claudeAI-Konsumenten ziehen den
+Submodul-Pointer nach. Konsistenz-Schutz: SemVer-Tags + Pre-Commit-Drift-Hook.
+
+## Distributions-Schichten
+
+Heute aktiv: **Submodul-Live-Edit** (siehe Python-Setup oben).
+
+Zwei weitere Schichten **vorbereitet, YAGNI-deferred** bis erster externer Konsument:
+
+- **GitHub Packages** — versionierte Wheel-Distribution fuer Konsumenten ohne Submodul-Setup
+- **PyPI public** — Open-Source-Distribution falls Drittnutzer auftreten
+
+Aktivierung pro Schicht: GitHub Action `release.yml` (Tag-Trigger) liefert Wheel.
+
 ## Verwandte Dokumente (im claudeAI-Repo)
 
 - ADR-008 Fundament-Entscheidung
-- Spec v2.1 (Detail-Spezifikation)
-- BACKGROUND-NOTES `system/referenz/background-notes/design-system.md` (Werdegang)
+- Spec v3 — `docs/superpowers/specs/2026-04-29-mn-design-system-v3-konsolidierung-design.md`
+- BACKGROUND-NOTES — `system/referenz/background-notes/design-system.md` (Werdegang)
+- Konsum-Anleitung — `docs/anleitungen/2026-04-29-ANL-012-token-konsumieren-richtig.md`
 
 ## Status
 
-- v0.1.0 — Initialfassung 2026-04-29 (S238)
-- Phase A: Repo + Tokens + Style Dictionary ✓
-- Phase B: claudeAI-Migration (laufend)
-- Phase H: Foto-Homepage Smugmug-Ablöse (geplant)
+| Tag | Datum | Inhalt |
+|---|---|---|
+| `v0.1.0` | 2026-04-29 | Repo + Tokens + Style Dictionary + Python-Package + 35 Fonts |
+| `v0.2.0` | 2026-04-29 | Pattern-First-Architektur + 3 PDF-Komponenten (Sparkline/KPI/Wetter-Strip) |
+| `v0.2.1` | 2026-04-29 | 12 neue Tokens (Status-bg/-tint, Viz-Familie, Grey-Erweiterung) + Audit-Script |
+| `v0.3.0` | 2026-04-29 | Doku-Architektur (ARCHITECTURE + erweitertes README + CHANGELOG) |
+
+Phase H (Foto-Homepage) und Welle D.4-D.6 (GitHub-Packages-Distribution) sind
+**vorbereitet, aber YAGNI-deferred** bis erster externer Konsument startet.
 
 ---
 
