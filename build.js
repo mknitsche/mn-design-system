@@ -116,8 +116,11 @@ const sd = new StyleDictionary({
       ],
     },
     python: {
+      // S238 v0.1.0: Output direkt ins mn_design_system/-Package (statt dist/python/).
+      // Damit ist tokens.py Teil des Python-Packages und via pip install -e
+      // importierbar als `from mn_design_system.tokens import TOKENS`.
       transformGroup: "js",
-      buildPath: "dist/python/",
+      buildPath: "mn_design_system/",
       files: [
         {
           destination: "tokens.py",

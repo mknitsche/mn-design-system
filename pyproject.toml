@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mn-design-system"
+version = "0.0.1"
+description = "MN PKA Design-System — Tokens, Fonts, Komponenten fuer Multi-Renderer (PDF/Web/LaTeX)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Matthias Nitsche" },
+]
+keywords = ["design-system", "tokens", "reportlab", "pdf", "style-dictionary"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "reportlab>=4.0",
+    "pydantic>=2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/mknitsche/mn-design-system"
+Repository = "https://github.com/mknitsche/mn-design-system"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mn_design_system*"]
+exclude = ["tests*", "dist*", "node_modules*"]
+
+[tool.setuptools.package-data]
+mn_design_system = [
+    "fonts/**/*.ttf",
+    "fonts/**/*.otf",
+    "fonts/**/*.txt",
+    "fonts/**/*.md",
+    "fonts/**/LICENSE*",
+]

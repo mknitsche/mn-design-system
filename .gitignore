@@ -16,7 +16,16 @@ Thumbs.db
 .idea/
 *.swp
 
-# Fonts (TTFs aus Lizenzgruenden nicht im Repo, nur via install.sh nachgeladen)
-fonts/*.ttf
-fonts/*.otf
-fonts/*.woff*
+# Python build artefacts (Welle A v0.1.0)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+build/
+dist/python/
+.pytest_cache/
+
+# Fonts: ab v0.1.0 IM Repo (mn_design_system/fonts/, alle OFL 1.1 / MIT,
+# Public-tauglich, self-contained fuer pip install -e + Multi-KI-Edit).
+# Top-Level fonts/install.sh-Workflow ist deprecated.
