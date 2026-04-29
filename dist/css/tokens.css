@@ -12,16 +12,31 @@
   --color-indigo-700: #4338ca; /** H2 / Italic-Akzent */
   --color-indigo-900: #312e81; /** H1 / Strong */
   --color-indigo-950: #1e1b4b; /** Body Text */
+  --color-grey-50: #f5f5f5; /** Sehr heller Hintergrund (Code-Box etc.) */
   --color-grey-100: #f3f4f6;
+  --color-grey-150: #eeeeee; /** Heller Trenn-/Logo-Akzent */
   --color-grey-200: #e5e7eb;
   --color-grey-300: #cbd5e1;
   --color-grey-400: #9ca3af;
   --color-grey-500: #6b7280; /** Captions, Meta (Light) */
+  --color-grey-550: #666666; /** Mid-Grey (Visualisierungen) */
+  --color-grey-600: #999999; /** Disabled/Tertiary-Grau */
   --color-grey-700: #374151;
   --color-brand: #C8102E; /** Crimson — NUR Logo, Brand-Strich, Foto-Logo. Niemals UI-interaktiv. */
   --color-status-success: #2e7d32;
   --color-status-warning: #f59e0b; /** Amber, statt Orange */
+  --color-status-urgent: #e65100; /** Tieferes Orange fuer Urgent/Fortschritt-Indikator */
   --color-status-error: #D32F2F; /** klar abgegrenzt von Brand-Crimson */
+  --color-status-error-bg: #ffebee; /** Risiko-hoch Hintergrund (rosa-blass) */
+  --color-status-warning-bg: #fff3e0; /** Risiko-mittel Hintergrund (orange-blass) */
+  --color-status-error-tint: #fff8f7; /** Status-Header rosa-tinted */
+  --color-status-warning-tint: #fffaf5; /** Status-Header orange-tinted */
+  --color-status-info-tint: #f5f8ff; /** Status-Header blau-tinted */
+  --color-viz-muted: #b0bec5; /** Diagramm-Box Muted Outline */
+  --color-viz-success-soft: #90caf9; /** Diagramm-Box helles Blau */
+  --color-viz-neutral-soft: #e0e0e0; /** Diagramm-Box neutraler Grau */
+  --color-viz-dark-navy: #1a237e; /** Visualisierungs-Prompt: Indigo-900-Variante */
+  --color-viz-medium-blue: #283593; /** Visualisierungs-Prompt: Indigo-800-Variante */
   --color-light-bg: #fdfdfd;
   --color-light-surface: #ffffff;
   --color-light-surface-subtle: #f6f6f6;

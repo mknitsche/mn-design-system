@@ -18,11 +18,15 @@
     },
 
     "grey": {
+      "50":  { "value": "#f5f5f5", "comment": "Sehr heller Hintergrund (Code-Box etc.)" },
       "100": { "value": "#f3f4f6" },
+      "150": { "value": "#eeeeee", "comment": "Heller Trenn-/Logo-Akzent" },
       "200": { "value": "#e5e7eb" },
       "300": { "value": "#cbd5e1" },
       "400": { "value": "#9ca3af" },
       "500": { "value": "#6b7280", "comment": "Captions, Meta (Light)" },
+      "550": { "value": "#666666", "comment": "Mid-Grey (Visualisierungen)" },
+      "600": { "value": "#999999", "comment": "Disabled/Tertiary-Grau" },
       "700": { "value": "#374151" }
     },
 
@@ -32,9 +36,24 @@
     },
 
     "status": {
-      "success": { "value": "#2e7d32" },
-      "warning": { "value": "#f59e0b", "comment": "Amber, statt Orange" },
-      "error":   { "value": "#D32F2F", "comment": "klar abgegrenzt von Brand-Crimson" }
+      "success":      { "value": "#2e7d32" },
+      "warning":      { "value": "#f59e0b", "comment": "Amber, statt Orange" },
+      "urgent":       { "value": "#e65100", "comment": "Tieferes Orange fuer Urgent/Fortschritt-Indikator" },
+      "error":        { "value": "#D32F2F", "comment": "klar abgegrenzt von Brand-Crimson" },
+      "error-bg":     { "value": "#ffebee", "comment": "Risiko-hoch Hintergrund (rosa-blass)" },
+      "warning-bg":   { "value": "#fff3e0", "comment": "Risiko-mittel Hintergrund (orange-blass)" },
+      "error-tint":   { "value": "#fff8f7", "comment": "Status-Header rosa-tinted" },
+      "warning-tint": { "value": "#fffaf5", "comment": "Status-Header orange-tinted" },
+      "info-tint":    { "value": "#f5f8ff", "comment": "Status-Header blau-tinted" }
+    },
+
+    "viz": {
+      "_meta":        { "value": "Architektur-Diagramm-Farben (system-dokumentation, viz_generate)" },
+      "muted":        { "value": "#b0bec5", "comment": "Diagramm-Box Muted Outline" },
+      "success-soft": { "value": "#90caf9", "comment": "Diagramm-Box helles Blau" },
+      "neutral-soft": { "value": "#e0e0e0", "comment": "Diagramm-Box neutraler Grau" },
+      "dark-navy":    { "value": "#1a237e", "comment": "Visualisierungs-Prompt: Indigo-900-Variante" },
+      "medium-blue":  { "value": "#283593", "comment": "Visualisierungs-Prompt: Indigo-800-Variante" }
     },
 
     "light": {
