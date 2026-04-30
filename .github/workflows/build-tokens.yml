@@ -1,0 +1,63 @@
+name: Verify Tokens Build
+
+# Triggert bei Push auf main, der tokens/* aendert. Verifiziert dass
+# mn_design_system/tokens.py synchron mit tokens/*.json ist (Style-Dictionary-Build
+# wurde lokal ausgefuehrt + committed).
+#
+# Bewusste Entscheidung: KEIN Auto-Commit. Solo-Maintainer-Disziplin: KT-1 fuehrt
+# `npm run build` lokal aus, committed beides zusammen, pusht. Bei Fail: KT-1 sieht
+# rot, fuehrt Build aus, pusht erneut. Klarer als Auto-Commit-Magie.
+#
+# Sicherheit: keine untrusted user inputs (Issue-Title, Commit-Messages etc.) in
+# run:-Steps. Nur Repo-eigene Files via git diff. Defensive.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tokens/**"
+      - "build.js"
+      - "package.json"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build tokens
+        run: npm run build
+
+      - name: Verify tokens.py is synced
+        run: |
+          if ! git diff --quiet mn_design_system/tokens.py; then
+            echo "::error::tokens.py ist nicht synchron mit tokens/*.json."
+            echo "::error::Bitte 'npm run build' lokal ausfuehren, committen, dann pushen."
+            git diff mn_design_system/tokens.py
+            exit 1
+          fi
+          echo "tokens.py is synced."
+
+      - name: Verify dist outputs are synced
+        # dist/python/ ist .gitignore'd. Andere dist/-Outputs (css/json/latex)
+        # werden COMMITTED (Konsumenten brauchen sie). Fail-on-diff.
+        run: |
+          if ! git diff --quiet dist/; then
+            echo "::error::dist/ ist nicht synchron mit tokens/*.json."
+            echo "::error::Bitte 'npm run build' lokal ausfuehren, dist/* committen, dann pushen."
+            git diff dist/
+            exit 1
+          fi
+          echo "dist/ is synced."

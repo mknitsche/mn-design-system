@@ -1,0 +1,93 @@
+name: Release Wheel
+
+# Triggert bei Push eines SemVer-Tags (v0.4.0, v0.4.1, v1.0.0, ...).
+# Baut Python-Wheel und published als GitHub Release Asset.
+# Nutzt GITHUB_TOKEN (out-of-the-box in Actions), kein zusaetzliches Secret noetig.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write  # noetig fuer gh release create + asset upload
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history fuer release-notes-Generierung
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build tokens (Style Dictionary → mn_design_system/tokens.py)
+        run: npm run build
+
+      - name: Validate tokens (WCAG-AA + Required Tokens)
+        run: npm run validate
+
+      - name: Verify tokens.py synced to commit
+        # Sicherheitsnetz: Tag-Commit MUSS bereits den korrekten Token-Build enthalten.
+        # Wenn `npm run build` Diff erzeugt, ist das ein Fehler — der Tag wurde gepusht
+        # ohne vorher die Tokens zu builden. release.yml soll keine Tokens "korrigieren".
+        run: |
+          if ! git diff --quiet mn_design_system/tokens.py; then
+            echo "::error::tokens.py ist nicht synchron mit tokens/*.json beim Tag-Commit."
+            echo "::error::Bitte 'npm run build' lokal ausfuehren, committen, dann Tag setzen."
+            git diff mn_design_system/tokens.py
+            exit 1
+          fi
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build
+
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: List build artifacts
+        run: ls -la dist/
+
+      - name: Smoke-Test wheel installation
+        # Verifiziert: Wheel installierbar, Tokens importierbar, Komponenten callable.
+        # Verhindert kaputte Releases.
+        run: |
+          python -m venv /tmp/smoke-venv
+          /tmp/smoke-venv/bin/pip install --quiet dist/*.whl
+          /tmp/smoke-venv/bin/python -c "
+          from mn_design_system.tokens import TOKENS, get
+          from mn_design_system.fonts import register_all_fonts, FONT_DIR
+          from mn_design_system.components.pdf import build_sparkline, build_kpi_card, build_wetter_strip
+          from mn_design_system.components.web import render_sparkline_svg
+          assert len(TOKENS) > 100, f'Token count too low: {len(TOKENS)}'
+          assert FONT_DIR.exists(), 'FONT_DIR missing'
+          assert callable(register_all_fonts)
+          assert callable(build_sparkline)
+          print(f'Smoke OK — {len(TOKENS)} Tokens, FONT_DIR={FONT_DIR}')
+          "
+
+      - name: Create GitHub Release with wheel asset
+        # Tag-Name ueber env-Variable, nicht direkt im Shell-String — defensive
+        # gegen Shell-Injection bei pathologischen Tag-Namen (auch wenn nur KT-1
+        # pusht: defense in depth).
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG_NAME" \
+            dist/*.whl \
+            --title "Release $TAG_NAME" \
+            --generate-notes

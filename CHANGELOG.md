@@ -8,6 +8,30 @@ oder Doku.
 
 ---
 
+## [0.4.0] — 2026-04-30
+
+### Added
+- **GitHub Actions Workflow `.github/workflows/release.yml`** — Tag-getriggert (`v*.*.*`),
+  baut Wheel via `python -m build --wheel` und published als GitHub Release Asset.
+  Nutzt `GITHUB_TOKEN` (out-of-the-box, kein zusaetzliches Secret).
+- **GitHub Actions Workflow `.github/workflows/build-tokens.yml`** — bei Push auf
+  `tokens/**`: prueft ob `mn_design_system/tokens.py` synchron mit Style-Dictionary-Build
+  ist. Fail-on-diff (kein Auto-Commit, klare Disziplin fuer Solo-Maintainer).
+- Erste **versionierte Wheel-Distribution** als GitHub Release Asset: konsumierbar via
+  `mn-design-system @ git+https://github.com/mknitsche/mn-design-system.git@v0.4.0`
+  oder direkter Wheel-URL.
+
+### Notes
+- **Welle F (S239 Entscheidung):** Distributions-Schicht B aktiviert. claudeAI bindet
+  ab v0.4.0 via Wheel-URL statt Submodul (`pip install -e ./system/design-system/`).
+- **Distributions-Wahl:** GitHub Release Asset statt PyPI. Begruendung: KT-1 will
+  gezielt einzelnen Personen zeigen statt suchindexiert publizieren. PyPI bleibt
+  spaeter migrationsfaehig (release.yml einmal um `pypa/gh-action-pypi-publish`
+  ergaenzen).
+- Welle E (Style-Dictionary Custom-Format) bleibt verschoben — Spec-Annex § Welle E.
+
+---
+
 ## [0.3.0] — 2026-04-29
 
 ### Added
