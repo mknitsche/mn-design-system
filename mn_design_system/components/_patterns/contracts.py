@@ -67,8 +67,13 @@ class KpiCardInput(BaseModel):
     caption: str | None = None
 
     def trend_direction(self) -> KpiTrendDirection:
-        """Abgeleiteter Trend aus change_pct."""
-        if self.change_pct is None or abs(self.change_pct) < 0.01:
+        """Abgeleiteter Trend aus change_pct.
+
+        v0.4.1 (S239 B5): Schwellwert von 0.01 auf 0.5 hochgezogen — KT-1
+        Briefing-Befund 30.04.: kleine Bewegungen (<0.5%) sollen nicht
+        rot/gruen markiert werden, sondern neutral (grau, color.viz.muted).
+        """
+        if self.change_pct is None or abs(self.change_pct) < 0.5:
             return KpiTrendDirection.NEUTRAL
         return KpiTrendDirection.UP if self.change_pct > 0 else KpiTrendDirection.DOWN
 

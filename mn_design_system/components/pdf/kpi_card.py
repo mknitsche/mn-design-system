@@ -67,12 +67,24 @@ def _build_styles() -> dict[str, ParagraphStyle]:
 
 
 def _format_change(change_pct: float | None) -> str:
-    """Change-Pct mit Trend-Pfeil und Farbe (deutsche Komma-Notation)."""
+    """Change-Pct mit Trend-Pfeil und Farbe (deutsche Komma-Notation).
+
+    v0.4.1 (S239 B5): Drei-Stufen-Schwellwert.
+      - |Δ| < 0.5%   → neutral, grau (`color.viz.muted`), Bullet statt Pfeil.
+        KT-1 Briefing-Befund 30.04.: kleine Bewegungen visuell zurueckgenommen.
+      - |Δ| >= 0.5%, change >= 0 → success (▲), gruen.
+      - |Δ| >= 0.5%, change <  0 → error (▼), rot.
+    """
     if change_pct is None:
         return ""
     color_success = token_get("color.status.success", "#2e7d32")
     color_error = token_get("color.status.error", "#D32F2F")
-    if change_pct >= 0:
+    color_muted = token_get("color.viz.muted", "#b0bec5")
+    abs_pct = abs(change_pct)
+    if abs_pct < 0.5:
+        sign = "+" if change_pct >= 0 else "-"
+        s = f'<font color="{color_muted}">• {sign}{abs_pct:.2f}%</font>'
+    elif change_pct >= 0:
         s = f'<font color="{color_success}">▲ +{change_pct:.2f}%</font>'
     else:
         s = f'<font color="{color_error}">▼ {change_pct:.2f}%</font>'

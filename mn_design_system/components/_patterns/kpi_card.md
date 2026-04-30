@@ -33,8 +33,9 @@
 - `color.light.h1` — Label + Value (Indigo-900, klar)
 - `color.light.h2` — Sparkline-Linie (Indigo-700)
 - `color.light.text-muted` — Caption (Grey-500)
-- `color.status.success` — Change positiv (Gruen)
-- `color.status.error` — Change negativ (Rot)
+- `color.status.success` — Change positiv kraeftig (Gruen)
+- `color.status.error` — Change negativ kraeftig (Rot)
+- `color.viz.muted` — Change neutral / Mikro-Bewegung (Grau, |Δ|<0.5%)
 - `color.indigo.50` — Card-Background (Tile-Look, vom Caller umgesetzt)
 - `font.body` (Geist), `font.bold` (Geist-Bold), `font.italic` (SourceSerif-Italic)
 
@@ -47,7 +48,11 @@
 ## Verhalten
 
 - Change-Pct mit Trend-Pfeil + Farbe (▲ gruen, ▼ rot)
-- Mikro-Bewegungen (`abs(change_pct) < 0.01`) → NEUTRAL (kein Pfeil)
+- **Schwellwert (v0.4.1, S239 B5):** `abs(change_pct) < 0.5` → NEUTRAL,
+  grau (`color.viz.muted`), Bullet-Punkt `•` statt Pfeil. Vorher 0.01,
+  hochgezogen weil kleine Marktbewegungen visuell rot/gruen-frei bleiben
+  sollen (KT-1 Briefing-Befund 30.04.). Negative Mikro-Bewegung erhaelt
+  manuelles Minuszeichen vor dem Wert.
 - Sparkline mit `sparkline_values` (>=2): Drawing aus `build_sparkline()`
 - Sparkline ohne Werte: Spacer (Hoehe identisch)
 - Deutsche Komma-Notation in Change-Display

@@ -8,6 +8,27 @@ oder Doku.
 
 ---
 
+## [0.4.1] — 2026-04-30
+
+### Changed
+- **`KpiCardInput.trend_direction()` Schwellwert 0.01 → 0.5.** KT-1
+  Briefing-Befund 30.04.2026 (S239 B5): Mikro-Bewegungen <0.5% sollen
+  visuell zurueckgenommen werden statt rot/gruen einzufaerben.
+- **`components/pdf/kpi_card._format_change`** zeigt fuer `|Δ|<0.5%`
+  jetzt einen Bullet-Punkt `•` in `color.viz.muted` (#b0bec5) statt
+  Pfeil + Status-Farbe. Vorzeichen wird manuell gerendert
+  (`+0,30%` / `-0,20%`). Aufruf ohne Bullet/Pfeil bei `|Δ|>=0.5%`
+  bleibt unveraendert.
+
+### Updated
+- Pattern-Spec `components/_patterns/kpi_card.md` § "Verhalten" und
+  Token-Liste auf neuen Schwellwert + `color.viz.muted` aktualisiert.
+
+### Tests
+- 6 neue Tests in `tests/components/pdf/test_kpi_card.py` decken die
+  Schwellwert-Stufen ab (knapp unter 0.5%, an der Schwelle, deutlich
+  ueber, exakte Null, negative Mikro-Bewegung).
+
 ## [0.4.0] — 2026-04-30
 
 ### Added
