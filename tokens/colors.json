@@ -47,6 +47,15 @@
       "info-tint":    { "value": "#f5f8ff", "comment": "Status-Header blau-tinted" }
     },
 
+    "accent": {
+      "_meta":     { "value": "Warmer Akzent als Sektions-Bruch im PDF/Web. Stack-A-Konsistenz: kuehle Indigo-Familie + warmer Akzent. KT-1 S239 (Variante C', kupferig + heller Soft). NICHT als Status-Signal verwenden — semantische Trennung zu status.warning/urgent." },
+      "warm": {
+        "strong": { "value": "#d97706", "comment": "Sektions-Header (Politik / Wirtschaft / Tech ...). Amber-600, kupferig-edel." },
+        "soft":   { "value": "#fef3c7", "comment": "Tint fuer Hintergrund-Boxen (Tagesfokus etc.). Amber-100, ganz hell." },
+        "text":   { "value": "#78350f", "comment": "Schrift auf accent.warm-soft. Amber-900, kontrastsicher (>=4.5:1 gegen accent.warm-soft)." }
+      }
+    },
+
     "viz": {
       "_meta":        { "value": "Architektur-Diagramm-Farben (system-dokumentation, viz_generate)" },
       "muted":        { "value": "#b0bec5", "comment": "Diagramm-Box Muted Outline" },

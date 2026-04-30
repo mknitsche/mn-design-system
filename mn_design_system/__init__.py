@@ -10,6 +10,6 @@ Komponenten (Welle B):
 Versionierung: SemVer ab v0.1.0 (Welle A).
 """
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 __all__ = ["__version__"]

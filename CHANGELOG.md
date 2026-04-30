@@ -8,6 +8,31 @@ oder Doku.
 
 ---
 
+## [0.4.2] — 2026-04-30
+
+### Added
+- **Neue Token-Familie `color.accent.warm`** (Variante C', KT-1 S239
+  nach Live-PDF-Vergleich):
+  - `accent.warm-strong` = `#d97706` (Amber-600, kupferig-edel) — fuer
+    Sektions-Header (Politik / Wirtschaft / Tech / ...).
+  - `accent.warm-soft` = `#fef3c7` (Amber-100) — heller Tint-Hintergrund
+    fuer Tagesfokus-Boxen u.ae.
+  - `accent.warm-text` = `#78350f` (Amber-900) — kontrastsichere Schrift
+    auf accent.warm-soft (>=4.5:1).
+- Hierarchie-Logik: warmer Akzent als **Sektions-Bruch** (gliedert),
+  kuehle Indigo-Familie als **Inhaltsanker** (Story-Titel in
+  `color.h1` / Indigo-900). Hierarchie ueber Farbtemperatur, nicht
+  ueber Helligkeit.
+
+### Notes
+- accent.warm ist **NICHT** als Status-Signal gedacht — semantische
+  Trennung zu `status.warning` (Amber-500) und `status.urgent`
+  (Orange-700). Kommentar in colors.json klargestellt.
+- Konsumenten: Briefing-Renderer (`renderer_rich`, `renderer_public`)
+  ziehen die Section-Header (`topnews_title` in
+  `morgenbriefing_template.py`) auf das neue Token. Migration in
+  claudeAI-Repo Schritt-fuer-Schritt nach Wheel-Release.
+
 ## [0.4.1] — 2026-04-30
 
 ### Changed
