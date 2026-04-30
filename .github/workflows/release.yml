@@ -27,7 +27,10 @@ jobs:
           node-version: "20"
 
       - name: Install npm dependencies
-        run: npm ci
+        # `npm install` (nicht `npm ci`): package-lock.json ist im Submodul-
+        # .gitignore (Solo-Maintainer-Entscheidung S238). `npm ci` braucht
+        # einen Lock-File, `npm install` nicht.
+        run: npm install
 
       - name: Build tokens (Style Dictionary → mn_design_system/tokens.py)
         run: npm run build

@@ -35,7 +35,9 @@ jobs:
           node-version: "20"
 
       - name: Install npm dependencies
-        run: npm ci
+        # `npm install` (nicht `npm ci`): package-lock.json ist im
+        # Submodul-.gitignore.
+        run: npm install
 
       - name: Build tokens
         run: npm run build
