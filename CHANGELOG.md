@@ -8,6 +8,20 @@ oder Doku.
 
 ---
 
+## [0.4.3] — 2026-05-02
+
+### Changed
+- **KPI-Card Trend-Glyph konsistent in allen 3 Stufen** (KT-1 S241 B-7
+  Briefing-Befund): Bullet "•" unter dem 0.5%-Schwellwert wirkte visuell
+  deutlich kleiner als die ▲/▼-Triangle-Glyphen. Lesbarkeit bei
+  Mikro-Bewegungen litt. **Neu:** alle drei Stufen tragen ▲ oder ▼ in
+  derselben Groesse, nur die FARBE variiert (muted-grau bei <0.5%,
+  success-gruen / error-rot ab 0.5%). Schwellwert-Logik (0.5%) bleibt
+  unveraendert. Tests in `tests/components/pdf/test_kpi_card.py`
+  entsprechend angepasst (4 Tests).
+
+---
+
 ## [0.4.2] — 2026-04-30
 
 ### Added

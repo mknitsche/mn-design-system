@@ -117,33 +117,37 @@ class TestBuildKpiCard:
         result = build_kpi_card(inp)
         assert result[2].text == ""
 
-    # ---- v0.4.1 / S239 B5: Drei-Stufen-Schwellwert ----
+    # ---- v0.4.3 (S241 KT-1 B-7): Pfeil-Glyph konsistent in allen 3 Stufen ----
+    # Vorher (v0.4.1+) trug die unter-Threshold-Stufe einen Bullet-Punkt "•",
+    # der visuell deutlich kleiner als die ▲/▼ wirkte (KT-1 Briefing-Befund S241).
+    # Jetzt: alle drei Stufen tragen ▲ oder ▼ in derselben Groesse, nur die
+    # Farbe variiert (muted-grau bei <0.5%, success-gruen / error-rot ab 0.5%).
 
-    def test_change_below_threshold_positive_is_muted(self):
-        """|Δ|<0.5% positiv → muted (grau), Bullet-Punkt, kein Pfeil."""
+    def test_change_below_threshold_positive_is_muted_arrow(self):
+        """|Δ|<0.5% positiv → muted (grau), aber ▲ in voller Groesse (kein Bullet)."""
         inp = KpiCardInput(label="X", value="100", change_pct=0.30)
         text = build_kpi_card(inp)[2].text
-        assert "▲" not in text
-        assert "•" in text
+        assert "▲" in text
+        assert "•" not in text
         assert "+0,30%" in text
         # color.viz.muted = #b0bec5
         assert "b0bec5" in text.lower()
 
-    def test_change_below_threshold_negative_is_muted(self):
-        """|Δ|<0.5% negativ → muted (grau), Bullet, kein Pfeil. Sign manuell."""
+    def test_change_below_threshold_negative_is_muted_arrow(self):
+        """|Δ|<0.5% negativ → muted (grau), ▼ in voller Groesse (kein Bullet)."""
         inp = KpiCardInput(label="X", value="100", change_pct=-0.20)
         text = build_kpi_card(inp)[2].text
-        assert "▼" not in text
-        assert "•" in text
+        assert "▼" in text
+        assert "•" not in text
         assert "-0,20%" in text
         assert "b0bec5" in text.lower()
 
-    def test_change_zero_is_muted(self):
-        """change_pct=0.0 → muted, Bullet, +0,00%."""
+    def test_change_zero_is_muted_arrow(self):
+        """change_pct=0.0 → muted, ▲ (Default Up bei Sign==0), +0,00%."""
         inp = KpiCardInput(label="X", value="100", change_pct=0.0)
         text = build_kpi_card(inp)[2].text
-        assert "▲" not in text and "▼" not in text
-        assert "•" in text
+        assert "▲" in text or "▼" in text
+        assert "•" not in text
         assert "+0,00%" in text
 
     def test_change_at_threshold_positive_is_strong(self):
@@ -162,12 +166,13 @@ class TestBuildKpiCard:
         assert "-0,50%" in text
         assert "d32f2f" in text.lower()
 
-    def test_change_just_below_threshold_is_muted(self):
-        """0.499% (knapp unter 0.5%) bleibt muted."""
+    def test_change_just_below_threshold_is_muted_arrow(self):
+        """0.499% (knapp unter 0.5%) → muted, aber ▲ statt Bullet."""
         inp = KpiCardInput(label="X", value="100", change_pct=0.499)
         text = build_kpi_card(inp)[2].text
-        assert "•" in text
-        assert "▲" not in text
+        assert "▲" in text
+        assert "•" not in text
+        assert "b0bec5" in text.lower()
 
     def test_sparkline_with_values(self):
         inp = KpiCardInput(label="X", value="100", sparkline_values=[1.0, 2.0, 3.0, 4.0])

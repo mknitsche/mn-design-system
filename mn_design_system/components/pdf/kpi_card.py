@@ -69,9 +69,11 @@ def _build_styles() -> dict[str, ParagraphStyle]:
 def _format_change(change_pct: float | None) -> str:
     """Change-Pct mit Trend-Pfeil und Farbe (deutsche Komma-Notation).
 
-    v0.4.1 (S239 B5): Drei-Stufen-Schwellwert.
-      - |Δ| < 0.5%   → neutral, grau (`color.viz.muted`), Bullet statt Pfeil.
-        KT-1 Briefing-Befund 30.04.: kleine Bewegungen visuell zurueckgenommen.
+    v0.4.3 (S241 KT-1 B-7): Glyph konsistent in allen 3 Stufen, nur Farbe variiert.
+      - |Δ| < 0.5%   → muted (grau, `color.viz.muted`), ▲/▼ in voller Groesse.
+        KT-1 S241 Briefing-Befund: Bullet "•" wirkte visuell deutlich kleiner
+        als die Triangle-Glyphen — Lesbarkeit litt. Konsistente Pfeil-Groesse
+        bei allen Stufen, der dezente Status wird ueber die Farbe transportiert.
       - |Δ| >= 0.5%, change >= 0 → success (▲), gruen.
       - |Δ| >= 0.5%, change <  0 → error (▼), rot.
     """
@@ -81,13 +83,15 @@ def _format_change(change_pct: float | None) -> str:
     color_error = token_get("color.status.error", "#D32F2F")
     color_muted = token_get("color.viz.muted", "#b0bec5")
     abs_pct = abs(change_pct)
+    glyph = "▲" if change_pct >= 0 else "▼"
+    sign = "+" if change_pct >= 0 else ""
     if abs_pct < 0.5:
-        sign = "+" if change_pct >= 0 else "-"
-        s = f'<font color="{color_muted}">• {sign}{abs_pct:.2f}%</font>'
+        color = color_muted
     elif change_pct >= 0:
-        s = f'<font color="{color_success}">▲ +{change_pct:.2f}%</font>'
+        color = color_success
     else:
-        s = f'<font color="{color_error}">▼ {change_pct:.2f}%</font>'
+        color = color_error
+    s = f'<font color="{color}">{glyph} {sign}{change_pct:.2f}%</font>'
     return s.replace(".", ",")
 
 
