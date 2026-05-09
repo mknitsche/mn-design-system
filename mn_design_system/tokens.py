@@ -1,4 +1,10 @@
-"""MN PKA Design-System Tokens — auto-generiert."""
+"""MN PKA Design-System Tokens — auto-generiert.
+
+Aktualisiert manuell um v0.4.4-Tokens (S248) — beim naechsten Generator-Lauf
+muessen die neuen Tokens in tokens/*.json mit aufgenommen werden, sonst werden
+sie hier ueberschrieben. Generator liest typography.json + colors.json + spacing.json
+(Stand v0.4.4 enthaelt alle neuen Keys).
+"""
 
 # Auto-generiert aus tokens/*.json via Style Dictionary.
 # NICHT MANUELL BEARBEITEN — Aenderungen werden ueberschrieben.
@@ -36,6 +42,13 @@ TOKENS = {
     "color.accent.warm.strong": "#d97706",
     "color.accent.warm.soft": "#fef3c7",
     "color.accent.warm.text": "#78350f",
+    # S248: Severity-Skala (Variante F nach DS-Decisions v03 §2)
+    "color.severity.high": "#dc2626",
+    "color.severity.medium": "#a16207",
+    "color.severity.low": "#6b7280",
+    "color.severity.high-bg": "#fee2e2",
+    "color.severity.medium-bg": "#fef3c7",
+    "color.severity.low-bg": "#f3f4f6",
     "color.viz.muted": "#b0bec5",
     "color.viz.success-soft": "#90caf9",
     "color.viz.neutral-soft": "#e0e0e0",
@@ -83,6 +96,17 @@ TOKENS = {
     "space.12": "48px",
     "space.16": "64px",
     "space.20": "80px",
+    # S248: Semantische Aliase fuer kontextabhaengiges Spacing (KT-1-Klassen)
+    "space.semantic.tight-min": "4px",
+    "space.semantic.tight": "8px",
+    "space.semantic.default": "12px",
+    "space.semantic.wide": "20px",
+    "space.semantic.wide-max": "32px",
+    "space.semantic.section": "48px",
+    # S248: Indent-Tokens (heute hardcoded leftIndent=3*mm)
+    "space.indent.bullet": "12px",
+    "space.indent.subitem": "24px",
+    "space.indent.code": "16px",
     "space.page.margin-top": "22mm",
     "space.page.margin-bottom": "22mm",
     "space.page.margin-inner": "22mm",
@@ -118,6 +142,14 @@ TOKENS = {
     "font.size.code": "9pt",
     "font.size.bibel": "12pt",
     "font.size.math": "12pt",
+    # S248 KT-1: neue Use-Case-Tokens (Footer-Familie, Page-Title, Icons)
+    "font.size.title-page": "22pt",
+    "font.size.footer-page": "8pt",
+    "font.size.disclaimer": "8pt",
+    "font.size.source": "8pt",
+    "font.size.icon-large": "22pt",
+    "font.size.icon-medium": "14pt",
+    "font.size.icon-small": "11pt",
     "font.leading.h0": "31pt",
     "font.leading.h1": "28pt",
     "font.leading.h2": "19pt",
@@ -128,6 +160,19 @@ TOKENS = {
     "font.leading.code": "13pt",
     "font.leading.bibel": "17pt",
     "font.leading.math": "16pt",
+    # S248: Leadings fuer neue Use-Case-Tokens
+    "font.leading.title-page": "26pt",
+    "font.leading.footer-page": "10pt",
+    "font.leading.disclaimer": "10pt",
+    "font.leading.source": "10pt",
+    "font.leading.icon-large": "26pt",
+    "font.leading.icon-medium": "18pt",
+    "font.leading.icon-small": "13pt",
+    # S248: Greek-Letters Fallback-Font (Sigma-Glyph-Bug Briefing/PDF V3)
+    "font.family.fallback-greek": "STIXTwoText",
+    # S248: Tabellen-Schrift-Token (Default = sans, Datentabellen koennen mono nutzen)
+    "font.family.table-default": "Geist",
+    "font.family.table-data": "JetBrainsMono",
     "font.weight.light": "300",
     "font.weight.regular": "400",
     "font.weight.medium": "500",

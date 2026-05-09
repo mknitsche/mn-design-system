@@ -8,6 +8,64 @@ oder Doku.
 
 ---
 
+## [0.4.4] — 2026-05-09
+
+### Added
+- **Token-Konsumtion-Helper-API** (KT-1 S248, Phase 0 der Welle Briefing-Drift-Beseitigung):
+  - `space_token(key, unit="mm"|"pt"|"px"|"raw")` — Spacing-Token mit expliziter Einheit
+  - `size_token(key, unit="pt"|"mm"|"px"|"raw")` — Schriftgroessen-Token
+  - `leading_token(key, unit="pt"|"mm"|"px"|"raw")` — Leading-Token
+  - `color_token(key)` — Farb-Token als Hex-String
+  - `font_family(key)` — Font-Familien-Lookup
+  - `font_with_fallback(text)` — wraped Greek/Math-Letters in
+    `<font name="STIXTwoText">...</font>`-Tags fuer ReportLab (Sigma-Glyph-Bug-Fix)
+  - Konvention: **1 unit = 1mm = 2.835pt = 4px** (mm-Basis, KT-1 misst auf A4
+    nach Druck)
+  - **Strict-Mode**: `KeyError` bei unbekanntem Token (Pattern 6, kein stilles Fallback)
+- **Neue Use-Case-Tokens** (Footer-Familie KT-1 S248):
+  - `font.size.title-page` = 22pt (war hardcoded fontSize=20 in renderer_v2.v2_title)
+  - `font.size.footer-page` = 8pt (Page-Fusszeile am Seitenrand)
+  - `font.size.disclaimer` = 8pt (End-of-Content "Generiert mit Claude...")
+  - `font.size.source` = 8pt (Quellen-Verzeichnis direkt unter Hauptabsatz)
+  - `font.size.icon-{large,medium,small}` = 22/14/11pt
+- **Neue Severity-Tokens** (KT-1 S248 Variante F nach 6 PDF-Iterationen):
+  - `color.severity.high` = `#dc2626` (red-600, leuchtender als status.error)
+  - `color.severity.medium` = `#a16207` (amber-800, dunkel-warm Kupfer-Ton)
+  - `color.severity.low` = `#6b7280` (alias auf color.text-muted)
+  - Plus `*-bg`-Varianten fuer Severity-Badges
+- **Neue Spacing-Klassen** (KT-1 S248 — kontextabhaengiges Spacing):
+  - `space.semantic.tight-min` = 1mm (Mikro)
+  - `space.semantic.tight` = 2mm (3-Spalten-Layout)
+  - `space.semantic.default` = 3mm (Standard 1-spaltig)
+  - `space.semantic.wide` = 5mm (Sektion-innerer Abstand)
+  - `space.semantic.wide-max` = 8mm (vor Section-Header)
+  - `space.semantic.section` = 12mm (zwischen Hauptsektionen)
+  - `space.indent.{bullet,subitem,code}` = 3/6/4mm
+- **Greek-Letter Fallback-Font-Token** `font.family.fallback-greek` = `STIXTwoText`
+  (loest Sigma-Glyph-Bug aus Briefing-PDF "Vol-Spike +1,8 □")
+- **Tabellen-Schrift-Tokens**:
+  - `font.family.table-default` = `Geist` (Body-Konsistenz)
+  - `font.family.table-data` = `JetBrainsMono` (Tabular Numerals fuer Zahlen)
+
+### Changed
+- **Repo-Hygiene**: BODY 10pt → 9.5pt und LEADING_BODY 15.5pt → 13.5pt
+  (S242-Korrektur war im v0.4.3-Wheel, aber nicht in main committed) jetzt
+  konsistent.
+
+### Tests
+- **38 neue Tests** in `tests/test_helpers.py` (alle gruen, total 133/133).
+
+### Background
+KT-1 S248-Tiefenanalyse heutiger Briefing-PDFs zeigte ~60 Drift-Stellen
+(hardcoded `fontSize=N`, `leading=N`, `space*=N*mm`, Severity-Hex) in
+`claudeAI`-Renderern. Wurzel: Token-Konsumtion-Infrastruktur fehlte. Diese
+Release schliesst die Luecke. Phase 1-7 der Welle (Konsumenten-Migration in
+claudeAI) folgen.
+
+Plan: `claudeAI/.claude/plans/welle-briefing-design-drift-S248.md`.
+
+---
+
 ## [0.4.3] — 2026-05-02
 
 ### Changed

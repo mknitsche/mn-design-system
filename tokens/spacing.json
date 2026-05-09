@@ -1,17 +1,40 @@
 {
   "space": {
-    "_meta": { "value": "Multi-Unit Spacing — px fuer Web, mm/pt fuer PDF, rem fuer Web-Skalierung." },
+    "_meta": {
+      "value": "Multi-Unit Spacing — mm-Basis (KT-1 misst auf A4 nach Druck), pt fuer ReportLab, px fuer Web/CSS, rem fuer Web-Skalierung. Konvention: 1 unit = 1mm = 2.835pt = 4px.",
+      "spec_ref": "S248 DS-Decisions v03 §3"
+    },
     "1":  { "value": "4px",  "mm": "1",   "pt": "2.83",  "rem": "0.25",  "comment": "Mikro" },
     "2":  { "value": "8px",  "mm": "2",   "pt": "5.67",  "rem": "0.5",   "comment": "Inline" },
-    "3":  { "value": "12px", "mm": "3",   "pt": "8.5",   "rem": "0.75",  "comment": "Component-Padding" },
+    "3":  { "value": "12px", "mm": "3",   "pt": "8.50",  "rem": "0.75",  "comment": "Component-Padding" },
     "4":  { "value": "16px", "mm": "4",   "pt": "11.34", "rem": "1",     "comment": "Section-Spacing" },
     "5":  { "value": "20px", "mm": "5",   "pt": "14.17", "rem": "1.25",  "comment": "Block-Spacing" },
-    "6":  { "value": "24px", "mm": "6",   "pt": "17",    "rem": "1.5",   "comment": "Container" },
+    "6":  { "value": "24px", "mm": "6",   "pt": "17.01", "rem": "1.5",   "comment": "Container" },
     "8":  { "value": "32px", "mm": "8",   "pt": "22.68", "rem": "2",     "comment": "Section-Trenner" },
     "10": { "value": "40px", "mm": "10",  "pt": "28.35", "rem": "2.5" },
-    "12": { "value": "48px", "mm": "12",  "pt": "34",    "rem": "3",     "comment": "Page-Section-Trenner gross" },
+    "12": { "value": "48px", "mm": "12",  "pt": "34.02", "rem": "3",     "comment": "Page-Section-Trenner gross" },
     "16": { "value": "64px", "mm": "16",  "pt": "45.36", "rem": "4" },
     "20": { "value": "80px", "mm": "20",  "pt": "56.69", "rem": "5" },
+
+    "semantic": {
+      "_meta": {
+        "value": "Semantische Spacing-Klassen (S248 KT-1): kontextabhaengige Aliase auf numerische Tokens. Konsumenten sollen semantic statt numeric nutzen, ausser numerischer Spezialwert noetig.",
+        "spec_ref": "S248 KT-1: 'spacing haengt nicht nur von Schriftgroesse ab, sondern auch vom Platz allg'"
+      },
+      "tight-min": { "ref": "space.1", "comment": "Caption unter Wert (KPI-Karte intern)" },
+      "tight":     { "ref": "space.2", "comment": "Bullet-Reihe, 3-Spalten-Layout, dichter Anriss" },
+      "default":   { "ref": "space.3", "comment": "Default — Item-Abstand bei 1-spaltigem Layout" },
+      "wide":      { "ref": "space.5", "comment": "Sektion-innerer Abstand" },
+      "wide-max":  { "ref": "space.8", "comment": "Vor Section-Header, Major-Block-Trennung" },
+      "section":   { "ref": "space.12", "comment": "Zwischen Hauptsektionen" }
+    },
+
+    "indent": {
+      "_meta": { "value": "S248: Indent-Tokens (heute hardcoded leftIndent=3*mm an mehreren Stellen)" },
+      "bullet":  { "value": "12px", "mm": "3", "pt": "8.50", "comment": "Bullet-Item-Indent (haengender Einzug)" },
+      "subitem": { "value": "24px", "mm": "6", "pt": "17.01", "comment": "Sub-Item zweite Ebene" },
+      "code":    { "value": "16px", "mm": "4", "pt": "11.34", "comment": "Code-Block-Indent" }
+    },
 
     "page": {
       "margin-top":    { "value": "22mm", "comment": "A4 Standard-Margin" },
