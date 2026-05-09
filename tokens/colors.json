@@ -47,6 +47,16 @@
       "info-tint":    { "value": "#f5f8ff", "comment": "Status-Header blau-tinted" }
     },
 
+    "severity": {
+      "_meta":      { "value": "S248 KT-1: Severity-Skala fuer KI-Firmen-Updates / Tech-KI-Items / Risiko-Bewertung. Variante F gewaehlt aus 6 Iterationen (DS-Decisions v03 §2). HOCH leuchtender als status.error, MITTEL dunkler-warm als status.warning fuer optischen Kontrast HOCH<->MITTEL." },
+      "high":       { "value": "#dc2626", "comment": "red-600 (leuchtender als red-700/status.error). Klare Signal-Stufe oben." },
+      "medium":     { "value": "#a16207", "comment": "amber-800 (dunkler-warm). Klar abgesetzt von HOCH, immer noch warm-erdig (Kupfer-Ton)." },
+      "low":        { "value": "{color.grey.500.value}", "comment": "Alias auf grey-500 / text-muted. Niedrige Severity = unauffaellig." },
+      "high-bg":    { "value": "#fee2e2", "comment": "red-100 — fuer Severity-Badge-Hintergrund optional" },
+      "medium-bg":  { "value": "#fef3c7", "comment": "amber-100 — Alias auf accent.warm.soft" },
+      "low-bg":     { "value": "{color.grey.100.value}", "comment": "grey-100 fuer Low-Badge-Hintergrund" }
+    },
+
     "accent": {
       "_meta":     { "value": "Warmer Akzent als Sektions-Bruch im PDF/Web. Stack-A-Konsistenz: kuehle Indigo-Familie + warmer Akzent. KT-1 S239 (Variante C', kupferig + heller Soft). NICHT als Status-Signal verwenden — semantische Trennung zu status.warning/urgent." },
       "warm": {
