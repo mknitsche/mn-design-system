@@ -36,11 +36,21 @@ _ICON_MAP: dict[WetterCategory, str] = {
 }
 
 
+def _parse_pt(token_str: str) -> float:
+    """'10pt' -> 10.0 (S242: KT-1 design-system body-Token-Konsumtion)."""
+    s = str(token_str).strip()
+    return float(s[:-2]) if s.endswith("pt") else float(s)
+
+
 def _build_styles() -> dict[str, ParagraphStyle]:
     """Komponenten-eigene Styles, gespeist aus Tokens."""
     color_h2 = token_get("color.light.h2", "#4338ca")
     color_h1 = token_get("color.light.h1", "#312e81")
     color_text_muted = token_get("color.light.text-muted", "#6b7280")
+    # S242 KT-1: Summary-Text (Marktlage unter Strip) muss identisch zu allen
+    # Body-Texten im Briefing sein — body-Token statt hardcoded 10/14.
+    body_size = _parse_pt(token_get("font.size.body", "10pt"))
+    body_lead = _parse_pt(token_get("font.leading.body", "13.5pt"))
 
     return {
         "icon": ParagraphStyle(
@@ -81,8 +91,8 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         "summary": ParagraphStyle(
             "WetterStripSummary",
             fontName="Geist",
-            fontSize=10,
-            leading=14,
+            fontSize=body_size,
+            leading=body_lead,
             spaceBefore=2 * mm,
             spaceAfter=2 * mm,
         ),
