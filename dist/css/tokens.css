@@ -32,6 +32,9 @@
   --color-status-error-tint: #fff8f7; /** Status-Header rosa-tinted */
   --color-status-warning-tint: #fffaf5; /** Status-Header orange-tinted */
   --color-status-info-tint: #f5f8ff; /** Status-Header blau-tinted */
+  --color-accent-warm-strong: #d97706; /** Sektions-Header (Politik / Wirtschaft / Tech ...). Amber-600, kupferig-edel. */
+  --color-accent-warm-soft: #fef3c7; /** Tint fuer Hintergrund-Boxen (Tagesfokus etc.). Amber-100, ganz hell. */
+  --color-accent-warm-text: #78350f; /** Schrift auf accent.warm-soft. Amber-900, kontrastsicher (>=4.5:1 gegen accent.warm-soft). */
   --color-viz-muted: #b0bec5; /** Diagramm-Box Muted Outline */
   --color-viz-success-soft: #90caf9; /** Diagramm-Box helles Blau */
   --color-viz-neutral-soft: #e0e0e0; /** Diagramm-Box neutraler Grau */
@@ -108,7 +111,7 @@
   --font-size-h1: 24pt;
   --font-size-h2: 15pt;
   --font-size-h3: 13pt;
-  --font-size-body: 10pt; /** Final V3' (KT-1 S238) */
+  --font-size-body: 9.5pt; /** S242 KT-1: 10pt -> 9.5pt (Wetter/Marktlage zu gross) */
   --font-size-lead: 11pt;
   --font-size-caption: 9pt;
   --font-size-code: 9pt;
@@ -118,7 +121,7 @@
   --font-leading-h1: 28pt;
   --font-leading-h2: 19pt;
   --font-leading-h3: 17pt;
-  --font-leading-body: 15.5pt; /** Final V3' (KT-1 S238) */
+  --font-leading-body: 13.5pt; /** S242 KT-1: 15.5 -> 13.5pt (Body kompakter, Ratio wie h3/bibel) */
   --font-leading-lead: 17pt;
   --font-leading-caption: 12pt;
   --font-leading-code: 13pt;
