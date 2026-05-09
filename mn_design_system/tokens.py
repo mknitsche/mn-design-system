@@ -107,6 +107,16 @@ TOKENS = {
     "space.indent.bullet": "12px",
     "space.indent.subitem": "24px",
     "space.indent.code": "16px",
+    # S248 v0.5.0: zusaetzliche semantische Tokens (waren hardcoded)
+    "space.semantic.sub-tight":      "2px",   # 0.5mm — Anriss-Bullet-spaceAfter
+    "space.semantic.bibel-quelle":   "7px",   # 1.8mm — BibelQuelle-spaceBefore
+    "space.semantic.tracker-item":   "6px",   # 1.5mm — Tracker-Item-spaceAfter
+    "space.semantic.divider":        "16px",  # 4mm — section_divider() Spacing
+    "space.semantic.between-modules":"24px",  # 6mm — Spacing zwischen Modul-Bloecken
+    # S248 v0.5.0: Logo-Tokens (waren hardcoded LOGO_SIZE=18mm, LOGO_GAP=4mm)
+    "space.logo.size":           "18mm",
+    "space.logo.gap":            "4mm",
+    "space.logo.size-small":     "14mm",
     "space.page.margin-top": "22mm",
     "space.page.margin-bottom": "22mm",
     "space.page.margin-inner": "22mm",
@@ -150,6 +160,12 @@ TOKENS = {
     "font.size.icon-large": "22pt",
     "font.size.icon-medium": "14pt",
     "font.size.icon-small": "11pt",
+    # S248 v0.5.0: Section-Title (war hardcoded fontSize=18 in pdf_utils title-Style)
+    "font.size.title-section": "18pt",
+    # S248 v0.5.0: News-Headline (Item-Title, fett, ueber Body)
+    "font.size.news-headline":      "11pt",
+    # News-Body bleibt = font.size.body (9.5pt), keine length-spezifischen Tokens.
+    # Length-Steuerung erfolgt ueber Wort-Limit im ETL-Layer, nicht ueber Schrift.
     "font.leading.h0": "31pt",
     "font.leading.h1": "28pt",
     "font.leading.h2": "19pt",
@@ -168,6 +184,9 @@ TOKENS = {
     "font.leading.icon-large": "26pt",
     "font.leading.icon-medium": "18pt",
     "font.leading.icon-small": "13pt",
+    # S248 v0.5.0: Leadings fuer neue Tokens
+    "font.leading.title-section":   "22pt",
+    "font.leading.news-headline":   "14pt",
     # S248: Greek-Letters Fallback-Font (Sigma-Glyph-Bug Briefing/PDF V3)
     "font.family.fallback-greek": "STIXTwoText",
     # S248: Tabellen-Schrift-Token (Default = sans, Datentabellen koennen mono nutzen)

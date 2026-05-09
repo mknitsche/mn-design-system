@@ -21,12 +21,26 @@
         "value": "Semantische Spacing-Klassen (S248 KT-1): kontextabhaengige Aliase auf numerische Tokens. Konsumenten sollen semantic statt numeric nutzen, ausser numerischer Spezialwert noetig.",
         "spec_ref": "S248 KT-1: 'spacing haengt nicht nur von Schriftgroesse ab, sondern auch vom Platz allg'"
       },
-      "tight-min": { "ref": "space.1", "comment": "Caption unter Wert (KPI-Karte intern)" },
-      "tight":     { "ref": "space.2", "comment": "Bullet-Reihe, 3-Spalten-Layout, dichter Anriss" },
-      "default":   { "ref": "space.3", "comment": "Default — Item-Abstand bei 1-spaltigem Layout" },
-      "wide":      { "ref": "space.5", "comment": "Sektion-innerer Abstand" },
-      "wide-max":  { "ref": "space.8", "comment": "Vor Section-Header, Major-Block-Trennung" },
-      "section":   { "ref": "space.12", "comment": "Zwischen Hauptsektionen" }
+      "sub-tight":     { "value": "2px", "mm": "0.5", "pt": "1.42", "comment": "S248 v0.5.0: Halber Mikro — Anriss-Bullet-spaceAfter (war hardcoded 0.5mm)" },
+      "tight-min":     { "ref": "space.1", "comment": "Caption unter Wert (KPI-Karte intern)" },
+      "tight":         { "ref": "space.2", "comment": "Bullet-Reihe, 3-Spalten-Layout, dichter Anriss" },
+      "default":       { "ref": "space.3", "comment": "Default — Item-Abstand bei 1-spaltigem Layout" },
+      "wide":          { "ref": "space.5", "comment": "Sektion-innerer Abstand" },
+      "wide-max":      { "ref": "space.8", "comment": "Vor Section-Header, Major-Block-Trennung" },
+      "section":       { "ref": "space.12", "comment": "Zwischen Hauptsektionen" },
+      "bibel-quelle":  { "value": "7px", "mm": "1.8", "pt": "5.10", "comment": "S248 v0.5.0: BibelQuelle-spaceBefore (war hardcoded 1.8mm)" },
+      "tracker-item":  { "value": "6px", "mm": "1.5", "pt": "4.25", "comment": "S248 v0.5.0: Tracker-Item-spaceAfter zwischen tight-min und tight" },
+      "divider":       { "ref": "space.4", "comment": "S248 v0.5.0: section_divider() Spacing davor + danach" },
+      "between-modules": { "ref": "space.6", "comment": "S248 v0.5.0: Spacing zwischen Modul-Bloecken" }
+    },
+
+    "logo": {
+      "_meta": {
+        "value": "S248 v0.5.0: Logo-Slot-Tokens (waren hardcoded LOGO_SIZE=18mm, LOGO_GAP=4mm in pdf_utils.build_doc_header)"
+      },
+      "size":  { "value": "18mm", "pt": "51.02", "comment": "Logo-Kantenlaenge im Header" },
+      "gap":   { "value": "4mm",  "pt": "11.34", "comment": "Abstand zwischen Logo und Title-Block" },
+      "size-small": { "value": "14mm", "pt": "39.69", "comment": "Kleineres Logo fuer kompakte Header" }
     },
 
     "indent": {
