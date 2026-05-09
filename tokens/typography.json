@@ -31,7 +31,9 @@
       "source":      { "value": "8pt",  "rem": "0.5",   "px": "13", "comment": "S248 KT-1: Quellen-Verzeichnis direkt unter Hauptabsatz" },
       "icon-large":  { "value": "22pt", "rem": "1.375", "px": "22", "comment": "S248 KT-1: Wetter-Strip-Icons (war hardcoded fontSize=22 in renderer_v2)" },
       "icon-medium": { "value": "14pt", "rem": "0.875", "px": "14", "comment": "S248 KT-1: Inline-Icons in KPI-Karten" },
-      "icon-small":  { "value": "11pt", "rem": "0.6875","px": "11", "comment": "S248 KT-1: Bullet-Inline-Icons" }
+      "icon-small":  { "value": "11pt", "rem": "0.6875","px": "11", "comment": "S248 KT-1: Bullet-Inline-Icons" },
+      "title-section": { "value": "18pt", "rem": "1.125", "px": "18", "comment": "S248 v0.5.0: Section-Title (Briefing-Bereiche, war hardcoded fontSize=18 in pdf_utils title-Style)" },
+      "news-headline": { "value": "11pt", "rem": "0.6875", "px": "11", "comment": "S248 v0.5.0: News-Item-Headline (Bold) — egal welche Length" }
     },
 
     "leading": {
@@ -51,7 +53,9 @@
       "source":      { "value": "10pt", "ratio": "1.25", "comment": "S248: Quellen-Verzeichnis-Leading" },
       "icon-large":  { "value": "26pt", "ratio": "1.18" },
       "icon-medium": { "value": "18pt", "ratio": "1.29" },
-      "icon-small":  { "value": "13pt", "ratio": "1.18" }
+      "icon-small":  { "value": "13pt", "ratio": "1.18" },
+      "title-section": { "value": "22pt", "ratio": "1.22", "comment": "S248 v0.5.0: Section-Title-Leading" },
+      "news-headline": { "value": "14pt", "ratio": "1.27", "comment": "S248 v0.5.0: News-Headline-Leading" }
     },
 
     "weight": {

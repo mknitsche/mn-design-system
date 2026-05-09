@@ -8,6 +8,36 @@ oder Doku.
 
 ---
 
+## [0.5.0] — 2026-05-09
+
+### Added — fuer Welle 3 Briefing-Modul-Architektur (KT-1 S248)
+
+- **Section-Title-Token** `font.size.title-section` = 18pt + leading 22pt
+  (war hardcoded `fontSize=18` in pdf_utils title-Style)
+- **News-Headline-Token** `font.size.news-headline` = 11pt + leading 14pt
+  (News-Item-Headline, fett, ueber dem Body — Body bleibt 9.5pt einheitlich
+  fuer alle News-Laengen, Length-Steuerung erfolgt im ETL-Layer ueber
+  Wort-Limit, nicht ueber Schriftgroesse)
+- **Semantische Spacing-Tokens** (waren hardcoded):
+  - `space.semantic.sub-tight` = 0.5mm (Anriss-Bullet-spaceAfter)
+  - `space.semantic.bibel-quelle` = 1.8mm (BibelQuelle-spaceBefore)
+  - `space.semantic.tracker-item` = 1.5mm (Tracker-Item-spaceAfter)
+  - `space.semantic.divider` = 4mm (section_divider() Spacing)
+  - `space.semantic.between-modules` = 6mm (zwischen Modul-Bloecken)
+- **Logo-Tokens** (waren hardcoded LOGO_SIZE/LOGO_GAP in pdf_utils):
+  - `space.logo.size` = 18mm
+  - `space.logo.gap` = 4mm
+  - `space.logo.size-small` = 14mm
+
+### Verworfen vs. v0.5.0-Plan
+
+- News-Body-Length-spezifische Schrift-Tokens (`news-body-top/kurz/mittel/lang`):
+  KT-1-Korrektur — Body bleibt **9.5pt einheitlich** fuer alle News-Laengen.
+  Length-Differenzierung erfolgt im ETL-Layer ueber Wort-Limit (Vorschlag:
+  top=20W, kurz=60W, mittel=100W, lang=200W — KT-1 prueft visuell).
+
+---
+
 ## [0.4.4] — 2026-05-09
 
 ### Added
