@@ -55,6 +55,14 @@ _FONT_MAP: dict[str, str] = {
     "STIXTwo-Italic": "stix-two/STIXTwoText-Italic.ttf",
     "STIXTwo-Bold": "stix-two/STIXTwoText-Bold.ttf",
     "STIXTwo-BoldItalic": "stix-two/STIXTwoText-BoldItalic.ttf",
+    # Aliase fuer helpers.font_with_fallback-Output (S249, macb-claude):
+    # font_with_fallback wrappt Greek-Chars in <font name="STIXTwoText">...</font>,
+    # daher muss der lange Name auch in pdfmetrics aufloesbar sein. Sonst
+    # ValueError beim PDF-Render (Bug-Trail: claudeAI daily-engine 2026-05-10).
+    "STIXTwoText": "stix-two/STIXTwoText-Regular.ttf",
+    "STIXTwoText-Italic": "stix-two/STIXTwoText-Italic.ttf",
+    "STIXTwoText-Bold": "stix-two/STIXTwoText-Bold.ttf",
+    "STIXTwoText-BoldItalic": "stix-two/STIXTwoText-BoldItalic.ttf",
     # Helvetica/Arial-Aliasse fuer ReportLab-Default-Compat (Geist substituiert)
     "Helvetica": "geist/Geist-Regular.ttf",
     "Helvetica-Bold": "geist/Geist-Bold.ttf",
