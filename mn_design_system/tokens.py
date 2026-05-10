@@ -188,10 +188,13 @@ TOKENS = {
     "font.leading.title-section":   "22pt",
     "font.leading.news-headline":   "14pt",
     # S248: Greek-Letters Fallback-Font (Sigma-Glyph-Bug Briefing/PDF V3).
-    # S249 (macb-claude): STIXTwoText-Regular hat KEINE Greek-Glyphen (verifiziert
-    # via fontTools: U+03C3 Sigma → NO). Greek liegt in separater TTF
-    # STIXTwoText-Greek.ttf — daher Token auf diese Variante umgestellt.
-    "font.family.fallback-greek": "STIXTwoText-Greek",
+    # S249 (macb-claude) finale Loesung: STIXTwoMath statt STIXTwoText-Greek.
+    # Grund: STIXTwoText-Greek.ttf teilt sich den PostScript-Namen
+    # 'STIXTwoText-Regular' mit der Latin-TTF (TTF-Asset-Bug von STIX), ReportLab
+    # cached per PS-Name → Latin gewinnt → σ als BOX. STIXTwoMath hat
+    # eindeutigen PS-Name + alle Greek + Math + Latin, σ rendert kursiv
+    # (konventionell richtig fuer Standardabweichung).
+    "font.family.fallback-greek": "STIXTwoMath",
     # S248: Tabellen-Schrift-Token (Default = sans, Datentabellen koennen mono nutzen)
     "font.family.table-default": "Geist",
     "font.family.table-data": "JetBrainsMono",
