@@ -63,6 +63,12 @@ _FONT_MAP: dict[str, str] = {
     "STIXTwoText-Italic": "stix-two/STIXTwoText-Italic.ttf",
     "STIXTwoText-Bold": "stix-two/STIXTwoText-Bold.ttf",
     "STIXTwoText-BoldItalic": "stix-two/STIXTwoText-BoldItalic.ttf",
+    # S249 (macb-claude): Greek-Variante separat — STIXTwoText-Regular hat
+    # KEINE Greek-Glyphen (verifiziert: U+03C3 Sigma → NO). Greek-Letters
+    # leben ausschliesslich in STIXTwoText-Greek.ttf. Token
+    # font.family.fallback-greek zeigt darauf, helpers.font_with_fallback
+    # wrappt mit diesem Namen.
+    "STIXTwoText-Greek": "stix-two/STIXTwoText-Greek.ttf",
     # Helvetica/Arial-Aliasse fuer ReportLab-Default-Compat (Geist substituiert)
     "Helvetica": "geist/Geist-Regular.ttf",
     "Helvetica-Bold": "geist/Geist-Bold.ttf",

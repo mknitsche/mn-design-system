@@ -187,8 +187,11 @@ TOKENS = {
     # S248 v0.5.0: Leadings fuer neue Tokens
     "font.leading.title-section":   "22pt",
     "font.leading.news-headline":   "14pt",
-    # S248: Greek-Letters Fallback-Font (Sigma-Glyph-Bug Briefing/PDF V3)
-    "font.family.fallback-greek": "STIXTwoText",
+    # S248: Greek-Letters Fallback-Font (Sigma-Glyph-Bug Briefing/PDF V3).
+    # S249 (macb-claude): STIXTwoText-Regular hat KEINE Greek-Glyphen (verifiziert
+    # via fontTools: U+03C3 Sigma → NO). Greek liegt in separater TTF
+    # STIXTwoText-Greek.ttf — daher Token auf diese Variante umgestellt.
+    "font.family.fallback-greek": "STIXTwoText-Greek",
     # S248: Tabellen-Schrift-Token (Default = sans, Datentabellen koennen mono nutzen)
     "font.family.table-default": "Geist",
     "font.family.table-data": "JetBrainsMono",
