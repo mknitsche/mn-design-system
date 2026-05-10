@@ -232,13 +232,13 @@ def font_family(key: str) -> str:
         key: Token-Schluessel ohne 'font.family.' Praefix erlaubt.
 
     Returns:
-        Font-Familien-Name (z.B. "Geist", "STIXTwoText").
+        Font-Familien-Name (z.B. "Geist", "STIXTwoText-Greek").
 
     Examples:
         >>> font_family("sans")
         'Geist'
         >>> font_family("fallback-greek")
-        'STIXTwoText'
+        'STIXTwoText-Greek'
         >>> font_family("table-data")
         'JetBrainsMono'
     """
@@ -275,12 +275,16 @@ def _is_greek_or_math(char: str) -> bool:
 
 
 def font_with_fallback(text: str, default_font: str | None = None) -> str:
-    """Wrappt Greek/Math-Letters in <font name="STIXTwoText">...</font>-Tags.
+    """Wrappt Greek/Math-Letters in <font name="STIXTwoText-Greek">...</font>-Tags.
 
     Fuer ReportLab Paragraph-Konsumenten: Geist enthaelt keine Greek-Letters
     (sigma, alpha, beta, gamma, delta, ...), Math-Operatoren etc. Wuerde im
     PDF als Box-Glyph rendern. Diese Funktion umrahmt einzelne Greek-Chars
-    (oder zusammenhaengende Sequenzen) mit dem STIXTwoText-Fallback.
+    (oder zusammenhaengende Sequenzen) mit dem STIXTwoText-Greek-Fallback.
+
+    S249 (macb-claude): STIXTwoText-Regular hat KEINE Greek-Glyphen,
+    Greek liegt nur in STIXTwoText-Greek.ttf — daher wird hier explizit
+    diese Variante referenziert.
 
     Args:
         text: Eingabe-Text mit ggf. Greek-Letters.
@@ -294,9 +298,9 @@ def font_with_fallback(text: str, default_font: str | None = None) -> str:
         >>> font_with_fallback("Vol-Spike +1,8 sigma")
         'Vol-Spike +1,8 sigma'
         >>> font_with_fallback("Vol-Spike +1,8 σ über Median")
-        'Vol-Spike +1,8 <font name="STIXTwoText">σ</font> über Median'
+        'Vol-Spike +1,8 <font name="STIXTwoText-Greek">σ</font> über Median'
         >>> font_with_fallback("α/β/γ Vergleich")
-        '<font name="STIXTwoText">α/β/γ</font> Vergleich'
+        '<font name="STIXTwoText-Greek">α/β/γ</font> Vergleich'
     """
     if not text:
         return text

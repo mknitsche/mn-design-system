@@ -154,7 +154,7 @@ class TestFontFamily:
 
     def test_fallback_greek(self):
         # S248: neuer Token
-        assert font_family("fallback-greek") == "STIXTwoText"
+        assert font_family("fallback-greek") == "STIXTwoText-Greek"
 
     def test_table_default(self):
         assert font_family("table-default") == "Geist"
@@ -183,7 +183,7 @@ class TestFontWithFallback:
     def test_single_sigma(self):
         # Sigma-Glyph-Bug aus Briefing
         result = font_with_fallback("Vol-Spike +1,8 σ über Median")
-        assert "<font name=\"STIXTwoText\">σ</font>" in result
+        assert "<font name=\"STIXTwoText-Greek\">σ</font>" in result
         assert "Vol-Spike +1,8 " in result
         assert "über Median" in result
 
@@ -191,13 +191,13 @@ class TestFontWithFallback:
         # alpha/beta/gamma als zusammenhaengender Block
         result = font_with_fallback("α/β/γ Vergleich")
         # Ganzer Block α/β/γ inkl. Slashes wird zusammengewrapped
-        assert "<font name=\"STIXTwoText\">" in result
+        assert "<font name=\"STIXTwoText-Greek\">" in result
         assert "Vergleich" in result
 
     def test_math_operators(self):
         # ∑ (U+2211) ist Math Operator
         result = font_with_fallback("Summe ∑ über alle")
-        assert "<font name=\"STIXTwoText\">∑</font>" in result
+        assert "<font name=\"STIXTwoText-Greek\">∑</font>" in result
 
     def test_empty_string(self):
         assert font_with_fallback("") == ""
