@@ -3,8 +3,12 @@ node_modules/
 npm-debug.log*
 .npm/
 
-# Build artefacts: dist/ wird COMMITTED (Konsumenten brauchen es)
-# aber Lockfile und Caches bleiben drausen
+# Build artefacts: dist/ wird COMMITTED (Konsumenten brauchen die CSS/JSON/LaTeX-Outputs)
+# ABER: Python-Wheels gehoeren in GitHub-Releases, nicht ins Repo —
+# eingecheckte alte Wheels haben in v0.5.4 (S251 KT-1) Multi-Version-Konflikte
+# im release.yml-Smoke-Test ausgeloest. dist/*.whl ab jetzt gitignored.
+dist/*.whl
+dist/*.tar.gz
 package-lock.json
 
 # OS
