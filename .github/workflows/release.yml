@@ -67,9 +67,22 @@ jobs:
       - name: Smoke-Test wheel installation
         # Verifiziert: Wheel installierbar, Tokens importierbar, Komponenten callable.
         # Verhindert kaputte Releases.
+        # WICHTIG: Nur das aktuell gebaute Tag-Wheel installieren — `dist/*.whl`
+        # waere falsch, weil zufaellig eingecheckte alte Wheels im dist/-Ordner
+        # (Drift, eigener Cleanup-PR) Multi-Version-Konflikte ausloesen wuerden.
+        env:
+          TAG_NAME: ${{ github.ref_name }}
         run: |
           python -m venv /tmp/smoke-venv
-          /tmp/smoke-venv/bin/pip install --quiet dist/*.whl
+          WHEEL_VERSION="${TAG_NAME#v}"
+          WHEEL_FILE="dist/mn_design_system-${WHEEL_VERSION}-py3-none-any.whl"
+          if [ ! -f "$WHEEL_FILE" ]; then
+            echo "::error::Wheel $WHEEL_FILE wurde von 'python -m build' nicht erzeugt."
+            echo "::error::Hat pyproject.toml die richtige version=$WHEEL_VERSION ?"
+            ls -la dist/
+            exit 1
+          fi
+          /tmp/smoke-venv/bin/pip install --quiet "$WHEEL_FILE"
           /tmp/smoke-venv/bin/python -c "
           from mn_design_system.tokens import TOKENS, get
           from mn_design_system.fonts import register_all_fonts, FONT_DIR
