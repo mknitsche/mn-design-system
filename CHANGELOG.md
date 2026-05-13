@@ -34,6 +34,18 @@ upstream-Repo eingespielt. Versionsnummer urspruenglich als v0.3.1 geplant,
 wegen Tag-Kollision (v0.3.1 = Welle E.0 Web-Renderer-Stubs) auf v0.5.4
 korrigiert.
 
+### Konsistenz-Korrektur (Generator-Drift)
+- `tokens/spacing.json` — 8 Semantic-Spacing-Tokens (`tight-min`, `tight`,
+  `default`, `wide`, `wide-max`, `section`, `divider`, `between-modules`)
+  vom proprietaeren `ref`-Format auf Style-Dictionary-Alias-Syntax
+  (`{space.N.value}`) umgestellt. Der Generator-Output enthaelt sie jetzt;
+  vorher wurden sie still gedroppt und mussten manuell in `tokens.py`
+  nachgepflegt werden.
+- `tokens/typography.json` — 3 Font-Family-Tokens (`fallback-greek=STIXTwoMath`
+  fuer Greek-Glyphen / Sigma-Rendering, `table-default=Geist`,
+  `table-data=JetBrainsMono`) waren bisher nur in `mn_design_system/tokens.py`
+  drift-manuell drin. Jetzt in JSON-SSoT gehoben → CI-Synced-Check gruen.
+
 ---
 
 ## [0.5.3] — 2026-05-10

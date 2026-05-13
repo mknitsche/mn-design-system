@@ -90,8 +90,16 @@
   --space-16: 64px;
   --space-20: 80px;
   --space-semantic-sub-tight: 2px; /** S248 v0.5.0: Halber Mikro — Anriss-Bullet-spaceAfter (war hardcoded 0.5mm) */
+  --space-semantic-tight-min: 4px; /** v0.5.4: Style-Dictionary-Alias auf space.1. Caption unter Wert (KPI-Karte intern) */
+  --space-semantic-tight: 8px; /** v0.5.4: Alias auf space.2. Bullet-Reihe, 3-Spalten-Layout, dichter Anriss */
+  --space-semantic-default: 12px; /** v0.5.4: Alias auf space.3. Default — Item-Abstand bei 1-spaltigem Layout */
+  --space-semantic-wide: 20px; /** v0.5.4: Alias auf space.5. Sektion-innerer Abstand */
+  --space-semantic-wide-max: 32px; /** v0.5.4: Alias auf space.8. Vor Section-Header, Major-Block-Trennung */
+  --space-semantic-section: 48px; /** v0.5.4: Alias auf space.12. Zwischen Hauptsektionen */
   --space-semantic-bibel-quelle: 7px; /** S248 v0.5.0: BibelQuelle-spaceBefore (war hardcoded 1.8mm) */
   --space-semantic-tracker-item: 6px; /** S248 v0.5.0: Tracker-Item-spaceAfter zwischen tight-min und tight */
+  --space-semantic-divider: 16px; /** v0.5.4: Alias auf space.4. section_divider() Spacing davor + danach */
+  --space-semantic-between-modules: 24px; /** v0.5.4: Alias auf space.6. Spacing zwischen Modul-Bloecken */
   --space-logo-size: 18mm; /** Logo-Kantenlaenge im Header */
   --space-logo-gap: 4mm; /** Abstand zwischen Logo und Title-Block */
   --space-logo-size-small: 14mm; /** Kleineres Logo fuer kompakte Header */
@@ -123,6 +131,9 @@
   --font-family-mono: JetBrainsMono;
   --font-family-math: STIXTwoMath;
   --font-family-icon: Phosphor; /** PUA E000-F8FF */
+  --font-family-fallback-greek: STIXTwoMath; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Greek-Letters Fallback-Font (sigma/alpha/beta...). S248-Sigma-Bug, S249 STIXTwoMath statt STIXTwoText-Greek wegen PS-Namen-Konflikt mit Latin-TTF (TTF-Asset-Bug von STIX). STIXTwoMath hat eindeutigen PS-Name + alle Greek + Math + Latin, sigma rendert kursiv (konventionell richtig fuer Standardabweichung). */
+  --font-family-table-default: Geist; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Default-Tabellen-Schrift (sans-serif). Datentabellen koennen mono nutzen. */
+  --font-family-table-data: JetBrainsMono; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Mono-Tabellen fuer Daten (KPI-Karten, numerische Spalten). */
   --font-size-h0: 26pt; /** Page-Title */
   --font-size-h1: 24pt;
   --font-size-h2: 15pt;

@@ -22,16 +22,16 @@
         "spec_ref": "S248 KT-1: 'spacing haengt nicht nur von Schriftgroesse ab, sondern auch vom Platz allg'"
       },
       "sub-tight":     { "value": "2px", "mm": "0.5", "pt": "1.42", "comment": "S248 v0.5.0: Halber Mikro — Anriss-Bullet-spaceAfter (war hardcoded 0.5mm)" },
-      "tight-min":     { "ref": "space.1", "comment": "Caption unter Wert (KPI-Karte intern)" },
-      "tight":         { "ref": "space.2", "comment": "Bullet-Reihe, 3-Spalten-Layout, dichter Anriss" },
-      "default":       { "ref": "space.3", "comment": "Default — Item-Abstand bei 1-spaltigem Layout" },
-      "wide":          { "ref": "space.5", "comment": "Sektion-innerer Abstand" },
-      "wide-max":      { "ref": "space.8", "comment": "Vor Section-Header, Major-Block-Trennung" },
-      "section":       { "ref": "space.12", "comment": "Zwischen Hauptsektionen" },
+      "tight-min":     { "value": "{space.1.value}", "comment": "v0.5.4: Style-Dictionary-Alias auf space.1. Caption unter Wert (KPI-Karte intern)" },
+      "tight":         { "value": "{space.2.value}", "comment": "v0.5.4: Alias auf space.2. Bullet-Reihe, 3-Spalten-Layout, dichter Anriss" },
+      "default":       { "value": "{space.3.value}", "comment": "v0.5.4: Alias auf space.3. Default — Item-Abstand bei 1-spaltigem Layout" },
+      "wide":          { "value": "{space.5.value}", "comment": "v0.5.4: Alias auf space.5. Sektion-innerer Abstand" },
+      "wide-max":      { "value": "{space.8.value}", "comment": "v0.5.4: Alias auf space.8. Vor Section-Header, Major-Block-Trennung" },
+      "section":       { "value": "{space.12.value}", "comment": "v0.5.4: Alias auf space.12. Zwischen Hauptsektionen" },
       "bibel-quelle":  { "value": "7px", "mm": "1.8", "pt": "5.10", "comment": "S248 v0.5.0: BibelQuelle-spaceBefore (war hardcoded 1.8mm)" },
       "tracker-item":  { "value": "6px", "mm": "1.5", "pt": "4.25", "comment": "S248 v0.5.0: Tracker-Item-spaceAfter zwischen tight-min und tight" },
-      "divider":       { "ref": "space.4", "comment": "S248 v0.5.0: section_divider() Spacing davor + danach" },
-      "between-modules": { "ref": "space.6", "comment": "S248 v0.5.0: Spacing zwischen Modul-Bloecken" }
+      "divider":       { "value": "{space.4.value}", "comment": "v0.5.4: Alias auf space.4. section_divider() Spacing davor + danach" },
+      "between-modules": { "value": "{space.6.value}", "comment": "v0.5.4: Alias auf space.6. Spacing zwischen Modul-Bloecken" }
     },
 
     "logo": {
