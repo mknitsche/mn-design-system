@@ -39,7 +39,10 @@ TOKENS = {
     "color.status.error-tint": "#fff8f7",
     "color.status.warning-tint": "#fffaf5",
     "color.status.info-tint": "#f5f8ff",
-    "color.accent.warm.strong": "#d97706",
+    # v0.5.4 KT-1: accent.warm.strong von Amber-600 (#d97706) auf Copper-800 (#b45309).
+    # accent.warm.amber als Legacy-Alias auf den alten Hex (hochkontrastive Badge-Faelle).
+    "color.accent.warm.strong": "#b45309",
+    "color.accent.warm.amber": "#d97706",
     "color.accent.warm.soft": "#fef3c7",
     "color.accent.warm.text": "#78350f",
     # S248: Severity-Skala (Variante F nach DS-Decisions v03 §2)
