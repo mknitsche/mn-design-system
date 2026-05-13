@@ -8,6 +8,80 @@ oder Doku.
 
 ---
 
+## [0.5.4] — 2026-05-13
+
+### Geaendert
+- `color.accent.warm.strong` — Amber-600 `#d97706` → **Copper-800 `#b45309`**.
+  Warm-erdig statt orange; harmoniert besser mit der Indigo-Familie ohne den
+  Sektions-Bruch-Charakter zu verlieren.
+- `_meta`-Kommentar der `accent.warm`-Familie verlaengert um v0.5.4-Rationale.
+
+### Hinzugefuegt
+- `color.accent.warm.amber` — Legacy-Alias auf `#d97706` (war bis v0.5.3
+  `color.accent.warm.strong`). Behalten fuer hochkontrastive Badge-Faelle,
+  wo Copper-800 zu braun wirkt.
+
+### Validierung
+- WCAG-AA-Kontrast Copper-800 ↔ `accent.warm.soft`: **5.46:1** ✓
+- WCAG-AA-Kontrast Copper-800 ↔ `light.bg`: 4.78:1 (Large only) — nur als
+  Section-Header / Marker / Hairline einsetzen, nicht als Body.
+
+### Status
+Bug-Fix-Level nach SemVer-pre-1.0-Politik — kein Breaking-Change, der alte
+Hex-Wert bleibt unter `color.accent.warm.amber` erreichbar. Diese Aenderung
+wurde von KT-1 in S250 (Claude Web Design) ausgearbeitet; in S251 in das
+upstream-Repo eingespielt. Versionsnummer urspruenglich als v0.3.1 geplant,
+wegen Tag-Kollision (v0.3.1 = Welle E.0 Web-Renderer-Stubs) auf v0.5.4
+korrigiert.
+
+### Konsistenz-Korrektur (Generator-Drift)
+- `tokens/spacing.json` — 8 Semantic-Spacing-Tokens (`tight-min`, `tight`,
+  `default`, `wide`, `wide-max`, `section`, `divider`, `between-modules`)
+  vom proprietaeren `ref`-Format auf Style-Dictionary-Alias-Syntax
+  (`{space.N.value}`) umgestellt. Der Generator-Output enthaelt sie jetzt;
+  vorher wurden sie still gedroppt und mussten manuell in `tokens.py`
+  nachgepflegt werden.
+- `tokens/typography.json` — 3 Font-Family-Tokens (`fallback-greek=STIXTwoMath`
+  fuer Greek-Glyphen / Sigma-Rendering, `table-default=Geist`,
+  `table-data=JetBrainsMono`) waren bisher nur in `mn_design_system/tokens.py`
+  drift-manuell drin. Jetzt in JSON-SSoT gehoben → CI-Synced-Check gruen.
+
+---
+
+## [0.5.3] — 2026-05-10
+
+### Fixed
+- `fonts/__init__.py` — STIXTwoMath statt STIXTwoText-Greek fuer Greek-Glyphen
+  (sigma/alpha/beta/...). v0.5.2 Greek-Variante hatte das Sigma-Render-Problem
+  nicht geloest, weil STIXTwoText-Greek.ttf den PostScript-Namen
+  `STIXTwoText-Regular` mit der Latin-TTF teilt (TTF-Asset-Bug von STIX). ReportLab
+  cached intern per PS-Name → die zuerst registrierte Variante gewann → σ
+  renderte als BOX-Glyph. Fix: STIXTwoMath als unabhaengige Font-Family registriert.
+
+---
+
+## [0.5.2] — 2026-05-10
+
+### Fixed
+- `helpers.font_with_fallback` nutzt jetzt `STIXTwoText-Greek` statt
+  `STIXTwoText-Regular` fuer Greek-Letters. Vorher: σ wurde als
+  BOX-Glyph (.notdef) gerendert, weil die Latin-TTF keine U+03C3-Glyphe
+  enthielt (verifiziert via fontTools). (Anmerkung: v0.5.3 musste den
+  PS-Namen-Konflikt nachfixen — siehe oben.)
+
+---
+
+## [0.5.1] — 2026-05-10
+
+### Fixed
+- `fonts/__init__.py` — STIXTwoText-Alias in `_FONT_MAP` ergaenzt.
+  `helpers.font_with_fallback` wrappt Greek-Letters in `<font
+  name="STIXTwoText">...</font>`-Tags; vorher war nur `STIXTwo` (kurz)
+  registriert → ReportLab `ValueError` beim Rendern, claudeAI daily-engine
+  Phase 4-render schlug fehl.
+
+---
+
 ## [0.5.0] — 2026-05-09
 
 ### Added — fuer Welle 3 Briefing-Modul-Architektur (KT-1 S248)

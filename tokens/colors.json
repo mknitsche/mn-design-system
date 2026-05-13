@@ -58,9 +58,10 @@
     },
 
     "accent": {
-      "_meta":     { "value": "Warmer Akzent als Sektions-Bruch im PDF/Web. Stack-A-Konsistenz: kuehle Indigo-Familie + warmer Akzent. KT-1 S239 (Variante C', kupferig + heller Soft). NICHT als Status-Signal verwenden — semantische Trennung zu status.warning/urgent." },
+      "_meta":     { "value": "Warmer Akzent als Sektions-Bruch im PDF/Web. Stack-A-Konsistenz: kuehle Indigo-Familie + warmer Akzent. KT-1 S239 (Variante C', kupferig + heller Soft) und v0.5.4 KT-1: strong von Amber-600 (#d97706) auf Copper-800 (#b45309) — warm-erdig statt orange, passt zur Indigo-Familie ohne in 'Werbe-Orange' zu kippen. NICHT als Status-Signal verwenden — semantische Trennung zu status.warning/urgent." },
       "warm": {
-        "strong": { "value": "#d97706", "comment": "Sektions-Header (Politik / Wirtschaft / Tech ...). Amber-600, kupferig-edel." },
+        "strong": { "value": "#b45309", "comment": "Sektions-Header (Politik / Wirtschaft / Tech ...). Copper-800, warm-erdig, harmoniert mit Indigo-Familie." },
+        "amber":  { "value": "#d97706", "comment": "v0.5.4 Legacy-Alias: war color.accent.warm.strong bis v0.5.3 (Amber-600). Behalten fuer hochkontrastive Badge-Faelle, wo Copper-800 zu braun wirkt." },
         "soft":   { "value": "#fef3c7", "comment": "Tint fuer Hintergrund-Boxen (Tagesfokus etc.). Amber-100, ganz hell." },
         "text":   { "value": "#78350f", "comment": "Schrift auf accent.warm-soft. Amber-900, kontrastsicher (>=4.5:1 gegen accent.warm-soft)." }
       }

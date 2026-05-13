@@ -32,7 +32,14 @@
   --color-status-error-tint: #fff8f7; /** Status-Header rosa-tinted */
   --color-status-warning-tint: #fffaf5; /** Status-Header orange-tinted */
   --color-status-info-tint: #f5f8ff; /** Status-Header blau-tinted */
-  --color-accent-warm-strong: #d97706; /** Sektions-Header (Politik / Wirtschaft / Tech ...). Amber-600, kupferig-edel. */
+  --color-severity-high: #dc2626; /** red-600 (leuchtender als red-700/status.error). Klare Signal-Stufe oben. */
+  --color-severity-medium: #a16207; /** amber-800 (dunkler-warm). Klar abgesetzt von HOCH, immer noch warm-erdig (Kupfer-Ton). */
+  --color-severity-low: #6b7280; /** Alias auf grey-500 / text-muted. Niedrige Severity = unauffaellig. */
+  --color-severity-high-bg: #fee2e2; /** red-100 — fuer Severity-Badge-Hintergrund optional */
+  --color-severity-medium-bg: #fef3c7; /** amber-100 — Alias auf accent.warm.soft */
+  --color-severity-low-bg: #f3f4f6; /** grey-100 fuer Low-Badge-Hintergrund */
+  --color-accent-warm-strong: #b45309; /** Sektions-Header (Politik / Wirtschaft / Tech ...). Copper-800, warm-erdig, harmoniert mit Indigo-Familie. */
+  --color-accent-warm-amber: #d97706; /** v0.5.4 Legacy-Alias: war color.accent.warm.strong bis v0.5.3 (Amber-600). Behalten fuer hochkontrastive Badge-Faelle, wo Copper-800 zu braun wirkt. */
   --color-accent-warm-soft: #fef3c7; /** Tint fuer Hintergrund-Boxen (Tagesfokus etc.). Amber-100, ganz hell. */
   --color-accent-warm-text: #78350f; /** Schrift auf accent.warm-soft. Amber-900, kontrastsicher (>=4.5:1 gegen accent.warm-soft). */
   --color-viz-muted: #b0bec5; /** Diagramm-Box Muted Outline */
@@ -82,6 +89,23 @@
   --space-12: 48px; /** Page-Section-Trenner gross */
   --space-16: 64px;
   --space-20: 80px;
+  --space-semantic-sub-tight: 2px; /** S248 v0.5.0: Halber Mikro — Anriss-Bullet-spaceAfter (war hardcoded 0.5mm) */
+  --space-semantic-tight-min: 4px; /** v0.5.4: Style-Dictionary-Alias auf space.1. Caption unter Wert (KPI-Karte intern) */
+  --space-semantic-tight: 8px; /** v0.5.4: Alias auf space.2. Bullet-Reihe, 3-Spalten-Layout, dichter Anriss */
+  --space-semantic-default: 12px; /** v0.5.4: Alias auf space.3. Default — Item-Abstand bei 1-spaltigem Layout */
+  --space-semantic-wide: 20px; /** v0.5.4: Alias auf space.5. Sektion-innerer Abstand */
+  --space-semantic-wide-max: 32px; /** v0.5.4: Alias auf space.8. Vor Section-Header, Major-Block-Trennung */
+  --space-semantic-section: 48px; /** v0.5.4: Alias auf space.12. Zwischen Hauptsektionen */
+  --space-semantic-bibel-quelle: 7px; /** S248 v0.5.0: BibelQuelle-spaceBefore (war hardcoded 1.8mm) */
+  --space-semantic-tracker-item: 6px; /** S248 v0.5.0: Tracker-Item-spaceAfter zwischen tight-min und tight */
+  --space-semantic-divider: 16px; /** v0.5.4: Alias auf space.4. section_divider() Spacing davor + danach */
+  --space-semantic-between-modules: 24px; /** v0.5.4: Alias auf space.6. Spacing zwischen Modul-Bloecken */
+  --space-logo-size: 18mm; /** Logo-Kantenlaenge im Header */
+  --space-logo-gap: 4mm; /** Abstand zwischen Logo und Title-Block */
+  --space-logo-size-small: 14mm; /** Kleineres Logo fuer kompakte Header */
+  --space-indent-bullet: 12px; /** Bullet-Item-Indent (haengender Einzug) */
+  --space-indent-subitem: 24px; /** Sub-Item zweite Ebene */
+  --space-indent-code: 16px; /** Code-Block-Indent */
   --space-page-margin-top: 22mm; /** A4 Standard-Margin */
   --space-page-margin-bottom: 22mm;
   --space-page-margin-inner: 22mm; /** Bundsteg */
@@ -107,6 +131,9 @@
   --font-family-mono: JetBrainsMono;
   --font-family-math: STIXTwoMath;
   --font-family-icon: Phosphor; /** PUA E000-F8FF */
+  --font-family-fallback-greek: STIXTwoMath; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Greek-Letters Fallback-Font (sigma/alpha/beta...). S248-Sigma-Bug, S249 STIXTwoMath statt STIXTwoText-Greek wegen PS-Namen-Konflikt mit Latin-TTF (TTF-Asset-Bug von STIX). STIXTwoMath hat eindeutigen PS-Name + alle Greek + Math + Latin, sigma rendert kursiv (konventionell richtig fuer Standardabweichung). */
+  --font-family-table-default: Geist; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Default-Tabellen-Schrift (sans-serif). Datentabellen koennen mono nutzen. */
+  --font-family-table-data: JetBrainsMono; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Mono-Tabellen fuer Daten (KPI-Karten, numerische Spalten). */
   --font-size-h0: 26pt; /** Page-Title */
   --font-size-h1: 24pt;
   --font-size-h2: 15pt;
@@ -117,6 +144,15 @@
   --font-size-code: 9pt;
   --font-size-bibel: 12pt;
   --font-size-math: 12pt;
+  --font-size-title-page: 22pt; /** S248 KT-1: Page-Title in Briefings (war hardcoded fontSize=20 in renderer_v2.v2_title) */
+  --font-size-footer-page: 8pt; /** S248 KT-1: Page-Fusszeile (Seitennummer/Datum am Seitenrand) */
+  --font-size-disclaimer: 8pt; /** S248 KT-1: End-of-Content-Disclaimer ('Generiert mit Claude...'). Eigener Token, NICHT Footer-Alias */
+  --font-size-source: 8pt; /** S248 KT-1: Quellen-Verzeichnis direkt unter Hauptabsatz */
+  --font-size-icon-large: 22pt; /** S248 KT-1: Wetter-Strip-Icons (war hardcoded fontSize=22 in renderer_v2) */
+  --font-size-icon-medium: 14pt; /** S248 KT-1: Inline-Icons in KPI-Karten */
+  --font-size-icon-small: 11pt; /** S248 KT-1: Bullet-Inline-Icons */
+  --font-size-title-section: 18pt; /** S248 v0.5.0: Section-Title (Briefing-Bereiche, war hardcoded fontSize=18 in pdf_utils title-Style) */
+  --font-size-news-headline: 11pt; /** S248 v0.5.0: News-Item-Headline (Bold) — egal welche Length */
   --font-leading-h0: 31pt;
   --font-leading-h1: 28pt;
   --font-leading-h2: 19pt;
@@ -127,6 +163,15 @@
   --font-leading-code: 13pt;
   --font-leading-bibel: 17pt;
   --font-leading-math: 16pt;
+  --font-leading-title-page: 26pt; /** S248: Page-Title-Leading */
+  --font-leading-footer-page: 10pt; /** S248: Footer-Leading */
+  --font-leading-disclaimer: 10pt; /** S248: Disclaimer-Leading */
+  --font-leading-source: 10pt; /** S248: Quellen-Verzeichnis-Leading */
+  --font-leading-icon-large: 26pt;
+  --font-leading-icon-medium: 18pt;
+  --font-leading-icon-small: 13pt;
+  --font-leading-title-section: 22pt; /** S248 v0.5.0: Section-Title-Leading */
+  --font-leading-news-headline: 14pt; /** S248 v0.5.0: News-Headline-Leading */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;

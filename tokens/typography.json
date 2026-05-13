@@ -11,7 +11,10 @@
       "italic-ui":     { "value": "Geist-Medium", "comment": "Status-Markierung in UI" },
       "mono":          { "value": "JetBrainsMono" },
       "math":          { "value": "STIXTwoMath" },
-      "icon":          { "value": "Phosphor", "comment": "PUA E000-F8FF" }
+      "icon":          { "value": "Phosphor", "comment": "PUA E000-F8FF" },
+      "fallback-greek": { "value": "STIXTwoMath", "comment": "v0.5.4 in JSON gehoben (war nur in tokens.py): Greek-Letters Fallback-Font (sigma/alpha/beta...). S248-Sigma-Bug, S249 STIXTwoMath statt STIXTwoText-Greek wegen PS-Namen-Konflikt mit Latin-TTF (TTF-Asset-Bug von STIX). STIXTwoMath hat eindeutigen PS-Name + alle Greek + Math + Latin, sigma rendert kursiv (konventionell richtig fuer Standardabweichung)." },
+      "table-default": { "value": "Geist", "comment": "v0.5.4 in JSON gehoben (war nur in tokens.py): Default-Tabellen-Schrift (sans-serif). Datentabellen koennen mono nutzen." },
+      "table-data":    { "value": "JetBrainsMono", "comment": "v0.5.4 in JSON gehoben (war nur in tokens.py): Mono-Tabellen fuer Daten (KPI-Karten, numerische Spalten)." }
     },
 
     "size": {
