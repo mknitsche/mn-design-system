@@ -8,6 +8,34 @@ oder Doku.
 
 ---
 
+## [0.6.0] — 2026-05-16
+
+### Hinzugefuegt (vier neue typography-Tokens)
+- `font.size.cover-hero` = **28pt** + `font.leading.cover-hero` = **34pt** — Cover-Hauptueberschrift fuer System-Doku-PDFs (war hardcoded `fontSize=28` in `system_doc_v2.py::cover_title`).
+- `font.size.subsection` = **10.5pt** + `font.leading.subsection` = **14pt** — Subsection-Header. KT-1 S253: mehr Abstand zu body (9.5pt) als die alte hardcoded 10pt.
+- `font.size.body-small` = **8.5pt** + `font.leading.body-small` = **11pt** — Body-Small fuer Annotationen, Fussnoten, sekundaeren Kontext. Eigener Name fuer Klarheit (gleiche Groesse wie caption, andere Semantik).
+- `font.size.stat-display` = **20pt** + `font.leading.stat-display` = **24pt** — Statistik-Display fuer KPI-Tiles (war hardcoded `fontSize=20` in `system_doc_v2.py::stat_number`).
+
+### Geaendert (KT-1 S253 — system-weite Typography-Skala)
+- `font.size.title-section` — **18pt → 16pt** (+ leading 22pt → 20pt). KT-1: "18pt sind schon gross".
+- `font.size.caption` — **9pt → 8.5pt** (+ leading 12pt → 11pt). System-weite Bildunterschrift-Skala.
+- `font.size.code` — **9pt → 8.5pt** (+ leading 13pt → 11pt). System-weite Code-Snippet-Skala.
+
+### Konsumenten-Auswirkung
+Aenderungen an `caption`/`code`/`title-section` betreffen ALLE PDF-Renderer im PKA — bewusst gewollt fuer einheitliche Skala (KT-1: "dafuer ist design-system da"). Betroffen u.a.:
+- `system/lib/briefing/modules/{header,bibel,tracker,aufgaben,projekte,...}_block.py` (caption-Token)
+- `system/lib/briefing/renderers/_doc_helper.py` (caption)
+- `system/lib/briefing/renderer_tech_ki.py`, `renderer_public.py` (disclaimer bleibt 8pt, caption wird kleiner)
+- `.claude/skills/pdf-basis/scripts/pdf_utils.py` (zentrale Lib — bekommt parallelen Sweep, alle `# legacy:`-Hardcoded-Werte werden eliminiert)
+- `.claude/skills/system-dokumentation/scripts/system_doc_v2.py` (Hauptanlass dieser Token-Welle)
+
+### Konsum-Reihenfolge nach Release
+1. `pip install --upgrade mn-design-system==0.6.0` in claudeAI-venv
+2. Sweep aller 11 hardcoded-Files in claudeAI (separater PR)
+3. PDFs regenerieren als Diff-Beweis
+
+---
+
 ## [0.5.4] — 2026-05-13
 
 ### Geaendert
