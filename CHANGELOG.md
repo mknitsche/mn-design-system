@@ -8,6 +8,19 @@ oder Doku.
 
 ---
 
+## [0.6.1] — 2026-05-16
+
+### Geaendert
+- `mn_design_system.__version__` wird jetzt zur Laufzeit via `importlib.metadata.version("mn-design-system")` aus dem installierten Wheel/Package-Metadata gelesen — **Single Source of Truth** ist die `pyproject.toml`-Version.
+  - Vorher: hartkodierter String `"0.5.0"`, hing seit v0.5.0-Release fest. Drift gegen die installierte Wheel-Version (siehe `~/sync/channel-notes/2026-05-14-cld1-macb-design-system-drift-S12.md` von cld1-claude).
+  - Fallback bei lokalem Source-Run ohne Install: `"0.0.0+local"`.
+
+### Begründung
+
+cld1-claude S12-Befund: drei inkonsistente Versionsindikatoren am Tag v0.5.4 — Wheel `0.5.4` / `__version__` `0.5.0` / `pyproject` `0.5.3`. Mit diesem Fix: alle drei Quellen sind nach Install konsistent.
+
+---
+
 ## [0.6.0] — 2026-05-16
 
 ### Hinzugefuegt (vier neue typography-Tokens)
