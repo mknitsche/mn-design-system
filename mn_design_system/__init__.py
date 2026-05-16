@@ -30,7 +30,13 @@ from .helpers import (
     token,
 )
 
-__version__ = "0.5.0"
+try:
+    from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
+    __version__ = _pkg_version("mn-design-system")
+except (ImportError, PackageNotFoundError):
+    # Fallback bei lokalem Source-Run ohne Install (z.B. Build-Phase)
+    __version__ = "0.0.0+local"
 
 __all__ = [
     "__version__",
