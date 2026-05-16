@@ -140,8 +140,8 @@
   --font-size-h3: 13pt;
   --font-size-body: 9.5pt; /** S242 KT-1: 10pt -> 9.5pt (Wetter/Marktlage zu gross) */
   --font-size-lead: 11pt;
-  --font-size-caption: 9pt;
-  --font-size-code: 9pt;
+  --font-size-caption: 8.5pt; /** S253 KT-1: 9pt -> 8.5pt (Bildunterschrift, system-weit) */
+  --font-size-code: 8.5pt; /** S253 KT-1: 9pt -> 8.5pt (Code-Snippets, system-weit) */
   --font-size-bibel: 12pt;
   --font-size-math: 12pt;
   --font-size-title-page: 22pt; /** S248 KT-1: Page-Title in Briefings (war hardcoded fontSize=20 in renderer_v2.v2_title) */
@@ -151,16 +151,20 @@
   --font-size-icon-large: 22pt; /** S248 KT-1: Wetter-Strip-Icons (war hardcoded fontSize=22 in renderer_v2) */
   --font-size-icon-medium: 14pt; /** S248 KT-1: Inline-Icons in KPI-Karten */
   --font-size-icon-small: 11pt; /** S248 KT-1: Bullet-Inline-Icons */
-  --font-size-title-section: 18pt; /** S248 v0.5.0: Section-Title (Briefing-Bereiche, war hardcoded fontSize=18 in pdf_utils title-Style) */
+  --font-size-title-section: 16pt; /** S253 KT-1: 18pt -> 16pt (Section-Title, 18pt war zu gross) */
   --font-size-news-headline: 11pt; /** S248 v0.5.0: News-Item-Headline (Bold) — egal welche Length */
+  --font-size-cover-hero: 28pt; /** S253 KT-1: NEU Cover-Hauptueberschrift (System-Doku, war hardcoded fontSize=28 in system_doc_v2.py) */
+  --font-size-subsection: 10.5pt; /** S253 KT-1: NEU Subsection-Header (mehr Abstand zu body 9.5pt) */
+  --font-size-body-small: 8.5pt; /** S253 KT-1: NEU Body-Small fuer Annotationen/sekundaeren Kontext (gleiche Groesse wie caption, andere Semantik) */
+  --font-size-stat-display: 20pt; /** S253 KT-1: NEU Statistik-Display fuer KPI-Tiles (war hardcoded fontSize=20 in stat_number) */
   --font-leading-h0: 31pt;
   --font-leading-h1: 28pt;
   --font-leading-h2: 19pt;
   --font-leading-h3: 17pt;
   --font-leading-body: 13.5pt; /** S242 KT-1: 15.5 -> 13.5pt (Body kompakter, Ratio wie h3/bibel) */
   --font-leading-lead: 17pt;
-  --font-leading-caption: 12pt;
-  --font-leading-code: 13pt;
+  --font-leading-caption: 11pt; /** S253 KT-1: 12pt -> 11pt (proportional zu fs 9->8.5) */
+  --font-leading-code: 11pt; /** S253 KT-1: 13pt -> 11pt (proportional zu fs 9->8.5) */
   --font-leading-bibel: 17pt;
   --font-leading-math: 16pt;
   --font-leading-title-page: 26pt; /** S248: Page-Title-Leading */
@@ -170,8 +174,12 @@
   --font-leading-icon-large: 26pt;
   --font-leading-icon-medium: 18pt;
   --font-leading-icon-small: 13pt;
-  --font-leading-title-section: 22pt; /** S248 v0.5.0: Section-Title-Leading */
+  --font-leading-title-section: 20pt; /** S253 KT-1: 22pt -> 20pt (proportional zu fs 18->16) */
   --font-leading-news-headline: 14pt; /** S248 v0.5.0: News-Headline-Leading */
+  --font-leading-cover-hero: 34pt; /** S253 KT-1: NEU Cover-Hero-Leading */
+  --font-leading-subsection: 14pt; /** S253 KT-1: NEU Subsection-Leading */
+  --font-leading-body-small: 11pt; /** S253 KT-1: NEU Body-Small-Leading (= caption) */
+  --font-leading-stat-display: 24pt; /** S253 KT-1: NEU Display-dichter fuer Stat-Tiles */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;

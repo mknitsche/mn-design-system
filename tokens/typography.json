@@ -24,8 +24,8 @@
       "h3":          { "value": "13pt", "rem": "0.8125","px": "13" },
       "body":        { "value": "9.5pt", "rem": "0.594","px": "15", "comment": "S242 KT-1: 10pt -> 9.5pt (Wetter/Marktlage zu gross)" },
       "lead":        { "value": "11pt", "rem": "0.6875","px": "17" },
-      "caption":     { "value": "9pt",  "rem": "0.5625","px": "13" },
-      "code":        { "value": "9pt",  "rem": "0.5625","px": "13" },
+      "caption":     { "value": "8.5pt","rem": "0.5313","px": "13", "comment": "S253 KT-1: 9pt -> 8.5pt (Bildunterschrift, system-weit)" },
+      "code":        { "value": "8.5pt","rem": "0.5313","px": "13", "comment": "S253 KT-1: 9pt -> 8.5pt (Code-Snippets, system-weit)" },
       "bibel":       { "value": "12pt", "rem": "0.75",  "px": "19" },
       "math":        { "value": "12pt", "rem": "0.75",  "px": "19" },
       "title-page":  { "value": "22pt", "rem": "1.375", "px": "22", "comment": "S248 KT-1: Page-Title in Briefings (war hardcoded fontSize=20 in renderer_v2.v2_title)" },
@@ -35,8 +35,12 @@
       "icon-large":  { "value": "22pt", "rem": "1.375", "px": "22", "comment": "S248 KT-1: Wetter-Strip-Icons (war hardcoded fontSize=22 in renderer_v2)" },
       "icon-medium": { "value": "14pt", "rem": "0.875", "px": "14", "comment": "S248 KT-1: Inline-Icons in KPI-Karten" },
       "icon-small":  { "value": "11pt", "rem": "0.6875","px": "11", "comment": "S248 KT-1: Bullet-Inline-Icons" },
-      "title-section": { "value": "18pt", "rem": "1.125", "px": "18", "comment": "S248 v0.5.0: Section-Title (Briefing-Bereiche, war hardcoded fontSize=18 in pdf_utils title-Style)" },
-      "news-headline": { "value": "11pt", "rem": "0.6875", "px": "11", "comment": "S248 v0.5.0: News-Item-Headline (Bold) — egal welche Length" }
+      "title-section": { "value": "16pt", "rem": "1.0",   "px": "16", "comment": "S253 KT-1: 18pt -> 16pt (Section-Title, 18pt war zu gross)" },
+      "news-headline": { "value": "11pt", "rem": "0.6875", "px": "11", "comment": "S248 v0.5.0: News-Item-Headline (Bold) — egal welche Length" },
+      "cover-hero":  { "value": "28pt", "rem": "1.75",  "px": "28", "comment": "S253 KT-1: NEU Cover-Hauptueberschrift (System-Doku, war hardcoded fontSize=28 in system_doc_v2.py)" },
+      "subsection":  { "value": "10.5pt","rem": "0.656","px": "13", "comment": "S253 KT-1: NEU Subsection-Header (mehr Abstand zu body 9.5pt)" },
+      "body-small":  { "value": "8.5pt","rem": "0.5313","px": "13", "comment": "S253 KT-1: NEU Body-Small fuer Annotationen/sekundaeren Kontext (gleiche Groesse wie caption, andere Semantik)" },
+      "stat-display":{ "value": "20pt", "rem": "1.25",  "px": "20", "comment": "S253 KT-1: NEU Statistik-Display fuer KPI-Tiles (war hardcoded fontSize=20 in stat_number)" }
     },
 
     "leading": {
@@ -46,8 +50,8 @@
       "h3":          { "value": "17pt", "ratio": "1.31" },
       "body":        { "value": "13.5pt", "ratio": "1.42", "comment": "S242 KT-1: 15.5 -> 13.5pt (Body kompakter, Ratio wie h3/bibel)" },
       "lead":        { "value": "17pt", "ratio": "1.55" },
-      "caption":     { "value": "12pt", "ratio": "1.33" },
-      "code":        { "value": "13pt", "ratio": "1.44" },
+      "caption":     { "value": "11pt", "ratio": "1.29", "comment": "S253 KT-1: 12pt -> 11pt (proportional zu fs 9->8.5)" },
+      "code":        { "value": "11pt", "ratio": "1.29", "comment": "S253 KT-1: 13pt -> 11pt (proportional zu fs 9->8.5)" },
       "bibel":       { "value": "17pt", "ratio": "1.42" },
       "math":        { "value": "16pt", "ratio": "1.33" },
       "title-page":  { "value": "26pt", "ratio": "1.18", "comment": "S248: Page-Title-Leading" },
@@ -57,8 +61,12 @@
       "icon-large":  { "value": "26pt", "ratio": "1.18" },
       "icon-medium": { "value": "18pt", "ratio": "1.29" },
       "icon-small":  { "value": "13pt", "ratio": "1.18" },
-      "title-section": { "value": "22pt", "ratio": "1.22", "comment": "S248 v0.5.0: Section-Title-Leading" },
-      "news-headline": { "value": "14pt", "ratio": "1.27", "comment": "S248 v0.5.0: News-Headline-Leading" }
+      "title-section": { "value": "20pt", "ratio": "1.25", "comment": "S253 KT-1: 22pt -> 20pt (proportional zu fs 18->16)" },
+      "news-headline": { "value": "14pt", "ratio": "1.27", "comment": "S248 v0.5.0: News-Headline-Leading" },
+      "cover-hero":  { "value": "34pt", "ratio": "1.21", "comment": "S253 KT-1: NEU Cover-Hero-Leading" },
+      "subsection":  { "value": "14pt", "ratio": "1.33", "comment": "S253 KT-1: NEU Subsection-Leading" },
+      "body-small":  { "value": "11pt", "ratio": "1.29", "comment": "S253 KT-1: NEU Body-Small-Leading (= caption)" },
+      "stat-display":{ "value": "24pt", "ratio": "1.20", "comment": "S253 KT-1: NEU Display-dichter fuer Stat-Tiles" }
     },
 
     "weight": {
