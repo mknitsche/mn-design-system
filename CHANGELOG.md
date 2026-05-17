@@ -8,6 +8,50 @@ oder Doku.
 
 ---
 
+## [0.7.0] — 2026-05-17
+
+### Hinzugefuegt — Kachel-Token-Familie (KT-1 S256 TODO-1105)
+
+Generische Token-Familie `kachel-*` fuer Sparkline-/KPI-Kacheln. Heute genutzt
+von `system/lib/briefing/blocks/sparkline_kachel.py` (Finanz-Snapshot, 12
+Symbole), spaeter wiederverwendbar fuer KPI-Tiles.
+
+**Typography (size + leading):**
+- `size.kachel-label` = 7pt (Symbol-Label oben links)
+- `size.kachel-meta` = 6pt (Einheit, "vs MA50" oben rechts)
+- `size.kachel-diff` = 9pt (Tages-Diff %-Wert mit Pfeil)
+- `size.kachel-value` = 13pt (Hauptwert, wertgleich h3, eigene Semantik)
+- `size.kachel-madiff` = 8pt (MA50-Diff %-Wert, wertgleich footer-page)
+- + jeweilige leading-Tokens (1.21-1.31 Ratio)
+
+**Spacing (`space.kachel.*`):**
+- `inset` = 4pt (Text-Padding L/R)
+- `radius` = 2pt (Eck-Rundung)
+- `gap-col` / `gap-row` = 3mm (Grid-Abstaende)
+- `width` = 38mm / `height` = 32mm (Komponenten-Dimensionen, 12 Kacheln auf A4)
+
+**Strokes:**
+- `stroke.kachel-marker` = 1.2pt (7T-Range-Marker-Linie)
+- `stroke.kachel-trennlinie` = 0.3pt (zwischen Spark-/Text-Bereich)
+
+### Hintergrund (KT-1 S256)
+
+Die Sparkline-Kachel-Werte waren seit S241/S242 (Iter 15 final) als Modul-
+Konstanten hardcoded — funktional korrekt, aber DS-Drift. KT-1's Direktive:
+"DS bestimmt, nicht Renderer". Token-Familie statt Renderer-Konstanten,
+generisches Naming (`kachel-*` statt `finanz-kachel-*`) fuer spaetere KPI-
+Tile-Wiederverwendung.
+
+**Heute nur helle Fassung**; Dark + Web-CSS-Pendant folgen.
+
+### Konsumenten-Update
+
+`claudeAI`: `system/lib/briefing/blocks/sparkline_kachel.py` wird auf
+`size_token("kachel-label")` / `space_token("space.kachel.inset", unit="pt")`
+etc. umgestellt (Folge-PR nach `pip install --upgrade mn-design-system`).
+
+---
+
 ## [0.6.1] — 2026-05-16
 
 ### Geaendert

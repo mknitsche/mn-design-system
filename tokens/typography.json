@@ -40,7 +40,12 @@
       "cover-hero":  { "value": "28pt", "rem": "1.75",  "px": "28", "comment": "S253 KT-1: NEU Cover-Hauptueberschrift (System-Doku, war hardcoded fontSize=28 in system_doc_v2.py)" },
       "subsection":  { "value": "10.5pt","rem": "0.656","px": "13", "comment": "S253 KT-1: NEU Subsection-Header (mehr Abstand zu body 9.5pt)" },
       "body-small":  { "value": "8.5pt","rem": "0.5313","px": "13", "comment": "S253 KT-1: NEU Body-Small fuer Annotationen/sekundaeren Kontext (gleiche Groesse wie caption, andere Semantik)" },
-      "stat-display":{ "value": "20pt", "rem": "1.25",  "px": "20", "comment": "S253 KT-1: NEU Statistik-Display fuer KPI-Tiles (war hardcoded fontSize=20 in stat_number)" }
+      "stat-display":{ "value": "20pt", "rem": "1.25",  "px": "20", "comment": "S253 KT-1: NEU Statistik-Display fuer KPI-Tiles (war hardcoded fontSize=20 in stat_number)" },
+      "kachel-label":  { "value": "7pt",  "rem": "0.4375", "px": "11", "comment": "v0.6.2 / S256 KT-1: Sparkline-Kachel Symbol-Label (oben links). Kachel-Familie." },
+      "kachel-meta":   { "value": "6pt",  "rem": "0.375",  "px": "10", "comment": "v0.6.2 / S256 KT-1: Sparkline-Kachel Meta (Einheit, vs MA50). Kachel-Familie." },
+      "kachel-diff":   { "value": "9pt",  "rem": "0.5625", "px": "14", "comment": "v0.6.2 / S256 KT-1: Sparkline-Kachel Tages-Diff %-Wert (Pfeil + Prozent). Kachel-Familie." },
+      "kachel-value":  { "value": "13pt", "rem": "0.8125", "px": "20", "comment": "v0.6.2 / S256 KT-1: Sparkline-Kachel Hauptwert. Wertgleich mit h3, eigene Semantik (Komponenten-Token)." },
+      "kachel-madiff": { "value": "8pt",  "rem": "0.5",    "px": "13", "comment": "v0.6.2 / S256 KT-1: Sparkline-Kachel MA50-Diff %-Wert. Wertgleich mit footer-page, eigene Semantik." }
     },
 
     "leading": {
@@ -66,7 +71,12 @@
       "cover-hero":  { "value": "34pt", "ratio": "1.21", "comment": "S253 KT-1: NEU Cover-Hero-Leading" },
       "subsection":  { "value": "14pt", "ratio": "1.33", "comment": "S253 KT-1: NEU Subsection-Leading" },
       "body-small":  { "value": "11pt", "ratio": "1.29", "comment": "S253 KT-1: NEU Body-Small-Leading (= caption)" },
-      "stat-display":{ "value": "24pt", "ratio": "1.20", "comment": "S253 KT-1: NEU Display-dichter fuer Stat-Tiles" }
+      "stat-display":{ "value": "24pt", "ratio": "1.20", "comment": "S253 KT-1: NEU Display-dichter fuer Stat-Tiles" },
+      "kachel-label":  { "value": "8.5pt", "ratio": "1.21", "comment": "v0.6.2 / S256: leading fuer kachel-label" },
+      "kachel-meta":   { "value": "7.5pt", "ratio": "1.25", "comment": "v0.6.2 / S256: leading fuer kachel-meta" },
+      "kachel-diff":   { "value": "11pt",  "ratio": "1.22", "comment": "v0.6.2 / S256: leading fuer kachel-diff" },
+      "kachel-value":  { "value": "17pt",  "ratio": "1.31", "comment": "v0.6.2 / S256: leading fuer kachel-value (= h3 leading)" },
+      "kachel-madiff": { "value": "10pt",  "ratio": "1.25", "comment": "v0.6.2 / S256: leading fuer kachel-madiff (= footer-page leading)" }
     },
 
     "weight": {

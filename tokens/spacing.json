@@ -56,6 +56,19 @@
       "margin-inner":  { "value": "22mm", "comment": "Bundsteg" },
       "margin-outer":  { "value": "18mm" },
       "col-gutter":    { "value": "8mm",  "comment": "Zwei-Spalten-Layout" }
+    },
+
+    "kachel": {
+      "_meta": {
+        "value": "v0.6.2 / S256 KT-1: Sparkline-/KPI-Kachel-Familie. Generische Familie kachel-*, mehrfach nutzbar (Finanz-Snapshot heute, KPI-Tiles spaeter). Werte stammen aus Sparkline-Kachel-Iterationen S241/S242 (Iter 15 final).",
+        "spec_ref": "S256 TODO-1105 Design-System-Durchsetzung"
+      },
+      "inset":   { "value": "4pt", "comment": "Text-Padding L/R innerhalb der Kachel (war hardcoded TEXT_PAD_LEFT/RIGHT in sparkline_kachel)" },
+      "radius":  { "value": "2pt", "comment": "Eck-Rundung der Kachel (war hardcoded KACHEL_RADIUS in sparkline_kachel)" },
+      "gap-col": { "value": "3mm", "pt": "8.50", "comment": "Spalten-Abstand im Kachel-Grid (4x3 fuer 12 Symbole)" },
+      "gap-row": { "value": "3mm", "pt": "8.50", "comment": "Zeilen-Abstand im Kachel-Grid" },
+      "width":   { "value": "38mm", "pt": "107.72", "comment": "Kachel-Breite — 4 Kacheln pro Zeile bei 170mm A4-Content-Width" },
+      "height":  { "value": "32mm", "pt": "90.71", "comment": "Kachel-Hoehe — bewahrt Wert-Sparkline-Verhaeltnis" }
     }
   }
 }

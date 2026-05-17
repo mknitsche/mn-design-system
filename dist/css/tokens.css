@@ -111,16 +111,24 @@
   --space-page-margin-inner: 22mm; /** Bundsteg */
   --space-page-margin-outer: 18mm;
   --space-page-col-gutter: 8mm; /** Zwei-Spalten-Layout */
+  --space-kachel-inset: 4pt; /** Text-Padding L/R innerhalb der Kachel (war hardcoded TEXT_PAD_LEFT/RIGHT in sparkline_kachel) */
+  --space-kachel-radius: 2pt; /** Eck-Rundung der Kachel (war hardcoded KACHEL_RADIUS in sparkline_kachel) */
+  --space-kachel-gap-col: 3mm; /** Spalten-Abstand im Kachel-Grid (4x3 fuer 12 Symbole) */
+  --space-kachel-gap-row: 3mm; /** Zeilen-Abstand im Kachel-Grid */
+  --space-kachel-width: 38mm; /** Kachel-Breite — 4 Kacheln pro Zeile bei 170mm A4-Content-Width */
+  --space-kachel-height: 32mm; /** Kachel-Hoehe — bewahrt Wert-Sparkline-Verhaeltnis */
   --stack-active: A; /** ENV-Override moeglich: MN_PKA_STACK=D */
   --stack-available-a: Geist + Source Serif 4 Italic; /** Vercel + Adobe Mix, charakterstark, Logo-affin */
   --stack-available-d: Source Sans 3 nativ; /** Adobe-DNA, kohaerent, +10% Skalierung */
   --stack-size-factor-a: 1.0;
   --stack-size-factor-d: 1.10; /** x-Hoehen-Normalisierung Source Sans 3 */
   --stroke-hairline: 0.4pt; /** Tabellen-Trenner, Footer-Line */
-  --stroke-thin: 0.5pt; /** Section-Trenner */
+  --stroke-thin: 0.5pt; /** Section-Trenner. v0.6.2 / S256: auch MA50-Linie in Sparkline-Kachel. */
   --stroke-default: 1pt;
   --stroke-thick: 1.5pt; /** Brand-Strich (oben am Logo) */
   --stroke-heavy: 2pt; /** Akzent-Strich an Sidenote-Boxen */
+  --stroke-kachel-marker: 1.2pt; /** v0.6.2 / S256 KT-1: 7T-Range-Marker-Linie in Sparkline-Kachel (Iter 15). */
+  --stroke-kachel-trennlinie: 0.3pt; /** v0.6.2 / S256 KT-1: Trennlinie zwischen Spark- und Text-Bereich der Kachel. */
   --shadow-none: none;
   --shadow-subtle: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
@@ -157,6 +165,11 @@
   --font-size-subsection: 10.5pt; /** S253 KT-1: NEU Subsection-Header (mehr Abstand zu body 9.5pt) */
   --font-size-body-small: 8.5pt; /** S253 KT-1: NEU Body-Small fuer Annotationen/sekundaeren Kontext (gleiche Groesse wie caption, andere Semantik) */
   --font-size-stat-display: 20pt; /** S253 KT-1: NEU Statistik-Display fuer KPI-Tiles (war hardcoded fontSize=20 in stat_number) */
+  --font-size-kachel-label: 7pt; /** v0.6.2 / S256 KT-1: Sparkline-Kachel Symbol-Label (oben links). Kachel-Familie. */
+  --font-size-kachel-meta: 6pt; /** v0.6.2 / S256 KT-1: Sparkline-Kachel Meta (Einheit, vs MA50). Kachel-Familie. */
+  --font-size-kachel-diff: 9pt; /** v0.6.2 / S256 KT-1: Sparkline-Kachel Tages-Diff %-Wert (Pfeil + Prozent). Kachel-Familie. */
+  --font-size-kachel-value: 13pt; /** v0.6.2 / S256 KT-1: Sparkline-Kachel Hauptwert. Wertgleich mit h3, eigene Semantik (Komponenten-Token). */
+  --font-size-kachel-madiff: 8pt; /** v0.6.2 / S256 KT-1: Sparkline-Kachel MA50-Diff %-Wert. Wertgleich mit footer-page, eigene Semantik. */
   --font-leading-h0: 31pt;
   --font-leading-h1: 28pt;
   --font-leading-h2: 19pt;
@@ -180,6 +193,11 @@
   --font-leading-subsection: 14pt; /** S253 KT-1: NEU Subsection-Leading */
   --font-leading-body-small: 11pt; /** S253 KT-1: NEU Body-Small-Leading (= caption) */
   --font-leading-stat-display: 24pt; /** S253 KT-1: NEU Display-dichter fuer Stat-Tiles */
+  --font-leading-kachel-label: 8.5pt; /** v0.6.2 / S256: leading fuer kachel-label */
+  --font-leading-kachel-meta: 7.5pt; /** v0.6.2 / S256: leading fuer kachel-meta */
+  --font-leading-kachel-diff: 11pt; /** v0.6.2 / S256: leading fuer kachel-diff */
+  --font-leading-kachel-value: 17pt; /** v0.6.2 / S256: leading fuer kachel-value (= h3 leading) */
+  --font-leading-kachel-madiff: 10pt; /** v0.6.2 / S256: leading fuer kachel-madiff (= footer-page leading) */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;

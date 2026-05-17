@@ -2,10 +2,12 @@
   "stroke": {
     "_meta": { "value": "Strichstaerken — Hairlines, Lines, Borders." },
     "hairline": { "value": "0.4pt", "comment": "Tabellen-Trenner, Footer-Line" },
-    "thin":     { "value": "0.5pt", "comment": "Section-Trenner" },
+    "thin":     { "value": "0.5pt", "comment": "Section-Trenner. v0.6.2 / S256: auch MA50-Linie in Sparkline-Kachel." },
     "default":  { "value": "1pt" },
     "thick":    { "value": "1.5pt", "comment": "Brand-Strich (oben am Logo)" },
-    "heavy":    { "value": "2pt",   "comment": "Akzent-Strich an Sidenote-Boxen" }
+    "heavy":    { "value": "2pt",   "comment": "Akzent-Strich an Sidenote-Boxen" },
+    "kachel-marker":     { "value": "1.2pt", "comment": "v0.6.2 / S256 KT-1: 7T-Range-Marker-Linie in Sparkline-Kachel (Iter 15)." },
+    "kachel-trennlinie": { "value": "0.3pt", "comment": "v0.6.2 / S256 KT-1: Trennlinie zwischen Spark- und Text-Bereich der Kachel." }
   },
   "shadow": {
     "_meta": { "value": "Schatten — sparsam, subtle." },
