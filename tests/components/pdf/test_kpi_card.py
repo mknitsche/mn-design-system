@@ -175,7 +175,9 @@ class TestBuildKpiCard:
         assert "b0bec5" in text.lower()
 
     def test_sparkline_with_values(self):
-        inp = KpiCardInput(label="X", value="100", sparkline_values=[1.0, 2.0, 3.0, 4.0])
+        inp = KpiCardInput(
+            label="X", value="100", sparkline_values=[1.0, 2.0, 3.0, 4.0]
+        )
         result = build_kpi_card(inp)
         # Sparkline-Slot ist ein ReportLab Drawing
         assert isinstance(result[3], Drawing)

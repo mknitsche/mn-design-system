@@ -85,7 +85,9 @@ class TestBuildWetterStrip:
         assert len(tables) == 1
 
     def test_no_summary_when_none(self):
-        inp = WetterStripInput(days=[_day()] * 3, location="Nuernberg", summary_text=None)
+        inp = WetterStripInput(
+            days=[_day()] * 3, location="Nuernberg", summary_text=None
+        )
         result = build_wetter_strip(inp)
         # Nur Table, kein Summary-Paragraph
         paragraphs = [f for f in result if isinstance(f, Paragraph)]

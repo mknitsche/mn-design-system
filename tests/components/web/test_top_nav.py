@@ -17,9 +17,7 @@ from mn_design_system.tokens import get
 def _make_input(**overrides) -> TopNavInput:
     base = {
         "items": [
-            TopNavItem(
-                label="Start", href="/start/", tier=WebTier.START, active=True
-            ),
+            TopNavItem(label="Start", href="/start/", tier=WebTier.START, active=True),
             TopNavItem(
                 label="Bibliothek", href="/bibliothek/", tier=WebTier.BIBLIOTHEK
             ),

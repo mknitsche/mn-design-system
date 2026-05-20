@@ -48,9 +48,7 @@ class TestRenderPageHeaderHtml:
         assert "&lt;script&gt;" in html
 
     def test_inline_css_embedded(self):
-        html = render_page_header_html(
-            PageHeaderInput(title="X"), inline_css=True
-        )
+        html = render_page_header_html(PageHeaderInput(title="X"), inline_css=True)
         assert "<style>" in html
         assert ".mn-page-header" in html
 

@@ -183,7 +183,7 @@ class TestFontWithFallback:
     def test_single_sigma(self):
         # Sigma-Glyph-Bug aus Briefing
         result = font_with_fallback("Vol-Spike +1,8 σ über Median")
-        assert "<font name=\"STIXTwoMath\">σ</font>" in result
+        assert '<font name="STIXTwoMath">σ</font>' in result
         assert "Vol-Spike +1,8 " in result
         assert "über Median" in result
 
@@ -191,13 +191,13 @@ class TestFontWithFallback:
         # alpha/beta/gamma als zusammenhaengender Block
         result = font_with_fallback("α/β/γ Vergleich")
         # Ganzer Block α/β/γ inkl. Slashes wird zusammengewrapped
-        assert "<font name=\"STIXTwoMath\">" in result
+        assert '<font name="STIXTwoMath">' in result
         assert "Vergleich" in result
 
     def test_math_operators(self):
         # ∑ (U+2211) ist Math Operator
         result = font_with_fallback("Summe ∑ über alle")
-        assert "<font name=\"STIXTwoMath\">∑</font>" in result
+        assert '<font name="STIXTwoMath">∑</font>' in result
 
     def test_empty_string(self):
         assert font_with_fallback("") == ""

@@ -31,7 +31,9 @@ _ICON_CLASS = {
 }
 
 
-def render_wetter_strip_html(input: WetterStripInput, *, inline_css: bool = False) -> str:
+def render_wetter_strip_html(
+    input: WetterStripInput, *, inline_css: bool = False
+) -> str:
     """Wetter-Strip als HTML-Tabelle.
 
     inline_css=True embedbar fuer Single-Snippet-Embeds.

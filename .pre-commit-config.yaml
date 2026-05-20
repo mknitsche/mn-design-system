@@ -1,0 +1,16 @@
+# Pre-Commit-Hooks fuer mn-design-system.
+#
+# Format-Gate: `ruff format` haelt den Python-Code konsistent und verhindert,
+# dass die Formatierung wieder driftet (Auswertung: cld1-S21 Cleanup 2).
+# Aktivierung pro Klon einmalig: `pre-commit install`.
+#
+# Bewusst nur das Format-Gate — `ruff check` (Lint) ist eine eigene, groessere
+# Aufraeum-Entscheidung und nicht Teil dieses Cleanups.
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.8
+    hooks:
+      - id: ruff-format
+        name: Ruff Format Check
+        args: ['--check']

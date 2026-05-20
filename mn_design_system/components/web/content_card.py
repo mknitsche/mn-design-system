@@ -80,9 +80,7 @@ def render_content_card_html(
     else:
         parts.append(f'<h3 class="mn-content-card__title">{title}</h3>')
 
-    parts.append(
-        f'<p class="mn-content-card__body">{escape(input.body)}</p>'
-    )
+    parts.append(f'<p class="mn-content-card__body">{escape(input.body)}</p>')
     parts.append("</article>")
     return "".join(parts)
 
@@ -152,9 +150,7 @@ def render_content_card_css() -> str:
     return "\n".join(rules)
 
 
-def render_card_grid_html(
-    input: CardGridInput, *, inline_css: bool = False
-) -> str:
+def render_card_grid_html(input: CardGridInput, *, inline_css: bool = False) -> str:
     """Card-Grid als HTML-Snippet (<div> mit eingebetteten Content-Cards).
 
     Die Spaltenzahl landet als CSS-Variable `--mn-card-grid-cols` am Wrapper.

@@ -91,7 +91,9 @@ class TestRenderWetterStripHtml:
         assert "mn-wetter-strip__summary" not in html
 
     def test_xss_summary_escaped(self):
-        html = render_wetter_strip_html(_make_input(summary_text="<script>alert(1)</script>"))
+        html = render_wetter_strip_html(
+            _make_input(summary_text="<script>alert(1)</script>")
+        )
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 

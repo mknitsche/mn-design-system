@@ -54,6 +54,7 @@ Unit = Literal["mm", "pt", "px", "raw"]
 # Wert-Parser
 # ----------------------------------------------------------------------------
 
+
 def _parse_value_to_mm(raw: str | int | float) -> float:
     """Akzeptiert 'Npx', 'Nmm', 'Npt', oder Integer/Float (= dimensionslos units)."""
     if isinstance(raw, (int, float)):
@@ -93,6 +94,7 @@ def _convert_mm(value_mm: float, unit: Unit) -> float | int:
 # Public API
 # ----------------------------------------------------------------------------
 
+
 def space_token(key: str, unit: Unit = "mm") -> float | int:
     """Spacing-Token in gewuenschter Einheit.
 
@@ -118,7 +120,9 @@ def space_token(key: str, unit: Unit = "mm") -> float | int:
         3.0
     """
     if key not in TOKENS:
-        raise KeyError(f"Unknown spacing token: {key!r} (available: {[k for k in TOKENS if k.startswith('space.')][:10]} ...)")
+        raise KeyError(
+            f"Unknown spacing token: {key!r} (available: {[k for k in TOKENS if k.startswith('space.')][:10]} ...)"
+        )
     raw = TOKENS[key]
     value_mm = _parse_value_to_mm(raw)
     return _convert_mm(value_mm, unit)
@@ -146,7 +150,9 @@ def size_token(key: str, unit: Unit = "pt") -> float | int:
     """
     full_key = key if key.startswith("font.size.") else f"font.size.{key}"
     if full_key not in TOKENS:
-        avail = [k.replace("font.size.", "") for k in TOKENS if k.startswith("font.size.")]
+        avail = [
+            k.replace("font.size.", "") for k in TOKENS if k.startswith("font.size.")
+        ]
         raise KeyError(f"Unknown size token: {key!r} (available: {avail})")
     raw = TOKENS[full_key]
     # Schriftgroessen sind in pt gespeichert, ggf. konvertieren
@@ -185,7 +191,11 @@ def leading_token(key: str, unit: Unit = "pt") -> float | int:
     """
     full_key = key if key.startswith("font.leading.") else f"font.leading.{key}"
     if full_key not in TOKENS:
-        avail = [k.replace("font.leading.", "") for k in TOKENS if k.startswith("font.leading.")]
+        avail = [
+            k.replace("font.leading.", "")
+            for k in TOKENS
+            if k.startswith("font.leading.")
+        ]
         raise KeyError(f"Unknown leading token: {key!r} (available: {avail})")
     raw = TOKENS[full_key]
     if str(raw).endswith("pt"):
@@ -221,7 +231,9 @@ def color_token(key: str) -> str:
     """
     if key not in TOKENS:
         avail = [k for k in TOKENS if k.startswith("color.")]
-        raise KeyError(f"Unknown color token: {key!r} (available: {len(avail)} color tokens)")
+        raise KeyError(
+            f"Unknown color token: {key!r} (available: {len(avail)} color tokens)"
+        )
     return TOKENS[key]
 
 
@@ -244,7 +256,11 @@ def font_family(key: str) -> str:
     """
     full_key = key if key.startswith("font.family.") else f"font.family.{key}"
     if full_key not in TOKENS:
-        avail = [k.replace("font.family.", "") for k in TOKENS if k.startswith("font.family.")]
+        avail = [
+            k.replace("font.family.", "")
+            for k in TOKENS
+            if k.startswith("font.family.")
+        ]
         raise KeyError(f"Unknown font family token: {key!r} (available: {avail})")
     return TOKENS[full_key]
 
@@ -346,6 +362,7 @@ def font_with_fallback(text: str, default_font: str | None = None) -> str:
 # ----------------------------------------------------------------------------
 # Convenience-Aliase (kompatibel zu existierenden claudeAI-Konsumenten)
 # ----------------------------------------------------------------------------
+
 
 def token(key: str, default=None):
     """Generischer Token-Lookup (mit Default). Behaelt v0.4.3-API."""

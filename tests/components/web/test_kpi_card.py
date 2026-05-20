@@ -18,19 +18,25 @@ class TestRenderKpiCardHtml:
         assert "</article>" in html
 
     def test_change_pct_up_class(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="100", change_pct=1.5))
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="100", change_pct=1.5)
+        )
         assert "is-up" in html
         assert "+1.50%" in html
         assert "▲" in html
 
     def test_change_pct_down_class(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="100", change_pct=-2.3))
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="100", change_pct=-2.3)
+        )
         assert "is-down" in html
         assert "-2.30%" in html
         assert "▼" in html
 
     def test_change_pct_neutral_class(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="100", change_pct=0.0))
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="100", change_pct=0.0)
+        )
         assert "is-neutral" in html
 
     def test_no_change_pct_omits_change(self):
@@ -49,22 +55,30 @@ class TestRenderKpiCardHtml:
         assert "mn-kpi-card__sparkline" in html
 
     def test_caption_when_provided(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="100", caption="30 Tage"))
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="100", caption="30 Tage")
+        )
         assert "30 Tage" in html
         assert "mn-kpi-card__caption" in html
 
     def test_xss_label_escaped(self):
-        html = render_kpi_card_html(KpiCardInput(label="<script>alert(1)</script>", value="100"))
+        html = render_kpi_card_html(
+            KpiCardInput(label="<script>alert(1)</script>", value="100")
+        )
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
     def test_xss_value_escaped(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="<img src=x onerror=alert(1)>"))
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="<img src=x onerror=alert(1)>")
+        )
         assert "<img" not in html
         assert "&lt;img" in html
 
     def test_inline_css_embedded(self):
-        html = render_kpi_card_html(KpiCardInput(label="X", value="100"), inline_css=True)
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="100"), inline_css=True
+        )
         assert "<style>" in html
         assert ".mn-kpi-card" in html
 

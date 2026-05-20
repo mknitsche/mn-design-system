@@ -63,16 +63,12 @@ class TestRenderContentCardHtml:
         assert "mn-content-card--" not in html
 
     def test_xss_title_escaped(self):
-        html = render_content_card_html(
-            _make_card(title="<script>alert(1)</script>")
-        )
+        html = render_content_card_html(_make_card(title="<script>alert(1)</script>"))
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
     def test_xss_body_escaped(self):
-        html = render_content_card_html(
-            _make_card(body="<script>alert(1)</script>")
-        )
+        html = render_content_card_html(_make_card(body="<script>alert(1)</script>"))
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
