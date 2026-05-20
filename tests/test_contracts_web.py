@@ -193,6 +193,20 @@ class TestBrandBarInput:
         with pytest.raises(ValidationError):
             BrandBarInput(brand_text="mkn-desk", foo="bar")
 
+    def test_user_chip_id_default_none(self):
+        """Hydration-Slot ist optional — ohne Angabe None."""
+        inp = BrandBarInput(brand_text="mkn-desk")
+        assert inp.user_chip_id is None
+
+    def test_user_chip_id_accepts_string(self):
+        inp = BrandBarInput(brand_text="mkn-desk", user_chip_id="brand-user-chip")
+        assert inp.user_chip_id == "brand-user-chip"
+
+    def test_user_chip_label_default(self):
+        """Pre-Hydration-Text hat einen Default."""
+        inp = BrandBarInput(brand_text="mkn-desk")
+        assert inp.user_chip_label == "…"
+
 
 # ---------------------------------------------------------------------------
 # SubNavTab

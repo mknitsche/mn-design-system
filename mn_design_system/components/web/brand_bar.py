@@ -43,6 +43,12 @@ def render_brand_bar_html(input: BrandBarInput, *, inline_css: bool = False) -> 
                 TierChipInput(tier=chip.tier, label=chip.label, bordered=True)
             )
         )
+    if input.user_chip_id is not None:
+        parts.append(
+            f'<span id="{escape(input.user_chip_id, quote=True)}" '
+            f'class="mn-tier-chip mn-tier-chip--loading">'
+            f"{escape(input.user_chip_label)}</span>"
+        )
     parts.append("</div>")
 
     parts.append("</header>")

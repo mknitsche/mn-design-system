@@ -60,6 +60,19 @@ class TestRenderBrandBarHtml:
         assert ".mn-brand-bar" in html
         assert ".mn-tier-chip" in html
 
+    def test_hydration_slot_rendered_when_user_chip_id_set(self):
+        html = render_brand_bar_html(
+            BrandBarInput(
+                brand_text="from the desk of mn", user_chip_id="brand-user-chip"
+            )
+        )
+        assert 'id="brand-user-chip"' in html
+        assert "mn-tier-chip--loading" in html
+
+    def test_no_hydration_slot_when_user_chip_id_none(self):
+        html = render_brand_bar_html(BrandBarInput(brand_text="x"))
+        assert "mn-tier-chip--loading" not in html
+
 
 class TestRenderBrandBarCss:
     def test_uses_custom_properties(self):

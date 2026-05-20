@@ -174,6 +174,11 @@ class BrandBarInput(BaseModel):
 
     brand_text: str = Field(min_length=1)
     chips: list[BrandBarChip] = Field(default_factory=list, max_length=3)
+    user_chip_id: str | None = None
+    """Optionaler Hydration-Slot. Gesetzt → ein Lade-Chip mit dieser id wird
+    nach den statischen Chips gerendert; eine App füllt ihn client-seitig."""
+    user_chip_label: str = "…"
+    """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
 
 
 class SubNavTab(BaseModel):
