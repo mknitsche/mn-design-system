@@ -266,3 +266,34 @@ class FooterInput(BaseModel):
     columns: list[FooterColumn] = Field(min_length=1, max_length=3)
     version: str | None = None
     note: str | None = None
+
+
+class ContentCardInput(BaseModel):
+    """Generische Inhalts-Karte (Titel + Text, optional verlinkt + tier-getoent).
+
+    title: Karten-Titel; wird zum Link-Text, wenn href gesetzt ist.
+    body: Karten-Text.
+    href: optionales Ziel — gesetzt macht die Karte klickbar (Titel als <a>).
+    tier: optionale Tier-Familie; setzt die Akzent-Border (color.tier.<tier>.border).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    title: str = Field(min_length=1)
+    body: str = Field(min_length=1)
+    href: str | None = None
+    tier: WebTier | None = None
+
+
+class CardGridInput(BaseModel):
+    """Responsives Karten-Raster.
+
+    cards: mind. 1 Content-Card.
+    columns: Spaltenzahl 1-4 (Default 3) — landet als CSS-Variable
+             --mn-card-grid-cols, kein Hex.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    cards: list[ContentCardInput] = Field(min_length=1)
+    columns: int = Field(default=3, ge=1, le=4)
