@@ -103,3 +103,12 @@ class TestRenderSubNavCss:
     def test_css_active_uses_bg(self):
         css = render_sub_nav_css()
         assert "var(--color-tier-bibliothek-bg" in css
+
+    def test_tab_has_focus_visible(self):
+        """A2 welle-weit: jeder Sub-Nav-Tab hat einen sichtbaren,
+        Token-basierten :focus-visible-Indikator (WCAG 2.4.7) — die Sub-Nav
+        ist tastaturbedienbar."""
+        css = render_sub_nav_css()
+        assert ".mn-sub-nav__tab:focus-visible" in css
+        assert "outline" in css
+        assert "var(--color-light-accent" in css

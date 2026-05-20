@@ -13,6 +13,7 @@ from mn_design_system.components.web.content_card import (
     render_content_card_css,
     render_content_card_html,
 )
+from mn_design_system.tokens import get
 
 
 def _make_card(**overrides) -> ContentCardInput:
@@ -103,10 +104,48 @@ class TestRenderContentCardCss:
         for tier in ("bibliothek", "atelier", "kabinett", "start"):
             assert f"var(--color-tier-{tier}-border" in css
 
-    def test_cursor_pointer_only_for_linked_card(self):
-        """Carry-over D1/D2: cursor:pointer nur fuer die verlinkte Card."""
+    def test_tier_border_fallback_matches_token(self):
+        """Befund 2 (A2-D2): der var()-Fallback je Tier-Border muss der
+        ECHTE Tier-Wert aus tokens.py sein, kein Einheits-Grau. Greift der
+        Fallback (FOUC / fehlende tokens.css), darf die Tier-Zuordnung
+        visuell nicht verloren gehen."""
         css = render_content_card_css()
-        assert "cursor: pointer" in css
+        for tier in ("bibliothek", "atelier", "kabinett", "start"):
+            soll = get(f"color.tier.{tier}.border")
+            assert soll is not None
+            assert f"var(--color-tier-{tier}-border, {soll})" in css
+
+    def test_cursor_pointer_only_for_linked_card(self):
+        """Carry-over D1/D2 (Befund 1): cursor:pointer ist nur dann ehrlich,
+        wenn die ganze Card auch klickbar ist. cursor:pointer steht am
+        --linked-Modifier UND der --linked-Modifier traegt das
+        Stretched-Link-Pattern (siehe test_linked_card_has_stretched_link).
+        Ohne --linked darf KEIN cursor:pointer gesetzt sein."""
+        css = render_content_card_css()
+        assert ".mn-content-card--linked {" in css
+        # cursor: pointer haengt am --linked-Block, nicht am Basis-Block.
+        basis_block = css.split(".mn-content-card--linked")[0]
+        assert "cursor: pointer" not in basis_block
+
+    def test_linked_card_has_stretched_link(self):
+        """Befund 1 (A2-D2): die verlinkte Card nutzt das Stretched-Link-
+        Pattern — Card position:relative + Titel-Link ::after inset:0 —
+        damit die GANZE Card-Flaeche klickbar ist und cursor:pointer ehrlich
+        bleibt (klickbar war vorher nur der Titel-Text)."""
+        css = render_content_card_css()
+        assert ".mn-content-card--linked {" in css
+        assert "position: relative" in css
+        assert ".mn-content-card__link::after" in css
+        assert "position: absolute" in css
+        assert "inset: 0" in css
+
+    def test_card_link_has_focus_visible(self):
+        """A2 welle-weit: der Card-Link hat einen sichtbaren, Token-basierten
+        :focus-visible-Indikator (WCAG 2.4.7)."""
+        css = render_content_card_css()
+        assert ".mn-content-card__link:focus-visible" in css
+        assert "outline" in css
+        assert "var(--color-light-accent" in css
 
 
 class TestRenderCardGridHtml:

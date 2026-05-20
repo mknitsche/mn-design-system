@@ -73,7 +73,7 @@ def render_footer_css() -> str:
 .mn-footer {
   font-family: var(--font-body, "Geist"), system-ui, sans-serif;
   padding-top: 1.5rem;
-  border-top: var(--stroke-thin, 0.5px) solid var(--color-light-border, #cbd5e1);
+  border-top: var(--stroke-thin, 0.5pt) solid var(--color-light-border, #cbd5e1);
   color: var(--color-light-text, #1e1b4b);
 }
 .mn-footer__columns {
@@ -104,6 +104,10 @@ def render_footer_css() -> str:
 }
 .mn-footer__link:hover {
   text-decoration: underline;
+}
+.mn-footer__link:focus-visible {
+  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline-offset: 2px;
 }
 .mn-footer__meta {
   display: flex;

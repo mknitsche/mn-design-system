@@ -11,6 +11,7 @@ from mn_design_system.components.web.top_nav import (
     render_top_nav_css,
     render_top_nav_html,
 )
+from mn_design_system.tokens import get
 
 
 def _make_input(**overrides) -> TopNavInput:
@@ -127,3 +128,24 @@ class TestRenderTopNavCss:
         """Spec §A4 L1: transparente Pills auf dunklem Grund."""
         css = render_top_nav_css()
         assert "var(--color-dark-surface" in css
+
+    def test_tier_active_fallback_matches_token(self):
+        """Befund 2 (A2-D2): der var()-Fallback je Tier-Aktiv-Regel (bg+text)
+        muss der ECHTE Tier-Wert aus tokens.py sein, kein fixer
+        bibliothek-Wert fuer alle Tiers."""
+        css = render_top_nav_css()
+        for tier in ("bibliothek", "atelier", "kabinett", "start"):
+            soll_bg = get(f"color.tier.{tier}.bg")
+            soll_text = get(f"color.tier.{tier}.text")
+            assert soll_bg is not None
+            assert soll_text is not None
+            assert f"var(--color-tier-{tier}-bg, {soll_bg})" in css
+            assert f"var(--color-tier-{tier}-text, {soll_text})" in css
+
+    def test_item_has_focus_visible(self):
+        """A2 welle-weit: jedes Nav-Item hat einen sichtbaren, Token-basierten
+        :focus-visible-Indikator (WCAG 2.4.7) — Top-Nav ist tastaturbedienbar."""
+        css = render_top_nav_css()
+        assert ".mn-top-nav__item:focus-visible" in css
+        assert "outline" in css
+        assert "var(--color-light-accent" in css
