@@ -35,7 +35,7 @@ Optional: ein Erzaehl-Satz oberhalb (z.B. von Wetterochs-Mail) im Italic-Stil.
 
 | Feld | Typ | Constraint |
 |---|---|---|
-| `weekday` | `str` | min_length=1, max_length=10 |
+| `header_label` | `str` | min_length=1, max_length=15 |
 | `category` | `WetterCategory` | Enum (sonnig, heiter, bewoelkt, regen, ...) |
 | `temp_min_c` | `int` | (Celsius) |
 | `temp_max_c` | `int` | (Celsius) |
