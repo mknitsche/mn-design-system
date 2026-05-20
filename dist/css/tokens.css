@@ -73,6 +73,22 @@
   --color-dark-h2: #a5b4fc;
   --color-dark-accent: #818cf8; /** indigo-400, WCAG-AA gegen Dark-BG (4.5:1+) */
   --color-dark-accent-soft: rgba(99,102,241,0.16);
+  --color-tier-bibliothek-bg: #f0fdf4;
+  --color-tier-bibliothek-bg-soft: #f7fef9; /** bg 55% ueber Weiss — Sub-Nav-Hover */
+  --color-tier-bibliothek-border: #bbf7d0;
+  --color-tier-bibliothek-text: #166534;
+  --color-tier-atelier-bg: #fffbeb;
+  --color-tier-atelier-bg-soft: #fffdf4; /** bg 55% ueber Weiss */
+  --color-tier-atelier-border: #fde68a;
+  --color-tier-atelier-text: #92400e;
+  --color-tier-kabinett-bg: #fef2f2;
+  --color-tier-kabinett-bg-soft: #fef8f8; /** bg 55% ueber Weiss */
+  --color-tier-kabinett-border: #fecaca;
+  --color-tier-kabinett-text: #991b1b;
+  --color-tier-start-bg: #f0fdf4;
+  --color-tier-start-bg-soft: #f7fef9;
+  --color-tier-start-border: #bbf7d0;
+  --color-tier-start-text: #166534;
   --radius-none: 0; /** Cards, Buttons, Tabellen — Default Tufte */
   --radius-subtle: 2px; /** minimaler Anschliff falls noetig */
   --radius-card: 4px; /** Cards, Sidenote-Boxen */

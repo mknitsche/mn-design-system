@@ -108,6 +108,34 @@
       "h2":            { "value": "{color.indigo.300.value}" },
       "accent":        { "value": "{color.indigo.400.value}", "comment": "indigo-400, WCAG-AA gegen Dark-BG (4.5:1+)" },
       "accent-soft":   { "value": "rgba(99,102,241,0.16)" }
+    },
+
+    "tier": {
+      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 4 Familien je bg / bg-soft / border / text. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich)." },
+      "bibliothek": {
+        "bg":      { "value": "#f0fdf4" },
+        "bg-soft": { "value": "#f7fef9", "comment": "bg 55% ueber Weiss — Sub-Nav-Hover" },
+        "border":  { "value": "#bbf7d0" },
+        "text":    { "value": "#166534" }
+      },
+      "atelier": {
+        "bg":      { "value": "#fffbeb" },
+        "bg-soft": { "value": "#fffdf4", "comment": "bg 55% ueber Weiss" },
+        "border":  { "value": "#fde68a" },
+        "text":    { "value": "#92400e" }
+      },
+      "kabinett": {
+        "bg":      { "value": "#fef2f2" },
+        "bg-soft": { "value": "#fef8f8", "comment": "bg 55% ueber Weiss" },
+        "border":  { "value": "#fecaca" },
+        "text":    { "value": "#991b1b" }
+      },
+      "start": {
+        "bg":      { "value": "{color.tier.bibliothek.bg.value}" },
+        "bg-soft": { "value": "{color.tier.bibliothek.bg-soft.value}" },
+        "border":  { "value": "{color.tier.bibliothek.border.value}" },
+        "text":    { "value": "{color.tier.bibliothek.text.value}" }
+      }
     }
   }
 }
