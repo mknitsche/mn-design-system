@@ -64,6 +64,11 @@ def render_tier_chip_css() -> str:
 .mn-tier-chip--bordered {
   border: 1px solid transparent;
 }
+.mn-tier-chip--loading {
+  background: var(--color-light-surface-subtle, #f6f6f6);
+  color: var(--color-light-text-muted, #6b7280);
+  font-style: italic;
+}
 """.strip()
     ]
     for tier in _TIERS:
