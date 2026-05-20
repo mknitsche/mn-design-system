@@ -58,3 +58,7 @@ class TestRenderTierChipCss:
         Eltern-Container kein `pointer` erbt."""
         css = render_tier_chip_css()
         assert "cursor: default;" in css
+
+    def test_css_contains_loading_variant(self):
+        css = render_tier_chip_css()
+        assert ".mn-tier-chip--loading" in css
