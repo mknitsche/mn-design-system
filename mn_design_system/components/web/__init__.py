@@ -25,6 +25,10 @@ from mn_design_system.components.web.kpi_card import (
     render_kpi_card_html,
 )
 from mn_design_system.components.web.sparkline import render_sparkline_svg
+from mn_design_system.components.web.tier_chip import (
+    render_tier_chip_css,
+    render_tier_chip_html,
+)
 from mn_design_system.components.web.wetter_strip import (
     render_wetter_strip_css,
     render_wetter_strip_html,
@@ -34,6 +38,8 @@ __all__ = [
     "render_kpi_card_css",
     "render_kpi_card_html",
     "render_sparkline_svg",
+    "render_tier_chip_css",
+    "render_tier_chip_html",
     "render_wetter_strip_css",
     "render_wetter_strip_html",
 ]

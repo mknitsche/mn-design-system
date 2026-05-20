@@ -123,3 +123,33 @@ class WetterStripInput(BaseModel):
     days: list[WetterDay] = Field(min_length=3, max_length=5)
     summary_text: str | None = None
     location: str = Field(min_length=1)
+
+
+# ---------------------------------------------------------------------------
+# Web-Tier-Komponenten (UX-Welle v0.2)
+# ---------------------------------------------------------------------------
+
+
+class WebTier(str, Enum):
+    """Die vier Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
+
+    BIBLIOTHEK = "bibliothek"
+    ATELIER = "atelier"
+    KABINETT = "kabinett"
+    START = "start"
+
+
+class TierChipInput(BaseModel):
+    """API-Contract fuer render_tier_chip_html(). Primitiv-Baustein.
+
+    tier: Farb-Familie (color.tier.<tier>.*).
+    label: sichtbarer Text.
+    bordered: True = L2-Status-Chip (Brand-Bar, mit Border, nicht klickbar).
+              False = L3-Auswahl-Chip (Sub-Nav, Background-only).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    tier: WebTier
+    label: str = Field(min_length=1)
+    bordered: bool = True
