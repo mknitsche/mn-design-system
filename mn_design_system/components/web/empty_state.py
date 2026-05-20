@@ -8,7 +8,14 @@ from __future__ import annotations
 
 from html import escape
 
-from mn_design_system.components._patterns.contracts import EmptyStateInput
+from mn_design_system.components._patterns.contracts import EmptyStateInput, WebTier
+
+_TIERS: tuple[WebTier, ...] = (
+    WebTier.BIBLIOTHEK,
+    WebTier.ATELIER,
+    WebTier.KABINETT,
+    WebTier.START,
+)
 
 
 def render_empty_state_html(input: EmptyStateInput, *, inline_css: bool = False) -> str:
@@ -42,10 +49,11 @@ def render_empty_state_css() -> str:
 }
 """.strip()
     ]
-    for tier in ("bibliothek", "atelier", "kabinett", "start"):
+    for tier in _TIERS:
+        t = tier.value
         rules.append(
-            f".mn-empty-state--{tier} {{\n"
-            f"  border-left-color: var(--color-tier-{tier}-border, #cbd5e1);\n"
+            f".mn-empty-state--{t} {{\n"
+            f"  border-left-color: var(--color-tier-{t}-border, #cbd5e1);\n"
             f"}}"
         )
     return "\n".join(rules)
