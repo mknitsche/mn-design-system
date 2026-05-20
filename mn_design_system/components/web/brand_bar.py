@@ -31,7 +31,9 @@ def render_brand_bar_html(input: BrandBarInput, *, inline_css: bool = False) -> 
 
     parts = []
     if inline_css:
-        parts.append(f"<style>{render_brand_bar_css()}\n{render_tier_chip_css()}</style>")
+        parts.append(
+            f"<style>{render_brand_bar_css()}\n{render_tier_chip_css()}</style>"
+        )
 
     parts.append('<header class="mn-brand-bar">')
     parts.append(f'<span class="mn-brand-bar__brand">{brand_text}</span>')
