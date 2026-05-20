@@ -50,7 +50,9 @@ class TestRenderBrandBarHtml:
         assert "mn-tier-chip" not in html
 
     def test_xss_brand_escaped(self):
-        html = render_brand_bar_html(_make_input(brand_text="<script>alert(1)</script>"))
+        html = render_brand_bar_html(
+            _make_input(brand_text="<script>alert(1)</script>")
+        )
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
@@ -72,6 +74,28 @@ class TestRenderBrandBarHtml:
     def test_no_hydration_slot_when_user_chip_id_none(self):
         html = render_brand_bar_html(BrandBarInput(brand_text="x"))
         assert "mn-tier-chip--loading" not in html
+
+    def test_user_chip_label_rendered_in_slot(self):
+        html = render_brand_bar_html(
+            BrandBarInput(
+                brand_text="x",
+                user_chip_id="brand-user-chip",
+                user_chip_label="lade …",
+            )
+        )
+        assert "lade …" in html
+
+    def test_xss_user_chip_id_escaped(self):
+        # boesartige user_chip_id darf nicht aus dem id-Attribut ausbrechen:
+        # das schliessende " wird zu &quot; escaped, kein roher <script>-Tag.
+        html = render_brand_bar_html(
+            BrandBarInput(
+                brand_text="x",
+                user_chip_id='a"><script>alert(1)</script>',
+            )
+        )
+        assert "<script>" not in html
+        assert "&quot;" in html
 
 
 class TestRenderBrandBarCss:
