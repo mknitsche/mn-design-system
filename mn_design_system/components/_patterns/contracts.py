@@ -174,3 +174,26 @@ class BrandBarInput(BaseModel):
 
     brand_text: str = Field(min_length=1)
     chips: list[BrandBarChip] = Field(default_factory=list, max_length=3)
+
+
+class SubNavTab(BaseModel):
+    """Ein Tab in der Sub-Nav."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+    active: bool = False
+
+
+class SubNavInput(BaseModel):
+    """L3 — Auswahl-Navigation INNERHALB eines Tiers (Spec §A5/A6).
+
+    tier: Tier-Kontext der gesamten Sub-Nav (alle Tabs in-tier).
+    tabs: mind. 1 Tab. Genau einer sollte active=True sein.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    tier: WebTier
+    tabs: list[SubNavTab] = Field(min_length=1)
