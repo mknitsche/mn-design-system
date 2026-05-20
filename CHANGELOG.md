@@ -8,6 +8,29 @@ oder Doku.
 
 ---
 
+## [0.8.0] — 2026-05-20
+
+### Hinzugefuegt — color.tier.* Token-Familie + 7 Web-Komponenten (UX-Welle v0.2)
+
+Web-Tier-Farben fuer mkn-desk.com und die zugehoerige Komponenten-Schicht.
+
+**Token-Familie `color.tier.*`** (16 Tokens): 4 Tier-Familien (bibliothek,
+atelier, kabinett, start) x {bg, bg-soft, border, text}. `bg-soft` =
+Sub-Nav-Hover, abgeleitet aus `bg` (55% ueber Weiss), vollwertiger Token
+(cross-media-faehig). `start` referenziell auf `bibliothek` aliased.
+
+**7 Web-Komponenten** (`web/`): Tier-Chip, Top-Nav (L1), Brand-Bar (L2),
+Sub-Nav (L3), Page-Header, Footer, Content-Card + Card-Grid. Pattern-First
+(Pydantic-Contract + Markdown-Spec + Renderer). PDF-Renderer folgen bei Bedarf.
+
+### Hintergrund
+
+UX-Aufwertung mkn-desk.com v0.2 — Foundation-Welle. Gemini-Gate-Review:
+`bg-soft` als Token statt `color-mix` (Cross-Media-Faehigkeit), `start` als
+Alias. Spec: claudeAI `docs/superpowers/specs/2026-05-19-ux-aufwertung-v02-design.md`.
+
+---
+
 ## [0.7.0] — 2026-05-17
 
 ### Hinzugefuegt — Kachel-Token-Familie (KT-1 S256 TODO-1105)
