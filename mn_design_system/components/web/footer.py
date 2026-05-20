@@ -31,9 +31,7 @@ def render_footer_html(input: FooterInput, *, inline_css: bool = False) -> str:
     parts.append('<div class="mn-footer__columns">')
     for column in input.columns:
         parts.append('<div class="mn-footer__col">')
-        parts.append(
-            f'<h2 class="mn-footer__col-title">{escape(column.title)}</h2>'
-        )
+        parts.append(f'<h2 class="mn-footer__col-title">{escape(column.title)}</h2>')
         parts.append('<ul class="mn-footer__list">')
         for link in column.links:
             href = escape(link.href, quote=True)
@@ -54,9 +52,7 @@ def render_footer_html(input: FooterInput, *, inline_css: bool = False) -> str:
     ):
         parts.append('<div class="mn-footer__meta">')
         if input.note is not None:
-            parts.append(
-                f'<span class="mn-footer__note">{escape(input.note)}</span>'
-            )
+            parts.append(f'<span class="mn-footer__note">{escape(input.note)}</span>')
         if input.user_info_id is not None:
             slot_id = escape(input.user_info_id, quote=True)
             parts.append(

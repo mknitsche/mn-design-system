@@ -298,7 +298,9 @@ class TestSubNavInput:
 
 class TestTopNavItem:
     def test_minimal_valid(self):
-        inp = TopNavItem(label="Bibliothek", href="/bibliothek", tier=WebTier.BIBLIOTHEK)
+        inp = TopNavItem(
+            label="Bibliothek", href="/bibliothek", tier=WebTier.BIBLIOTHEK
+        )
         assert inp.active is False  # Default
 
     def test_all_fields(self):
@@ -521,9 +523,7 @@ class TestFooterInput:
         assert inp.user_info_id is None
 
     def test_user_info_id_accepts_string(self):
-        inp = FooterInput(
-            columns=[_footer_column()], user_info_id="footer-user-info"
-        )
+        inp = FooterInput(columns=[_footer_column()], user_info_id="footer-user-info")
         assert inp.user_info_id == "footer-user-info"
 
     def test_user_info_label_default(self):

@@ -11,13 +11,17 @@ from mn_design_system.components.web.tier_chip import (
 
 class TestRenderTierChipHtml:
     def test_minimal_renders(self):
-        html = render_tier_chip_html(TierChipInput(tier=WebTier.BIBLIOTHEK, label="Bibliothek"))
+        html = render_tier_chip_html(
+            TierChipInput(tier=WebTier.BIBLIOTHEK, label="Bibliothek")
+        )
         assert 'class="mn-tier-chip' in html
         assert "mn-tier-chip--bibliothek" in html
         assert "Bibliothek" in html
 
     def test_bordered_default(self):
-        html = render_tier_chip_html(TierChipInput(tier=WebTier.ATELIER, label="Atelier"))
+        html = render_tier_chip_html(
+            TierChipInput(tier=WebTier.ATELIER, label="Atelier")
+        )
         assert "mn-tier-chip--bordered" in html
 
     def test_borderless_variant(self):

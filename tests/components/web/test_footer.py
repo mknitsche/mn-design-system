@@ -90,9 +90,7 @@ class TestRenderFooterHtml:
                     FooterColumn(
                         title="X",
                         links=[
-                            FooterLink(
-                                label="<script>alert(1)</script>", href="/x"
-                            )
+                            FooterLink(label="<script>alert(1)</script>", href="/x")
                         ],
                     )
                 ]
@@ -135,16 +133,12 @@ class TestRenderFooterHtml:
         assert "&lt;script&gt;" in html
 
     def test_xss_version_escaped(self):
-        html = render_footer_html(
-            _make_input(version="<script>alert(1)</script>")
-        )
+        html = render_footer_html(_make_input(version="<script>alert(1)</script>"))
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
     def test_xss_note_escaped(self):
-        html = render_footer_html(
-            _make_input(note="<script>alert(1)</script>")
-        )
+        html = render_footer_html(_make_input(note="<script>alert(1)</script>"))
         assert "<script>" not in html
         assert "&lt;script&gt;" in html
 
@@ -154,9 +148,7 @@ class TestRenderFooterHtml:
         assert ".mn-footer" in html
 
     def test_user_info_slot_rendered_when_id_set(self):
-        html = render_footer_html(
-            _make_input(user_info_id="footer-user-info")
-        )
+        html = render_footer_html(_make_input(user_info_id="footer-user-info"))
         assert 'id="footer-user-info"' in html
         assert "mn-footer__meta" in html
 
