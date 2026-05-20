@@ -47,11 +47,21 @@ def render_footer_html(input: FooterInput, *, inline_css: bool = False) -> str:
         parts.append("</div>")
     parts.append("</div>")
 
-    if input.version is not None or input.note is not None:
+    if (
+        input.version is not None
+        or input.note is not None
+        or input.user_info_id is not None
+    ):
         parts.append('<div class="mn-footer__meta">')
         if input.note is not None:
             parts.append(
                 f'<span class="mn-footer__note">{escape(input.note)}</span>'
+            )
+        if input.user_info_id is not None:
+            slot_id = escape(input.user_info_id, quote=True)
+            parts.append(
+                f'<span class="mn-footer__user" id="{slot_id}">'
+                f"{escape(input.user_info_label)}</span>"
             )
         if input.version is not None:
             parts.append(

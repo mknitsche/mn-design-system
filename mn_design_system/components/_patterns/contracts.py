@@ -271,6 +271,10 @@ class FooterInput(BaseModel):
     columns: list[FooterColumn] = Field(min_length=1, max_length=3)
     version: str | None = None
     note: str | None = None
+    user_info_id: str | None = None
+    """Optionaler Hydration-Slot in der Meta-Zeile (client-seitig gefüllter Span)."""
+    user_info_label: str = "…"
+    """Server-gerenderter Pre-Hydration-Text des User-Info-Spans."""
 
 
 class ContentCardInput(BaseModel):
