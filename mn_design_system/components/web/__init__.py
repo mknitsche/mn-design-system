@@ -20,6 +20,10 @@ Status: Erst-Implementierung (Welle E.0). Foto-Homepage ist erster Konsument
 ab PRJ-9.
 """
 
+from mn_design_system.components.web.brand_bar import (
+    render_brand_bar_css,
+    render_brand_bar_html,
+)
 from mn_design_system.components.web.kpi_card import (
     render_kpi_card_css,
     render_kpi_card_html,
@@ -35,6 +39,8 @@ from mn_design_system.components.web.wetter_strip import (
 )
 
 __all__ = [
+    "render_brand_bar_css",
+    "render_brand_bar_html",
     "render_kpi_card_css",
     "render_kpi_card_html",
     "render_sparkline_svg",

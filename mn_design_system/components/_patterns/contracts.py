@@ -153,3 +153,24 @@ class TierChipInput(BaseModel):
     tier: WebTier
     label: str = Field(min_length=1)
     bordered: bool = True
+
+
+class BrandBarChip(BaseModel):
+    """Ein Status-Chip in der Brand-Bar (Page-Tier oder User-Tier)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    tier: WebTier
+    label: str = Field(min_length=1)
+
+
+class BrandBarInput(BaseModel):
+    """L2 — Brand-Text + Status-Chips. Affordance: Info, nicht klickbar.
+
+    chips: 0-3 Status-Chips (z.B. Page-Tier + User-Tier). Bordered.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    brand_text: str = Field(min_length=1)
+    chips: list[BrandBarChip] = Field(default_factory=list, max_length=3)
