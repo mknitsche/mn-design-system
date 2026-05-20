@@ -8,6 +8,40 @@ oder Doku.
 
 ---
 
+## [0.9.0] — 2026-05-20
+
+### Hinzugefuegt — Hydration-Slots + Empty-State (UX-Welle B, Foundation)
+
+Die Bausteine, die UX-Welle B fuer die Konsumenten-Migration und den
+Platzhalter-Ausbau braucht. Additiv und **rueckwaertskompatibel zu v0.8.0**:
+alle v0.8.0-Contracts und -Renderer bleiben unveraendert nutzbar, neue Felder
+sind optional mit Default.
+
+**Empty-State-Komponente** (`web/empty_state.py`): ruhiger Leer-Zustand —
+gedaempfter Hinweistext statt Baustellen-Schild. Contract `EmptyStateInput`
+(`message` Pflicht, `tier` optional fuer eine zarte farbliche Verankerung),
+HTML- und CSS-Renderer, Pattern-Doku `_patterns/empty_state.md`. Keine neuen
+Tokens — nutzt `--color-light-*` und die `--color-tier-*`-Familie aus v0.8.0.
+
+**Brand-Bar Hydration-Slot** (`BrandBarInput.user_chip_id`): gesetzt rendert
+die Brand-Bar nach den statischen Chips einen Lade-Chip mit dieser id, den
+eine App client-seitig fuellt. `user_chip_label` traegt den
+Server-gerenderten Pre-Hydration-Text.
+
+**Footer Hydration-Slot** (`FooterInput.user_info_id`): optionaler
+client-seitig gefuellter User-Info-Span in der Footer-Meta-Zeile.
+`user_info_label` traegt den Pre-Hydration-Text.
+
+**Tier-Chip Lade-Variante** (`.mn-tier-chip--loading`): neutraler,
+gedaempft-kursiver Lade-Look fuer Hydration-Slots ohne bekannten Tier.
+
+### Hintergrund
+
+UX-Welle B Foundation. Spec: claudeAI
+`docs/superpowers/specs/2026-05-20-ux-welle-b-design.md` Phase 1.
+
+---
+
 ## [0.8.0] — 2026-05-20
 
 ### Hinzugefuegt — color.tier.* Token-Familie + 7 Web-Komponenten (UX-Welle v0.2)
