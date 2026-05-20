@@ -28,6 +28,10 @@ from mn_design_system.components.web.kpi_card import (
     render_kpi_card_css,
     render_kpi_card_html,
 )
+from mn_design_system.components.web.page_header import (
+    render_page_header_css,
+    render_page_header_html,
+)
 from mn_design_system.components.web.sparkline import render_sparkline_svg
 from mn_design_system.components.web.sub_nav import (
     render_sub_nav_css,
@@ -51,6 +55,8 @@ __all__ = [
     "render_brand_bar_html",
     "render_kpi_card_css",
     "render_kpi_card_html",
+    "render_page_header_css",
+    "render_page_header_html",
     "render_sparkline_svg",
     "render_sub_nav_css",
     "render_sub_nav_html",
