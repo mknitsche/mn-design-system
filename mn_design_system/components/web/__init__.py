@@ -37,6 +37,10 @@ from mn_design_system.components.web.tier_chip import (
     render_tier_chip_css,
     render_tier_chip_html,
 )
+from mn_design_system.components.web.top_nav import (
+    render_top_nav_css,
+    render_top_nav_html,
+)
 from mn_design_system.components.web.wetter_strip import (
     render_wetter_strip_css,
     render_wetter_strip_html,
@@ -52,6 +56,8 @@ __all__ = [
     "render_sub_nav_html",
     "render_tier_chip_css",
     "render_tier_chip_html",
+    "render_top_nav_css",
+    "render_top_nav_html",
     "render_wetter_strip_css",
     "render_wetter_strip_html",
 ]

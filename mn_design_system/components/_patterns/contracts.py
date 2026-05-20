@@ -202,3 +202,30 @@ class SubNavInput(BaseModel):
     tier: WebTier
     tabs: list[SubNavTab] = Field(min_length=1)
     aria_label: str = Field(default="Bereichs-Navigation", min_length=1)
+
+
+class TopNavItem(BaseModel):
+    """Ein Eintrag der Top-Nav (= ein Tier-Ziel)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+    tier: WebTier
+    active: bool = False
+
+
+class TopNavInput(BaseModel):
+    """L1 — Tier-Wechsel-Navigation (transparente Pills auf dunklem Grund).
+
+    items: mind. 1 Eintrag. Genau einer sollte active=True sein.
+    aria_label: Landmark-Label des <nav> (Barrierefreiheit, WCAG 2.4.1).
+                Mehrere <nav> pro Seite (L1 Top-Nav + L3 Sub-Nav) muessen
+                unterscheidbar sein — der Konsument kann ein praeziseres
+                Label setzen.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    items: list[TopNavItem] = Field(min_length=1)
+    aria_label: str = Field(default="Hauptnavigation", min_length=1)
