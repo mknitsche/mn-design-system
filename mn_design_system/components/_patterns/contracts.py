@@ -297,3 +297,16 @@ class CardGridInput(BaseModel):
 
     cards: list[ContentCardInput] = Field(min_length=1)
     columns: int = Field(default=3, ge=1, le=4)
+
+
+class EmptyStateInput(BaseModel):
+    """Ruhiger Leer-Zustand — "hier erscheint bald etwas", kein Baustellen-Schild.
+
+    message: sichtbarer Hinweistext.
+    tier:    optionale Tier-Familie für eine zarte farbliche Verankerung.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    message: str = Field(min_length=1)
+    tier: WebTier | None = None

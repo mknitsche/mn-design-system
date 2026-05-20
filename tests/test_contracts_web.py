@@ -24,6 +24,7 @@ from mn_design_system.components._patterns.contracts import (
     BrandBarInput,
     CardGridInput,
     ContentCardInput,
+    EmptyStateInput,
     FooterColumn,
     FooterInput,
     FooterLink,
@@ -93,6 +94,34 @@ class TestTierChipInput:
     def test_extra_forbidden(self):
         with pytest.raises(ValidationError):
             TierChipInput(tier=WebTier.START, label="Start", foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# EmptyStateInput
+# ---------------------------------------------------------------------------
+
+
+class TestEmptyStateInput:
+    def test_valid_minimal(self):
+        e = EmptyStateInput(message="Sobald Einträge da sind, erscheinen sie hier.")
+        assert e.tier is None
+
+    def test_valid_with_tier(self):
+        e = EmptyStateInput(message="x", tier=WebTier.ATELIER)
+        assert e.tier is WebTier.ATELIER
+
+    def test_message_min_length(self):
+        with pytest.raises(ValidationError):
+            EmptyStateInput(message="")
+
+    def test_frozen(self):
+        e = EmptyStateInput(message="x")
+        with pytest.raises(ValidationError):
+            e.message = "y"
+
+    def test_extra_forbid(self):
+        with pytest.raises(ValidationError):
+            EmptyStateInput(message="x", unbekannt=1)
 
 
 # ---------------------------------------------------------------------------
