@@ -10,7 +10,9 @@ from mn_design_system.components.web.sparkline import render_sparkline_svg
 
 class TestRenderSparklineSvg:
     def test_minimal_two_points(self):
-        svg = render_sparkline_svg(SparklineInput(values=[1.0, 2.0], width=100, height=20))
+        svg = render_sparkline_svg(
+            SparklineInput(values=[1.0, 2.0], width=100, height=20)
+        )
         assert svg.startswith("<svg")
         assert svg.endswith("</svg>")
         assert 'width="100' in svg
@@ -18,7 +20,9 @@ class TestRenderSparklineSvg:
         assert "<path" in svg
 
     def test_default_color_from_token(self):
-        svg = render_sparkline_svg(SparklineInput(values=[1.0, 2.0, 3.0], width=100, height=20))
+        svg = render_sparkline_svg(
+            SparklineInput(values=[1.0, 2.0, 3.0], width=100, height=20)
+        )
         # Default ist color.light.h2 = #4338ca
         assert "#4338ca" in svg
 
@@ -34,7 +38,9 @@ class TestRenderSparklineSvg:
         assert "#ff0000" in svg
 
     def test_flat_line_renders_horizontal(self):
-        svg = render_sparkline_svg(SparklineInput(values=[5.0, 5.0, 5.0], width=100, height=20))
+        svg = render_sparkline_svg(
+            SparklineInput(values=[5.0, 5.0, 5.0], width=100, height=20)
+        )
         # M 0 10 L 100 10 — horizontal in der Mitte
         assert re.search(r"M\s+0\s+10", svg)
 

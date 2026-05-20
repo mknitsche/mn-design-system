@@ -46,3 +46,9 @@ mn_design_system = [
     "fonts/**/*.md",
     "fonts/**/LICENSE*",
 ]
+
+[tool.ruff]
+# Macht die bislang implizite Format-Konvention explizit (ruff-Default: 88).
+# Aktivierung des Format-Gates pro Klon: `pre-commit install`.
+target-version = "py310"
+line-length = 88

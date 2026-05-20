@@ -18,9 +18,7 @@ from html import escape
 from mn_design_system.components._patterns.contracts import PageHeaderInput
 
 
-def render_page_header_html(
-    input: PageHeaderInput, *, inline_css: bool = False
-) -> str:
+def render_page_header_html(input: PageHeaderInput, *, inline_css: bool = False) -> str:
     """Page-Header als HTML-Snippet (<header> mit <h1> und optionalem Lead).
 
     inline_css=True hangt das Komponenten-CSS in einem <style>-Block an —
@@ -31,13 +29,9 @@ def render_page_header_html(
         parts.append(f"<style>{render_page_header_css()}</style>")
 
     parts.append('<header class="mn-page-header">')
-    parts.append(
-        f'<h1 class="mn-page-header__title">{escape(input.title)}</h1>'
-    )
+    parts.append(f'<h1 class="mn-page-header__title">{escape(input.title)}</h1>')
     if input.lead is not None:
-        parts.append(
-            f'<p class="mn-page-header__lead">{escape(input.lead)}</p>'
-        )
+        parts.append(f'<p class="mn-page-header__lead">{escape(input.lead)}</p>')
     parts.append("</header>")
     return "".join(parts)
 

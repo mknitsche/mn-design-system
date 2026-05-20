@@ -48,9 +48,7 @@ class TestRenderSubNavHtml:
 
     def test_xss_label_escaped(self):
         html = render_sub_nav_html(
-            _make_input(
-                tabs=[SubNavTab(label="<script>alert(1)</script>", href="/x")]
-            )
+            _make_input(tabs=[SubNavTab(label="<script>alert(1)</script>", href="/x")])
         )
         assert "<script>" not in html
         assert "&lt;script&gt;" in html

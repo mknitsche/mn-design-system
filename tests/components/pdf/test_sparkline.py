@@ -83,7 +83,9 @@ class TestBuildSparkline:
         assert len(polyline.points) == 10  # 5 values * 2 coords
 
     def test_custom_color_applied(self):
-        inp = SparklineInput(values=[1.0, 2.0], width=80.0, height=20.0, color="#ff0000")
+        inp = SparklineInput(
+            values=[1.0, 2.0], width=80.0, height=20.0, color="#ff0000"
+        )
         result = build_sparkline(inp)
         polyline = next(c for c in result.contents if isinstance(c, PolyLine))
         # ReportLab HexColor("#ff0000") = (1.0, 0.0, 0.0) approx
