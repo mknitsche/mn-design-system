@@ -153,6 +153,42 @@ class TestRenderFooterHtml:
         assert "<style>" in html
         assert ".mn-footer" in html
 
+    def test_user_info_slot_rendered_when_id_set(self):
+        html = render_footer_html(
+            _make_input(user_info_id="footer-user-info")
+        )
+        assert 'id="footer-user-info"' in html
+        assert "mn-footer__meta" in html
+
+    def test_no_user_info_slot_when_id_none(self):
+        html = render_footer_html(_make_input())
+        assert 'id="footer-user-info"' not in html
+
+    def test_user_info_label_rendered_in_slot(self):
+        html = render_footer_html(
+            _make_input(
+                user_info_id="footer-user-info",
+                user_info_label="lade …",
+            )
+        )
+        assert "lade …" in html
+
+    def test_xss_user_info_id_escaped(self):
+        html = render_footer_html(
+            _make_input(user_info_id='x"><script>alert(1)</script>')
+        )
+        assert "<script>" not in html
+
+    def test_xss_user_info_label_escaped(self):
+        html = render_footer_html(
+            _make_input(
+                user_info_id="footer-user-info",
+                user_info_label="<script>alert(1)</script>",
+            )
+        )
+        assert "<script>" not in html
+        assert "&lt;script&gt;" in html
+
 
 class TestRenderFooterCss:
     def test_uses_custom_properties(self):

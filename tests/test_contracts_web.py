@@ -515,6 +515,22 @@ class TestFooterInput:
         with pytest.raises(ValidationError):
             FooterInput(columns=[_footer_column()], foo="bar")
 
+    def test_user_info_id_default_none(self):
+        """user_info_id: optionaler Hydration-Slot, Default None (v0.9.0)."""
+        inp = FooterInput(columns=[_footer_column()])
+        assert inp.user_info_id is None
+
+    def test_user_info_id_accepts_string(self):
+        inp = FooterInput(
+            columns=[_footer_column()], user_info_id="footer-user-info"
+        )
+        assert inp.user_info_id == "footer-user-info"
+
+    def test_user_info_label_default(self):
+        """user_info_label: Server-gerenderter Pre-Hydration-Text, Default '…'."""
+        inp = FooterInput(columns=[_footer_column()])
+        assert inp.user_info_label == "…"
+
 
 # ---------------------------------------------------------------------------
 # ContentCardInput
