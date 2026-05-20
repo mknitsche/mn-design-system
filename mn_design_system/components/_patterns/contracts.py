@@ -229,3 +229,12 @@ class TopNavInput(BaseModel):
 
     items: list[TopNavItem] = Field(min_length=1)
     aria_label: str = Field(default="Hauptnavigation", min_length=1)
+
+
+class PageHeaderInput(BaseModel):
+    """Seiten-Kopf: H1 + optionaler Lead-Absatz."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    title: str = Field(min_length=1)
+    lead: str | None = None
