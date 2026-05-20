@@ -37,6 +37,16 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
 )
 
+# var()-Fallback je Tier (bg + text) — die ECHTEN Tier-Werte aus tokens.py
+# (color.tier.<tier>.bg / .text). Ohne geladene tokens.css behaelt der
+# aktive Eintrag damit seinen Tier-Tint statt eines Einheits-Werts.
+_TIER_ACTIVE_FALLBACK: dict[WebTier, tuple[str, str]] = {
+    WebTier.BIBLIOTHEK: ("#f0fdf4", "#166534"),
+    WebTier.ATELIER: ("#fffbeb", "#92400e"),
+    WebTier.KABINETT: ("#fef2f2", "#991b1b"),
+    WebTier.START: ("#f0fdf4", "#166534"),
+}
+
 
 def render_top_nav_html(input: TopNavInput, *, inline_css: bool = False) -> str:
     """Top-Nav als HTML-Snippet (<nav> mit <a>-Pills).
@@ -96,14 +106,19 @@ def render_top_nav_css() -> str:
 .mn-top-nav__item:hover {
   background: rgba(255, 255, 255, 0.08);
 }
+.mn-top-nav__item:focus-visible {
+  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline-offset: 2px;
+}
 """.strip()
     ]
     for tier in _TIERS:
         t = tier.value
+        fb_bg, fb_text = _TIER_ACTIVE_FALLBACK[tier]
         rules.append(
             f".mn-top-nav__item--{t}.is-active {{\n"
-            f"  background: var(--color-tier-{t}-bg, #f0fdf4);\n"
-            f"  color: var(--color-tier-{t}-text, #166534);\n"
+            f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
+            f"  color: var(--color-tier-{t}-text, {fb_text});\n"
             f"}}"
         )
     return "\n".join(rules)

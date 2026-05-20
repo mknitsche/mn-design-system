@@ -95,6 +95,10 @@ def render_sub_nav_css() -> str:
   background: transparent;
   transition: background 120ms;
 }
+.mn-sub-nav__tab:focus-visible {
+  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline-offset: 2px;
+}
 """.strip()
     ]
     for tier in _TIERS:

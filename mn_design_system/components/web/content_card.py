@@ -3,17 +3,20 @@
 Konsumiert ContentCardInput und CardGridInput aus `_patterns.contracts`.
 
 - Content-Card: generische Inhalts-Karte (Titel + Text). Optional verlinkt
-  (Titel wird klickbar) und optional tier-getoent (Akzent-Border aus der
-  color.tier-Familie). Bewusst getrennt von kpi_card — die KPI-Card ist
-  KPI-spezifisch (Trend/Sparkline), die Content-Card ist generisch.
+  und optional tier-getoent (Akzent-Border aus der color.tier-Familie).
+  Bewusst getrennt von kpi_card — die KPI-Card ist KPI-spezifisch
+  (Trend/Sparkline), die Content-Card ist generisch.
 - Card-Grid: responsives Raster, das Content-Cards einbettet. Die Spaltenzahl
   wird als CSS-Variable `--mn-card-grid-cols` am Wrapper gesetzt (kein Hex,
   keine inline-Grid-Template-Hardcodes).
 
 CSS-Strategie wie kpi_card / wetter_strip: Farb- und Schrift-Token via CSS
 Custom Properties, Layout-Werte (Grid, Schriftgroessen in rem) inline.
-`cursor: pointer` greift nur fuer die verlinkte Card (Affordance) — eine Card
-ohne href behaelt den Default-Cursor.
+
+Verlinkte Card (Affordance): bei gesetztem href wird der Titel zum `<a>` UND
+die ganze Card via Stretched-Link-Pattern (`__link::after { inset: 0 }`)
+ganzflaechig klickbar — `cursor: pointer` am `<article>` ist damit ehrlich.
+Eine Card ohne href behaelt den Default-Cursor.
 """
 
 from __future__ import annotations
@@ -33,6 +36,16 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
 )
 
+# var()-Fallback je Tier-Border — der ECHTE Tier-Wert aus tokens.py
+# (color.tier.<tier>.border), damit eine tier-getoente Card auch ohne
+# geladene tokens.css ihre Tier-Akzent-Border behaelt statt Einheits-Grau.
+_TIER_BORDER_FALLBACK: dict[WebTier, str] = {
+    WebTier.BIBLIOTHEK: "#bbf7d0",
+    WebTier.ATELIER: "#fde68a",
+    WebTier.KABINETT: "#fecaca",
+    WebTier.START: "#bbf7d0",
+}
+
 
 def render_content_card_html(
     input: ContentCardInput, *, inline_css: bool = False
@@ -40,7 +53,8 @@ def render_content_card_html(
     """Content-Card als HTML-Snippet (<article> mit Titel + Text).
 
     Bei gesetztem href wird der Titel zum Link und die Card traegt
-    `mn-content-card--linked` (CSS-Affordance: cursor pointer).
+    `mn-content-card--linked` — via Stretched-Link wird die gesamte
+    Card-Flaeche klickbar (CSS-Affordance: cursor pointer).
     inline_css=True hangt das Komponenten-CSS in einem <style>-Block an.
     """
     parts = []
@@ -93,6 +107,7 @@ def render_content_card_css() -> str:
   font-family: var(--font-body, "Geist"), system-ui, sans-serif;
 }
 .mn-content-card--linked {
+  position: relative;
   cursor: pointer;
 }
 .mn-content-card__title {
@@ -106,8 +121,17 @@ def render_content_card_css() -> str:
   text-decoration: none;
   color: inherit;
 }
+.mn-content-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
 .mn-content-card__link:hover {
   text-decoration: underline;
+}
+.mn-content-card__link:focus-visible {
+  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline-offset: 2px;
 }
 .mn-content-card__body {
   font-size: 0.8125rem;
@@ -119,9 +143,10 @@ def render_content_card_css() -> str:
     ]
     for tier in _TIERS:
         t = tier.value
+        fallback = _TIER_BORDER_FALLBACK[tier]
         rules.append(
             f".mn-content-card--{t} {{\n"
-            f"  border-color: var(--color-tier-{t}-border, #cbd5e1);\n"
+            f"  border-color: var(--color-tier-{t}-border, {fallback});\n"
             f"}}"
         )
     return "\n".join(rules)

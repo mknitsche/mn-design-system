@@ -11,6 +11,7 @@ from mn_design_system.components.web.footer import (
     render_footer_css,
     render_footer_html,
 )
+from mn_design_system.tokens import get
 
 
 def _make_input(**overrides) -> FooterInput:
@@ -158,3 +159,20 @@ class TestRenderFooterCss:
         css = render_footer_css()
         assert "var(--color-light-border" in css
         assert "var(--color-light-text" in css
+
+    def test_stroke_thin_fallback_matches_token_unit(self):
+        """Befund 3 (A2-D2): der var()-Fallback fuer stroke.thin muss in Wert
+        UND Einheit dem Token entsprechen (0.5pt, nicht 0.5px — pt und px
+        sind verschiedene Einheiten)."""
+        css = render_footer_css()
+        soll = get("stroke.thin")
+        assert soll == "0.5pt"
+        assert f"var(--stroke-thin, {soll})" in css
+
+    def test_link_has_focus_visible(self):
+        """A2 welle-weit: Footer-Links haben einen sichtbaren, Token-basierten
+        :focus-visible-Indikator (WCAG 2.4.7)."""
+        css = render_footer_css()
+        assert ".mn-footer__link:focus-visible" in css
+        assert "outline" in css
+        assert "var(--color-light-accent" in css
