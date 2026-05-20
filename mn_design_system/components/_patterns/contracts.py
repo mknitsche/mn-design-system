@@ -238,3 +238,31 @@ class PageHeaderInput(BaseModel):
 
     title: str = Field(min_length=1)
     lead: str | None = None
+
+
+class FooterLink(BaseModel):
+    """Ein Link in einer Footer-Spalte."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+
+
+class FooterColumn(BaseModel):
+    """Eine Spalte im 3-Block-Footer."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    title: str = Field(min_length=1)
+    links: list[FooterLink] = Field(min_length=1)
+
+
+class FooterInput(BaseModel):
+    """3-Spalten-Footer + optionale Version + Copyright-Notiz (Spec §Welle B)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    columns: list[FooterColumn] = Field(min_length=1, max_length=3)
+    version: str | None = None
+    note: str | None = None
