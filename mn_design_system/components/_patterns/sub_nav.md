@@ -23,6 +23,7 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 |---|---|---|
 | `tier` | `WebTier` | Enum — Tier-Kontext der gesamten Sub-Nav |
 | `tabs` | `list[SubNavTab]` | min_length=1 |
+| `aria_label` | `str` | Default `"Bereichs-Navigation"`, min_length=1 — Landmark-Label des `<nav>` (WCAG 2.4.1) |
 
 `SubNavTab` (Pydantic):
 
@@ -45,8 +46,9 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 
 ## Verhalten
 
-- HTML-Struktur: `<nav class="mn-sub-nav mn-sub-nav--{tier}">` mit
-  `<a class="mn-sub-nav__tab[ is-active]" href="...">` pro Tab.
+- HTML-Struktur: `<nav class="mn-sub-nav mn-sub-nav--{tier}" aria-label="...">`
+  mit `<a class="mn-sub-nav__tab[ is-active]" href="..."[ aria-current="page"]>`
+  pro Tab (`aria-current="page"` nur am aktiven Tab).
 - Inaktiver Tab: nur Text, transparenter Hintergrund.
 - Hover auf inaktivem Tab: `background: var(--color-tier-{tier}-bg-soft)` —
   bg-soft-Token, kein `color-mix` im Konsumenten (Gemini-Gate Punkt 1).
@@ -56,6 +58,16 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 - `label` und `href` werden per `html.escape()` (href mit `quote=True`)
   XSS-sicher ausgegeben.
 - `render_sub_nav_css()` gibt Hover- und Aktiv-Regeln fuer alle 4 Tiers aus.
+
+### Barrierefreiheit (Spec §A6)
+
+- `<nav>` traegt `aria-label` (Default `"Bereichs-Navigation"`, per
+  `SubNavInput.aria_label` ueberschreibbar) — mehrere `<nav>` auf einer Seite
+  (L1 Top-Nav + L3 Sub-Nav) muessen fuer Screenreader unterscheidbar sein
+  (WCAG 2.4.1). `aria_label` wird per `html.escape()` XSS-sicher ausgegeben.
+- Der aktive Tab traegt zusaetzlich `aria-current="page"` — die
+  "aktiv"-Information ist damit nicht rein visuell, sondern auch fuer
+  assistive Technik sichtbar.
 
 ## Tier-Bezug
 

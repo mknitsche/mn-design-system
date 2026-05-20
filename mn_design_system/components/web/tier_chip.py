@@ -59,6 +59,7 @@ def render_tier_chip_css() -> str:
   font-size: 0.6875rem;
   font-weight: 600;
   line-height: 1.4;
+  cursor: default;
 }
 .mn-tier-chip--bordered {
   border: 1px solid transparent;

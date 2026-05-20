@@ -191,9 +191,14 @@ class SubNavInput(BaseModel):
 
     tier: Tier-Kontext der gesamten Sub-Nav (alle Tabs in-tier).
     tabs: mind. 1 Tab. Genau einer sollte active=True sein.
+    aria_label: Landmark-Label des <nav> (Barrierefreiheit, WCAG 2.4.1).
+                Mehrere <nav> pro Seite (L1 Top-Nav + L3 Sub-Nav) muessen
+                unterscheidbar sein — der Konsument kann ein praeziseres
+                Label setzen (z.B. "Bibliothek-Bereiche").
     """
 
     model_config = {"extra": "forbid", "frozen": True}
 
     tier: WebTier
     tabs: list[SubNavTab] = Field(min_length=1)
+    aria_label: str = Field(default="Bereichs-Navigation", min_length=1)

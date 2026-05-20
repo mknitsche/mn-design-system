@@ -51,3 +51,10 @@ class TestRenderTierChipCss:
     def test_bordered_uses_border_token(self):
         css = render_tier_chip_css()
         assert "var(--color-tier-bibliothek-border" in css
+
+    def test_cursor_default_anti_affordance(self):
+        """Spec §A4: L2-Chip ist Info, nicht klickbar — cursor:default als
+        Anti-Affordance-Marker, damit der Chip von einem klickbaren
+        Eltern-Container kein `pointer` erbt."""
+        css = render_tier_chip_css()
+        assert "cursor: default;" in css

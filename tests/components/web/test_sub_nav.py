@@ -69,6 +69,31 @@ class TestRenderSubNavHtml:
         assert "<style>" in html
         assert ".mn-sub-nav" in html
 
+    def test_nav_has_aria_label_default(self):
+        """Spec §A6: <nav> traegt ein aria-label — mehrere <nav> pro Seite
+        (L1 Top-Nav + L3 Sub-Nav) muessen fuer Screenreader unterscheidbar
+        sein (WCAG 2.4.1). Default greift ohne explizites aria_label."""
+        html = render_sub_nav_html(_make_input())
+        assert 'aria-label="Bereichs-Navigation"' in html
+
+    def test_nav_aria_label_overridable(self):
+        html = render_sub_nav_html(_make_input(aria_label="Bibliothek-Bereiche"))
+        assert 'aria-label="Bibliothek-Bereiche"' in html
+
+    def test_nav_aria_label_escaped(self):
+        """aria_label ist ein Konsument-String — muss XSS-sicher escaped werden."""
+        html = render_sub_nav_html(
+            _make_input(aria_label='"><script>alert(1)</script>')
+        )
+        assert "<script>" not in html
+        assert "&lt;script&gt;" in html
+
+    def test_active_tab_has_aria_current(self):
+        """Spec §A6: aktiver Tab traegt aria-current="page" — die
+        Aktiv-Information darf nicht rein visuell sein (WCAG)."""
+        html = render_sub_nav_html(_make_input())
+        assert html.count('aria-current="page"') == 1
+
 
 class TestRenderSubNavCss:
     def test_css_hover_uses_bg_soft(self):
