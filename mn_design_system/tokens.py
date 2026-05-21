@@ -230,7 +230,6 @@ TOKENS = {
     "font.hyphenation.min-chars-after": 3,
 }
 
-
 # Helper
 def get(key, default=None):
     """Token-Lookup mit Default. Beispiel: get("color.light.text")."""
