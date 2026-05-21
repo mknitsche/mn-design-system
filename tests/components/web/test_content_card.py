@@ -92,8 +92,29 @@ class TestRenderContentCardCss:
 
     def test_uses_css_custom_properties(self):
         css = render_content_card_css()
-        assert "var(--color-light-border" in css
+        assert "var(--web-color-separator" in css
         assert "var(--color-light-h1" in css
+
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Stroke, Schriftgroessen, Schriftfamilie und
+        Abstaende kommen aus der Web-Foundation."""
+        css = render_content_card_css()
+        assert "var(--web-stroke-line" in css
+        assert "var(--web-text-body" in css
+        assert "var(--web-text-ui" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--space-" in css
+
+    def test_radius_card_fallback_is_4px(self):
+        """Der radius-card-Fallback muss dem echten Token (4px) entsprechen —
+        die alte 6px-Angabe war ein falscher Fallback."""
+        css = render_content_card_css()
+        assert "var(--radius-card, 4px)" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — die Content-Card ist rein web."""
+        css = render_content_card_css()
+        assert "pt" not in css
 
     def test_tier_modifier_uses_border_token(self):
         css = render_content_card_css()
@@ -137,11 +158,12 @@ class TestRenderContentCardCss:
 
     def test_card_link_has_focus_visible(self):
         """A2 welle-weit: der Card-Link hat einen sichtbaren, Token-basierten
-        :focus-visible-Indikator (WCAG 2.4.7)."""
+        :focus-visible-Indikator (WCAG 2.4.7) — Foundation-Fokus-Ring."""
         css = render_content_card_css()
         assert ".mn-content-card__link:focus-visible" in css
         assert "outline" in css
-        assert "var(--color-light-accent" in css
+        assert "var(--web-stroke-focus" in css
+        assert "var(--web-color-focus-ring" in css
 
 
 class TestRenderCardGridHtml:
@@ -195,3 +217,12 @@ class TestRenderCardGridCss:
     def test_grid_uses_columns_variable(self):
         css = render_card_grid_css()
         assert "var(--mn-card-grid-cols" in css
+
+    def test_grid_gap_uses_space_token(self):
+        """Re-Tokenisierung: der Raster-Abstand kommt aus dem space-Raster."""
+        css = render_card_grid_css()
+        assert "var(--space-4" in css
+
+    def test_grid_no_print_pt_units(self):
+        css = render_card_grid_css()
+        assert "pt" not in css
