@@ -1,0 +1,45 @@
+{
+  "web": {
+    "_meta": {
+      "comment": "Web-Foundation (Design 2026-05-21, cld1-S21). Genuin web-spezifisch: Typo-Skala in px (Anker body=16px), Strokes in ganzen Pixeln, Layout-Proportionen. Die print-orientierten Tokens (font.size.* / stroke.* in pt) bleiben unberuehrt."
+    },
+    "text": {
+      "caption": { "value": "12px", "comment": "Chips, Feinzeile, Editions-Meta" },
+      "ui":      { "value": "14px", "comment": "Navigation, Footer, Bedien-Elemente" },
+      "body":    { "value": "16px", "comment": "Fliesstext — Anker der Skala" },
+      "lead":    { "value": "19px", "comment": "Intro-Absatz" },
+      "h3":      { "value": "23px", "comment": "Abschnitts-Ueberschrift" },
+      "h2":      { "value": "28px", "comment": "Bereichs-Ueberschrift" },
+      "h1":      { "value": "33px", "comment": "Seitentitel" }
+    },
+    "leading": {
+      "caption": { "value": "1.4" },
+      "ui":      { "value": "1.35" },
+      "body":    { "value": "1.6" },
+      "lead":    { "value": "1.55" },
+      "h3":      { "value": "1.3" },
+      "h2":      { "value": "1.22" },
+      "h1":      { "value": "1.18" }
+    },
+    "font": {
+      "sans":            { "value": "Geist", "comment": "Web-Sans — Fliesstext, UI, Navigation" },
+      "serif-editorial": { "value": "Source Serif 4", "comment": "Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print)." }
+    },
+    "stroke": {
+      "line":        { "value": "1px", "comment": "Trennlinie auf hellem Grund — ganze Pixel, blurfrei" },
+      "line-strong": { "value": "2px", "comment": "Trennlinie auf dunklem Grund (Masthead)" },
+      "focus":       { "value": "2px", "comment": "Tastatur-Fokus-Ring" }
+    },
+    "color": {
+      "separator":         { "value": "#b4bcc8", "comment": "Trennlinien-Grau auf hellem Grund — kraeftiger als color.light.border, sichtbar bei 1px" },
+      "separator-on-dark": { "value": "rgba(255,255,255,0.16)", "comment": "Trenner im dunklen Masthead (WCAG 1.4.11 >= 3:1 auf color.dark.surface pruefen)" },
+      "focus-ring":        { "value": "{color.indigo.600.value}", "comment": "Tastatur-Fokus-Ring — Akzent-Indigo" }
+    },
+    "layout": {
+      "content-width": { "value": "1024px", "comment": "Maximale Inhalts-Spalte; alle Bahnen fluchten daran (Design §8)" },
+      "page-inset":    { "value": "44px",   "comment": "Seiten-Einzug Desktop; responsiv 32px Tablet / 16px Mobil via render_foundation_css()" },
+      "bp-mobile":     { "value": "640px",  "comment": "Breakpoint: < 640 = mobil" },
+      "bp-tablet":     { "value": "1024px", "comment": "Breakpoint: 640-1024 = Tablet; >= 1024 = Desktop" }
+    }
+  }
+}
