@@ -52,6 +52,7 @@ def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
         f'<nav class="mn-sub-nav mn-sub-nav--{input.tier.value}" '
         f'aria-label="{aria_label}">'
     )
+    parts.append('<div class="mn-sub-nav__inner">')
     for tab in input.tabs:
         classes = ["mn-sub-nav__tab"]
         aria_current = ""
@@ -63,6 +64,7 @@ def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
         parts.append(
             f'<a class="{" ".join(classes)}" href="{href}"{aria_current}>{label}</a>'
         )
+    parts.append("</div>")
     parts.append("</nav>")
     return "".join(parts)
 
@@ -76,19 +78,24 @@ def render_sub_nav_css() -> str:
     rules = [
         """
 .mn-sub-nav {
+  background: var(--color-light-surface, #ffffff);
+  border-bottom: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
+}
+.mn-sub-nav__inner {
+  max-width: var(--web-layout-content-width, 1024px);
+  margin-inline: auto;
+  padding: var(--space-2, 8px) var(--web-layout-page-inset, 44px);
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 1rem;
-  background: var(--color-light-surface, #ffffff);
-  border-bottom: 1px solid var(--color-light-border, #cbd5e1);
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
+  gap: var(--space-1, 4px);
 }
 .mn-sub-nav__tab {
   display: inline-block;
-  padding: 0.25rem 0.625rem;
+  padding: var(--space-1, 4px) var(--space-3, 12px);
   border-radius: var(--radius-subtle, 2px);
-  font-size: 0.8125rem;
+  font-size: var(--web-text-ui, 14px);
+  line-height: var(--web-leading-ui, 1.35);
   font-weight: 500;
   text-decoration: none;
   color: var(--color-light-text, #1e1b4b);
@@ -96,7 +103,7 @@ def render_sub_nav_css() -> str:
   transition: background 120ms;
 }
 .mn-sub-nav__tab:focus-visible {
-  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: 2px;
 }
 """.strip()
