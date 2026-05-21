@@ -325,3 +325,69 @@ class EmptyStateInput(BaseModel):
 
     message: str = Field(min_length=1)
     tier: WebTier | None = None
+
+
+# ---------------------------------------------------------------------------
+# Masthead (Web-Foundation, Design §10) — loest TopNav + BrandBar ab
+# ---------------------------------------------------------------------------
+
+
+class MastheadEmblem(BaseModel):
+    """Hirn-Emblem links im Masthead, verlinkt (Home-Ruecksprung).
+
+    src: Bild-URL (z.B. "/assets/logo-mkn2ndbrain-kopf.png").
+    alt: Alt-Text fuer Screenreader.
+    href: Ziel des Emblem-Links (z.B. "/start/").
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    src: str = Field(min_length=1)
+    alt: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+
+
+class MastheadTierItem(BaseModel):
+    """Ein Tier-Pill in Reihe 2 des Masthead (= ein Tier-Ziel)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+    tier: WebTier
+    active: bool = False
+
+
+class MastheadChip(BaseModel):
+    """Kontext-Chip rechts in Reihe 2 (z.B. Page-Tier 'Atelier · AMBER')."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    tier: WebTier
+    label: str = Field(min_length=1)
+
+
+class MastheadInput(BaseModel):
+    """Editorialer Masthead (Design §10) — dunkler Kopf, zwei Reihen.
+
+    Reihe 1 (Identitaet): Emblem + Wortmarke + optionales Editions-Datum.
+    Reihe 2 (Tier-Navigation): Tier-Pills links, optionaler Kontext-Chip
+    rechts, optional ein client-seitig gefuellter Hydration-Chip.
+
+    Das helle Lokal-Band (reine Sub-Navigation) ist NICHT Teil des Masthead —
+    es ist die separat gerenderte sub_nav-Komponente darunter.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    emblem: MastheadEmblem
+    wordmark: str = Field(min_length=1)
+    edition_date: str | None = None
+    tier_items: list[MastheadTierItem] = Field(min_length=1)
+    aria_label: str = Field(default="Hauptnavigation", min_length=1)
+    context_chip: MastheadChip | None = None
+    user_chip_id: str | None = None
+    """Optionaler Hydration-Slot. Gesetzt → ein Lade-Chip mit dieser id wird
+    nach dem Kontext-Chip gerendert; eine App fuellt ihn client-seitig."""
+    user_chip_label: str = "…"
+    """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
