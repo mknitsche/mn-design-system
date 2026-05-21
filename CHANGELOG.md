@@ -8,6 +8,65 @@ oder Doku.
 
 ---
 
+## [0.12.0] — 2026-05-21
+
+### Hinzugefuegt — Schaltbare Diagramm-Palette `color.diagram.*` (claudeAI Welle-3 Farb-Harmonie)
+
+Neue kategorische Farbpalette fuer **ungeordnete** Diagramm-Kategorien
+(EAM-Schichten, Architektur-Knoten-Rollen, Skill-Typen) — bewusst getrennt von
+der **geordneten** `color.category.prio-*` Skala und dem 2-poligen
+`color.accent.warm`. KT-1-Entscheidung S260.
+
+12 Hues, perzeptueller OKLCH-Ring (12 Speichen alle 30 Grad, indigo-verankert:
+`diagram.indigo`-Hue = 276.97 Grad = Hue von `indigo-600` `#4F46E5`). Jede
+Kategorie hat drei Slots — `base` (Linien/Rahmen/Text), `nuance` (helle
+Fuellung), `dark` (Text auf Nuance). Alle 12 base-Toene WCAG-AA:
+base-auf-Weiss >=3:1, base-auf-Nuance >=3:1, dark-auf-Nuance >=4.5:1.
+
+**Schaltbar zwischen zwei Varianten** — `vivid` (gamut-relative Chroma,
+lebendig, aktiver Default) und `uniform` (konstante L+C, ruhiger). Beide
+Tabellen liegen als `_variant_*`-Bloecke (intern, nicht im Build-Output) in
+`tokens/colors.json`; die 36 semantischen `color.diagram.<hue>.{base,nuance,dark}`-
+Tokens sind Style-Dictionary-Referenzen auf die aktive Variante. Umschalten ist
+ein Config-Edit (Referenz-Redirect + `_variant`-Wert), kein Refactor —
+Konsumenten referenzieren nur die semantischen Keys.
+
+### Geaendert — `color.category.*` auf Option-B Temperatur-Skala (BREAKING)
+
+Die To-Do-Prioritaets-Farben sind von vier unverbundenen Material-Design-Toenen
+auf eine **Temperatur-Skala** umgestellt (KT-1 Option B, S260): Sofort=warm-rot,
+Demnaechst=warm-amber, Klaeren=kuehl-indigo, Irgendwann=neutral-grau.
+
+Alle Werte sind jetzt Referenzen auf bestehende Marken-Tokens
+(`status.error-bg`, `severity.high`, `accent.warm.soft/.text`, `indigo.100/700`,
+`grey.50/500/700`) — die Prioritaets-Skala wandert damit automatisch mit der
+Marke. Einziges Hex-Literal: `prio-sofort-header-text` (`#b91c1c`, Tailwind
+red-700) fuer WCAG-AA Kleintext-Kontrast im Sektions-Header (5.66:1 auf bg).
+
+**Breaking — 11 `color.category.*` Tokens entfernt:** `yellow`, `red-bg`,
+`red-cb`, `yellow-bg`, `yellow-cb`, `blue-bg`, `blue-text`, `blue-cb`,
+`gray-text`, `gray-cb`, `green-cb`. Neu: `prio-sofort-bg`, `prio-sofort-text`,
+`prio-sofort-header-text`, `prio-demnaechst-bg`, `prio-demnaechst-text`,
+`prio-klaeren-bg`, `prio-klaeren-text`, `prio-irgendwann-bg`,
+`prio-irgendwann-text`, `prio-irgendwann-header-text`, `checkbox` (eine
+einheitliche Checkbox-Farbe statt vier stufenspezifischer).
+
+### Entfernt — `color.architecture.*` (BREAKING)
+
+Die 6 `color.architecture.*` Tokens (`workflow`, `workflow-light`,
+`integration`, `integration-light`, `data`, `data-light`) sind retired —
+abgeloest durch `color.diagram.*`. `color.light.row-alt` und
+`color.status.success-bg` bleiben (markenkonform, weiter in Verwendung).
+
+### Hinweis
+
+v0.11.0 hatte diese Familien als 1:1-Kopien von Material-Design-Literalen
+eingefuehrt (additiv, ohne visuelle Aenderung). v0.12.0 macht den eigentlichen
+Schritt: weg von Material-Adhoc, hin zu marken-verankerten, perzeptuell
+konstruierten Farbskalen. Die claudeAI-Konsumenten (`pdf_layer`,
+`system_doc_v2`) werden in einem separaten Schritt (Part 2-CONSUMER) auf die
+neuen Token-Keys umgestellt.
+
 ## [0.11.0] — 2026-05-21
 
 ### Hinzugefuegt — Kategorie- + Architektur-Farbtokens (claudeAI Welle 3)

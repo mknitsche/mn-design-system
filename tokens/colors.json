@@ -78,28 +78,122 @@
     },
 
     "category": {
-      "_meta":     { "value": "Kategorie- und To-Do-Prioritaets-Farben fuer PDF-Tabellen (pdf_utils.py, Aufgaben-Cockpit / Briefing). Vier Prioritaets-Familien (Sofort=red, Demnaechst=yellow, Klaeren=blue, Irgendwann=gray) je bg / text / cb (Checkbox) plus green (Projekt) und yellow Akzent-Basis. S260 Welle 3 — Material-Design-Werte 1:1 in Tokens ueberfuehrt (kein visueller Unterschied, additive Aufnahme)." },
-      "yellow":      { "value": "#f9a825", "comment": "Warm-Gelb Akzent-Basis (Categories)." },
-      "red-bg":      { "value": "#fce4ec", "comment": "Prioritaet 'Sofort' — Zeilen-Hintergrund." },
-      "red-cb":      { "value": "#c62828", "comment": "Prioritaet 'Sofort' — Checkbox." },
-      "yellow-bg":   { "value": "#fff8e1", "comment": "Prioritaet 'Demnaechst' — Zeilen-Hintergrund." },
-      "yellow-cb":   { "value": "#f57f17", "comment": "Prioritaet 'Demnaechst' — Checkbox." },
-      "blue-bg":     { "value": "#e3f2fd", "comment": "Prioritaet 'Klaeren' — Zeilen-Hintergrund." },
-      "blue-text":   { "value": "#1565c0", "comment": "Prioritaet 'Klaeren' — Text." },
-      "blue-cb":     { "value": "#1976d2", "comment": "Prioritaet 'Klaeren' — Checkbox." },
-      "gray-text":   { "value": "#616161", "comment": "Prioritaet 'Irgendwann' — Text." },
-      "gray-cb":     { "value": "#757575", "comment": "Prioritaet 'Irgendwann' — Checkbox." },
-      "green-cb":    { "value": "#388e3c", "comment": "Projekt — Checkbox." }
+      "_meta":     { "value": "To-Do-Prioritaets-Farben fuer PDF-Tabellen (pdf_layer, Aufgaben-Cockpit / Briefing). Option-B Temperatur-Skala (KT-1 S260, Welle 3): vier Prioritaets-Stufen ueber Farb-TEMPERATUR statt vier unverbundener Material-Toene — Sofort=warm-rot, Demnaechst=warm-amber, Klaeren=kuehl-indigo, Irgendwann=neutral-grau. Alle Werte sind Style-Dictionary-Referenzen auf bestehende Marken-Tokens (status / severity / accent.warm / indigo / grey) — keine eigenen Hex-Literale, damit die Prioritaets-Skala automatisch mit der Marke mitwandert. Einzige Ausnahme: prio-sofort-header-text (red-700, kein bestehender Token). v0.12.0 — ersetzt die 11 Material-Design-Adhoc-Tokens aus v0.11.0 (yellow / red-* / yellow-* / blue-* / gray-* / green-cb)." },
+
+      "prio-sofort-bg":          { "value": "{color.status.error-bg.value}",   "comment": "Prioritaet 'Sofort' — Zeilen-Hintergrund (rosa-blass)." },
+      "prio-sofort-text":        { "value": "{color.severity.high.value}",     "comment": "Prioritaet 'Sofort' — Zeilen-Text (red-600, leuchtend)." },
+      "prio-sofort-header-text": { "value": "#b91c1c",                         "comment": "Prioritaet 'Sofort' — Sektions-Header-Text. Tailwind red-700 — dunkler als severity.high, erreicht >=4.5:1 (5.66:1) auf prio-sofort-bg fuer Kleintext-WCAG-AA. Einziges Hex-Literal der category-Familie: red-700 hat keinen bestehenden Token, fuegt sich aber in die Tailwind-Rot-Skala (severity.high=red-600, status.error=red-ish) ein." },
+
+      "prio-demnaechst-bg":      { "value": "{color.accent.warm.soft.value}",  "comment": "Prioritaet 'Demnaechst' — Zeilen-Hintergrund (amber-100, hell)." },
+      "prio-demnaechst-text":    { "value": "{color.accent.warm.text.value}",  "comment": "Prioritaet 'Demnaechst' — Zeilen-Text (amber-900, 8.15:1 auf bg)." },
+
+      "prio-klaeren-bg":         { "value": "{color.indigo.100.value}",        "comment": "Prioritaet 'Klaeren' — Zeilen-Hintergrund (indigo-100, kuehl)." },
+      "prio-klaeren-text":       { "value": "{color.indigo.700.value}",        "comment": "Prioritaet 'Klaeren' — Zeilen-Text (indigo-700, 6.41:1 auf bg)." },
+
+      "prio-irgendwann-bg":          { "value": "{color.grey.50.value}",       "comment": "Prioritaet 'Irgendwann' — Zeilen-Hintergrund (grey-50, neutral)." },
+      "prio-irgendwann-text":        { "value": "{color.grey.500.value}",      "comment": "Prioritaet 'Irgendwann' — Zeilen-Text (grey-500, unauffaellig)." },
+      "prio-irgendwann-header-text": { "value": "{color.grey.700.value}",      "comment": "Prioritaet 'Irgendwann' — Sektions-Header-Text. grey-700, 9.45:1 auf prio-irgendwann-bg (Kleintext-WCAG-AA)." },
+
+      "checkbox":                { "value": "{color.indigo.600.value}",        "comment": "Einheitliche Checkbox-Farbe fuer alle Prioritaets-Stufen — Action-Indigo. Loest die vier stufenspezifischen Checkbox-Toene (red-cb / yellow-cb / blue-cb / gray-cb) ab: die Checkbox ist ein interaktives Element, traegt die Action-Farbe, nicht die Prioritaets-Temperatur." }
     },
 
-    "architecture": {
-      "_meta":             { "value": "Architektur-Diagramm-Knotenfarben fuer PDF-Visualisierung (pdf_utils.py, system-dokumentation). Drei Knoten-Rollen (workflow / integration / data) je Fuellfarbe + helle Hintergrund-Variante. S260 Welle 3 — Material-Design-Werte 1:1 in Tokens ueberfuehrt. workflow=blau und integration=lila/data=teal: rollensemantisch benannt, ergaenzt color.viz.* (generische Diagramm-Box-Toene)." },
-      "workflow":          { "value": "#1565c0", "comment": "Workflow-Knoten — Fuellfarbe." },
-      "workflow-light":    { "value": "#e3f2fd", "comment": "Workflow-Knoten — helle Hintergrund-Variante." },
-      "integration":       { "value": "#6a1b9a", "comment": "Integrations-Knoten — Fuellfarbe." },
-      "integration-light": { "value": "#f3e5f5", "comment": "Integrations-Knoten — helle Hintergrund-Variante." },
-      "data":              { "value": "#00695c", "comment": "Daten-Knoten — Fuellfarbe." },
-      "data-light":        { "value": "#e0f2f1", "comment": "Daten-Knoten — helle Hintergrund-Variante." }
+    "diagram": {
+      "_meta": { "value": "SCHALTBARE kategorische Diagramm-Palette (KT-1 S260, Welle-3 Farb-Harmonie). 12 unterscheidbare Hues fuer UNGEORDNETE Diagramm-Kategorien (EAM-Schichten, Architektur-Knoten-Rollen, Skill-Typen) — bewusst getrennt von der GEORDNETEN color.category.prio-* Skala und dem 2-poligen color.accent.warm. Methode: perzeptueller OKLCH-Ring, 12 Hues alle 30 Grad, indigo-verankert (diagram.indigo-Hue = 276.97 Grad = Hue von indigo-600 #4F46E5; indigo-600 selbst dient als dark-Variante). Jede Kategorie: base (Linien/Rahmen/Text) + nuance (helle Fuellung) + dark (Text auf Nuance). Alle 12 base-Toene WCAG-AA: base-auf-Weiss >=3:1, base-auf-Nuance >=3:1, dark-auf-Nuance >=4.5:1." },
+
+      "_variant": { "value": "vivid", "comment": "AKTIVE Variante. Zwei Tabellen sind hinterlegt: 'vivid' (gamut-relative Chroma, lebendig, KT-1-Default S260) und 'uniform' (konstante L+C, ruhiger). UMSCHALTEN ist ein Config-Edit, kein Refactor — die 36 semantischen diagram-Hue-base/nuance/dark-Tokens sind Style-Dictionary-Referenzen auf eine der _variant_-Tabellen. Flip-Prozedur (im mn-design-system-Repo, danach npm run build): in tokens/colors.json den Substring _variant_vivid durch _variant_uniform ersetzen UND in diesem _variant-Token den value von vivid auf uniform setzen (per Editor-Suchen-Ersetzen oder sed). Zum Zurueckschalten umgekehrt. Konsumenten referenzieren ausschliesslich die semantischen color.diagram-Hue-Keys und merken vom Wechsel nichts ausser dem Farbwert." },
+
+      "_variant_vivid": {
+        "_meta":    { "value": "Variante VIVID — gamut-relative Chroma (Base C = 95% des Hue-Gamut-Maximums bei L=0.62; emerald-Base bei L=0.61 fuer WCAG base-auf-Nuance >=3:1). Gleiches *empfundenes* Farbgewicht, lebendig. Interne Tabelle — _meta-Prefix haelt sie aus dem Build-Output; nur ueber color.diagram.<hue> referenziert." },
+        "crimson":  { "base": { "value": "#ef1e6e" }, "nuance": { "value": "#f8ebed" }, "dark": { "value": "#840c39" } },
+        "copper":   { "base": { "value": "#e34b16" }, "nuance": { "value": "#f8ebe8" }, "dark": { "value": "#7d2507" } },
+        "amber":    { "base": { "value": "#b97417" }, "nuance": { "value": "#f8ece1" }, "dark": { "value": "#653d07" } },
+        "citron":   { "base": { "value": "#9b8517" }, "nuance": { "value": "#f7efcd" }, "dark": { "value": "#544708" } },
+        "green":    { "base": { "value": "#6d9617" }, "nuance": { "value": "#e6f5d5" }, "dark": { "value": "#395108" } },
+        "emerald":  { "base": { "value": "#1b9b60" }, "nuance": { "value": "#d8f8e3" }, "dark": { "value": "#0a5633" } },
+        "teal":     { "base": { "value": "#1b9a90" }, "nuance": { "value": "#d2f8f3" }, "dark": { "value": "#0a534e" } },
+        "azure":    { "base": { "value": "#1b95af" }, "nuance": { "value": "#e0f2f8" }, "dark": { "value": "#0a505f" } },
+        "blue":     { "base": { "value": "#198bdd" }, "nuance": { "value": "#e7f0f8" }, "dark": { "value": "#094b7a" } },
+        "indigo":   { "base": { "value": "#6c73f9" }, "nuance": { "value": "#eceef8" }, "dark": { "value": "#3812c1" } },
+        "violet":   { "base": { "value": "#af47f9" }, "nuance": { "value": "#f1ecf8" }, "dark": { "value": "#640e97" } },
+        "magenta":  { "base": { "value": "#dd1ebd" }, "nuance": { "value": "#f8eaf3" }, "dark": { "value": "#7a0b67" } }
+      },
+
+      "_variant_uniform": {
+        "_meta":    { "value": "Variante UNIFORM — konstante Lightness + Chroma (Base L=0.62 / C=0.105 fuer alle 12, nur Hue rotiert; Nuance L=0.95 / C=0.030; Dark L=0.40 / C=0.105). Gleiches *numerisches* L+C, ruhiger/gedaempfter. Interne Tabelle — als Reserve-Variante mit-anker, _meta-Prefix haelt sie aus dem Build-Output." },
+        "crimson":  { "base": { "value": "#bb6a7b" }, "nuance": { "value": "#ffe8eb" }, "dark": { "value": "#742b3e" } },
+        "copper":   { "base": { "value": "#bc6e58" }, "nuance": { "value": "#ffe9e3" }, "dark": { "value": "#752f1a" } },
+        "amber":    { "base": { "value": "#b0793a" }, "nuance": { "value": "#fdebda" }, "dark": { "value": "#663d02" } },
+        "citron":   { "base": { "value": "#988632" }, "nuance": { "value": "#f4efd9" }, "dark": { "value": "#544703" } },
+        "green":    { "base": { "value": "#759249" }, "nuance": { "value": "#e9f3dd" }, "dark": { "value": "#395100" } },
+        "emerald":  { "base": { "value": "#49996c" }, "nuance": { "value": "#dff5e7" }, "dark": { "value": "#015632" } },
+        "teal":     { "base": { "value": "#149a91" }, "nuance": { "value": "#d9f5f2" }, "dark": { "value": "#02534e" } },
+        "azure":    { "base": { "value": "#1c95af" }, "nuance": { "value": "#d9f4fc" }, "dark": { "value": "#015160" } },
+        "blue":     { "base": { "value": "#4d8bc2" }, "nuance": { "value": "#e2f1ff" }, "dark": { "value": "#004b7c" } },
+        "indigo":   { "base": { "value": "#7680c5" }, "nuance": { "value": "#eaedff" }, "dark": { "value": "#3b407f" } },
+        "violet":   { "base": { "value": "#9775b8" }, "nuance": { "value": "#f4eaff" }, "dark": { "value": "#573673" } },
+        "magenta":  { "base": { "value": "#ae6d9d" }, "nuance": { "value": "#fde7f6" }, "dark": { "value": "#6a2e5c" } }
+      },
+
+      "crimson": {
+        "base":   { "value": "{color.diagram._variant_vivid.crimson.base.value}",   "comment": "Kategorie 1 — Hue 6.97 Grad. base: Linien/Rahmen/Text." },
+        "nuance": { "value": "{color.diagram._variant_vivid.crimson.nuance.value}", "comment": "Kategorie 1 — helle Fuellung." },
+        "dark":   { "value": "{color.diagram._variant_vivid.crimson.dark.value}",   "comment": "Kategorie 1 — Text auf Nuance." }
+      },
+      "copper": {
+        "base":   { "value": "{color.diagram._variant_vivid.copper.base.value}",   "comment": "Kategorie 2 — Hue 36.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.copper.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.copper.dark.value}" }
+      },
+      "amber": {
+        "base":   { "value": "{color.diagram._variant_vivid.amber.base.value}",    "comment": "Kategorie 3 — Hue 66.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.amber.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.amber.dark.value}" }
+      },
+      "citron": {
+        "base":   { "value": "{color.diagram._variant_vivid.citron.base.value}",   "comment": "Kategorie 4 — Hue 96.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.citron.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.citron.dark.value}" }
+      },
+      "green": {
+        "base":   { "value": "{color.diagram._variant_vivid.green.base.value}",    "comment": "Kategorie 5 — Hue 126.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.green.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.green.dark.value}" }
+      },
+      "emerald": {
+        "base":   { "value": "{color.diagram._variant_vivid.emerald.base.value}",  "comment": "Kategorie 6 — Hue 156.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.emerald.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.emerald.dark.value}" }
+      },
+      "teal": {
+        "base":   { "value": "{color.diagram._variant_vivid.teal.base.value}",     "comment": "Kategorie 7 — Hue 186.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.teal.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.teal.dark.value}" }
+      },
+      "azure": {
+        "base":   { "value": "{color.diagram._variant_vivid.azure.base.value}",    "comment": "Kategorie 8 — Hue 216.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.azure.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.azure.dark.value}" }
+      },
+      "blue": {
+        "base":   { "value": "{color.diagram._variant_vivid.blue.base.value}",     "comment": "Kategorie 9 — Hue 246.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.blue.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.blue.dark.value}" }
+      },
+      "indigo": {
+        "base":   { "value": "{color.diagram._variant_vivid.indigo.base.value}",   "comment": "Kategorie 10 — Hue 276.97 Grad = Anker, Hue von indigo-600. indigo-600 #4F46E5 selbst dient als dark-Variante in der Konsumenten-Schicht." },
+        "nuance": { "value": "{color.diagram._variant_vivid.indigo.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.indigo.dark.value}" }
+      },
+      "violet": {
+        "base":   { "value": "{color.diagram._variant_vivid.violet.base.value}",   "comment": "Kategorie 11 — Hue 306.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.violet.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.violet.dark.value}" }
+      },
+      "magenta": {
+        "base":   { "value": "{color.diagram._variant_vivid.magenta.base.value}",  "comment": "Kategorie 12 — Hue 336.97 Grad." },
+        "nuance": { "value": "{color.diagram._variant_vivid.magenta.nuance.value}" },
+        "dark":   { "value": "{color.diagram._variant_vivid.magenta.dark.value}" }
+      }
     },
 
     "light": {
