@@ -52,3 +52,11 @@ mn_design_system = [
 # Aktivierung des Format-Gates pro Klon: `pre-commit install`.
 target-version = "py310"
 line-length = 88
+
+# tokens.py wird von Style Dictionary generiert (npm run build) — ruff darf
+# die generierte Datei NICHT formatieren, sonst divergiert sie vom Generator-
+# Output und der Release-Schritt "Verify tokens.py synced" schlaegt fehl (cld1-S21).
+extend-exclude = ["mn_design_system/tokens.py"]
+# force-exclude: Excludes auch anwenden, wenn pre-commit Dateien explizit
+# uebergibt — sonst greift extend-exclude beim Format-Gate-Hook nicht.
+force-exclude = true
