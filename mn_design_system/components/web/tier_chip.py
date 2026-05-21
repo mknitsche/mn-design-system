@@ -1,12 +1,11 @@
 """Web-Renderer Tier-Chip — HTML + CSS, UX-Welle v0.2.
 
 Konsumiert TierChipInput aus `_patterns.contracts`. Primitiv-Baustein: ein
-einzelnes `<span>`, tier-getoent. Wird von der Brand-Bar (L2, bordered) und
-der Sub-Nav (L3, Chip-Muster) wiederverwendet.
+einzelnes `<span>`, tier-getoent.
 
-CSS-Strategie wie kpi_card / wetter_strip: Token-Werte kommen aus
-`dist/css/tokens.css` (CSS Custom Properties), Komponenten-CSS liefert
-`render_tier_chip_css()`. Pro Tier eine Modifier-Klasse, kein Inline-Hex.
+CSS-Strategie: alle Masse, Schriftgroessen und Linien aus Web-Foundation-Tokens
+(var(--web-*) / var(--space-*)). Die Tier-Toene bleiben CSS Custom Properties —
+pro Tier eine Modifier-Klasse, kein Inline-Hex.
 """
 
 from __future__ import annotations
@@ -53,16 +52,16 @@ def render_tier_chip_css() -> str:
         """
 .mn-tier-chip {
   display: inline-block;
-  padding: 0.125rem 0.5rem;
+  padding: var(--space-1, 4px) var(--space-2, 8px);
   border-radius: var(--radius-subtle, 2px);
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
-  font-size: 0.6875rem;
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
+  font-size: var(--web-text-caption, 12px);
+  line-height: var(--web-leading-caption, 1.4);
   font-weight: 600;
-  line-height: 1.4;
   cursor: default;
 }
 .mn-tier-chip--bordered {
-  border: 1px solid transparent;
+  border: var(--web-stroke-line, 1px) solid transparent;
 }
 .mn-tier-chip--loading {
   background: var(--color-light-surface-subtle, #f6f6f6);
