@@ -3,12 +3,9 @@
 Konsumiert PageHeaderInput aus `_patterns.contracts`. Seiten-Kopf einer
 mkn-desk.com-Seite: H1-Titel plus optionaler Lead-Absatz.
 
-CSS-Strategie wie kpi_card / wetter_strip: Farb- und Schrift-Token via CSS
-Custom Properties, Layout-Werte (Schriftgroessen in rem, Abstaende) inline.
-Schriftgroessen bewusst in rem statt `var(--font-size-*)`: die `font.size.*`-
-Tokens sind print-orientiert (pt). Web nutzt rem — konsistent mit den
-bestehenden Web-Renderern (kpi_card, wetter_strip). Eine web-spezifische
-font.size-Familie waere eine eigene Token-Welle.
+CSS-Strategie: alle Schriftgroessen, Zeilenhoehen und Abstaende aus
+Web-Foundation-Tokens (var(--web-text-*) / var(--web-leading-*) /
+var(--space-*)). Der Titel nutzt web.text.h1, der Lead web.text.lead.
 """
 
 from __future__ import annotations
@@ -44,20 +41,21 @@ def render_page_header_css() -> str:
     """
     return """
 .mn-page-header {
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
-  margin-bottom: 1.5rem;
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
+  margin-bottom: var(--space-6, 24px);
 }
 .mn-page-header__title {
-  font-size: 1.75rem;
+  font-size: var(--web-text-h1, 33px);
+  line-height: var(--web-leading-h1, 1.18);
   font-weight: 700;
-  line-height: 1.2;
+  letter-spacing: -0.01em;
   margin: 0;
   color: var(--color-light-h1, #312e81);
 }
 .mn-page-header__lead {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0.5rem 0 0;
+  font-size: var(--web-text-lead, 19px);
+  line-height: var(--web-leading-lead, 1.55);
+  margin: var(--space-2, 8px) 0 0;
   color: var(--color-light-text-muted, #6b7280);
 }
 """.strip()

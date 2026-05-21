@@ -58,3 +58,18 @@ class TestRenderPageHeaderCss:
         css = render_page_header_css()
         assert "var(--color-light-h1" in css
         assert "var(--color-light-text-muted" in css
+
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Titel auf web.text.h1, Lead auf web.text.lead,
+        Schriftfamilie auf web.font.sans, Abstand auf das space-Raster."""
+        css = render_page_header_css()
+        assert "var(--web-text-h1" in css
+        assert "var(--web-leading-h1" in css
+        assert "var(--web-text-lead" in css
+        assert "var(--web-leading-lead" in css
+        assert "var(--web-font-sans" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — der Page-Header ist rein web."""
+        css = render_page_header_css()
+        assert "pt" not in css
