@@ -4,10 +4,11 @@ Konsumiert KpiCardInput aus `_patterns.contracts`. Liefert ein HTML-Snippet
 plus optional embedbares CSS.
 
 CSS-Strategie:
-- Token-Werte kommen aus `dist/css/tokens.css` (CSS Custom Properties),
-  die vom Konsumenten in `<head>` eingebunden werden muss.
-- Komponenten-Layout (Grid, Padding, Schriftgroessen) liefert
-  `render_kpi_card_css()`. Konsument kann das einmal cachen.
+- Alle Masse, Schriftgroessen und Linien kommen aus Web-Foundation-Tokens
+  (var(--web-*) / var(--space-*)) — `dist/css/tokens.css` muss der Konsument
+  in `<head>` einbinden.
+- Komponenten-Layout liefert `render_kpi_card_css()`. Konsument kann das
+  einmal cachen.
 """
 
 from __future__ import annotations
@@ -89,27 +90,27 @@ def render_kpi_card_css() -> str:
     return """
 .mn-kpi-card {
   display: grid;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
+  gap: var(--space-1, 4px);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
   background: var(--color-light-surface, #ffffff);
-  border: 1px solid var(--color-light-border, #cbd5e1);
-  border-radius: var(--radius-card, 6px);
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
+  border: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
+  border-radius: var(--radius-card, 4px);
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
 }
 .mn-kpi-card__label {
-  font-size: 0.6875rem; /* ~9pt */
+  font-size: var(--web-text-caption, 12px);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-kpi-card__value {
-  font-size: 1rem; /* ~10pt */
+  font-size: var(--web-text-h3, 23px);
+  line-height: var(--web-leading-h3, 1.3);
   font-weight: 700;
   color: var(--color-light-h1, #312e81);
-  line-height: 1.2;
 }
 .mn-kpi-card__change {
-  font-size: 0.55rem; /* ~8pt */
+  font-size: var(--web-text-caption, 12px);
   font-weight: 600;
 }
 .mn-kpi-card__change.is-up {
@@ -122,11 +123,11 @@ def render_kpi_card_css() -> str:
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-kpi-card__sparkline {
-  margin: 0.125rem 0;
+  margin: var(--space-1, 4px) 0;
   line-height: 0;
 }
 .mn-kpi-card__caption {
-  font-size: 0.4375rem; /* ~7pt */
+  font-size: var(--web-text-caption, 12px);
   font-style: italic;
   color: var(--color-light-text-muted, #6b7280);
 }
