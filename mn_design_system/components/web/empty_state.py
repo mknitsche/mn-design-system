@@ -36,15 +36,16 @@ def render_empty_state_css() -> str:
     rules = [
         """
 .mn-empty-state {
-  padding: 1.75rem 1.25rem;
+  padding: var(--space-6, 24px) var(--space-5, 20px);
   border-radius: var(--radius-subtle, 2px);
   background: var(--color-light-surface-subtle, #f6f6f6);
-  border-left: 3px solid var(--color-light-border, #cbd5e1);
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
+  border-left: var(--web-stroke-line-strong, 2px) solid var(--web-color-separator, #b4bcc8);
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
 }
 .mn-empty-state__message {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--web-text-ui, 14px);
+  line-height: var(--web-leading-ui, 1.35);
   color: var(--color-light-text-muted, #6b7280);
 }
 """.strip()
