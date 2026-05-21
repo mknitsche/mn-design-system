@@ -95,16 +95,16 @@ def render_wetter_strip_css() -> str:
     """Komponenten-CSS fuer den Wetter-Strip."""
     return """
 .mn-wetter-strip {
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
   color: var(--color-light-text, #1e1b4b);
 }
 .mn-wetter-strip__header {
-  font-size: 0.75rem;
+  font-size: var(--web-text-caption, 12px);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-light-text-muted, #6b7280);
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-1, 4px);
 }
 .mn-wetter-strip__grid {
   width: 100%;
@@ -112,16 +112,16 @@ def render_wetter_strip_css() -> str:
   table-layout: fixed;
 }
 .mn-wetter-strip__day-label {
-  font-size: 0.6875rem;
+  font-size: var(--web-text-caption, 12px);
   font-weight: 600;
   text-align: center;
-  padding: 0.25rem 0;
-  border-bottom: 1px solid var(--color-light-border, #cbd5e1);
+  padding: var(--space-1, 4px) 0;
+  border-bottom: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
 }
 .mn-wetter-strip__icon {
-  font-size: 1.25rem;
+  font-size: var(--web-text-h2, 28px);
   text-align: center;
-  padding: 0.375rem 0;
+  padding: var(--space-2, 8px) 0;
   color: var(--color-light-h2, #4338ca);
 }
 .mn-wetter-strip__sr {
@@ -132,9 +132,9 @@ def render_wetter_strip_css() -> str:
   clip: rect(0 0 0 0);
 }
 .mn-wetter-strip__temp {
-  font-size: 0.75rem;
+  font-size: var(--web-text-caption, 12px);
   text-align: center;
-  padding: 0.125rem 0;
+  padding: var(--space-1, 4px) 0;
 }
 .mn-wetter-strip__tmax {
   font-weight: 700;
@@ -144,16 +144,16 @@ def render_wetter_strip_css() -> str:
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-wetter-strip__precip {
-  font-size: 0.625rem;
+  font-size: var(--web-text-caption, 12px);
   text-align: center;
   color: var(--color-status-success, #2e7d32);
-  padding-bottom: 0.25rem;
+  padding-bottom: var(--space-1, 4px);
 }
 .mn-wetter-strip__summary {
-  margin-top: 0.5rem;
-  font-size: 0.6875rem;
+  margin-top: var(--space-2, 8px);
+  font-size: var(--web-text-caption, 12px);
   font-style: italic;
   color: var(--color-light-text-muted, #6b7280);
-  line-height: 1.4;
+  line-height: var(--web-leading-caption, 1.4);
 }
 """.strip()
