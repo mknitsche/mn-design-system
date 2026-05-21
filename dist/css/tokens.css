@@ -48,23 +48,53 @@
   --color-viz-neutral-soft: #e0e0e0; /** Diagramm-Box neutraler Grau */
   --color-viz-dark-navy: #1a237e; /** Visualisierungs-Prompt: Indigo-900-Variante */
   --color-viz-medium-blue: #283593; /** Visualisierungs-Prompt: Indigo-800-Variante */
-  --color-category-yellow: #f9a825; /** Warm-Gelb Akzent-Basis (Categories). */
-  --color-category-red-bg: #fce4ec; /** Prioritaet 'Sofort' — Zeilen-Hintergrund. */
-  --color-category-red-cb: #c62828; /** Prioritaet 'Sofort' — Checkbox. */
-  --color-category-yellow-bg: #fff8e1; /** Prioritaet 'Demnaechst' — Zeilen-Hintergrund. */
-  --color-category-yellow-cb: #f57f17; /** Prioritaet 'Demnaechst' — Checkbox. */
-  --color-category-blue-bg: #e3f2fd; /** Prioritaet 'Klaeren' — Zeilen-Hintergrund. */
-  --color-category-blue-text: #1565c0; /** Prioritaet 'Klaeren' — Text. */
-  --color-category-blue-cb: #1976d2; /** Prioritaet 'Klaeren' — Checkbox. */
-  --color-category-gray-text: #616161; /** Prioritaet 'Irgendwann' — Text. */
-  --color-category-gray-cb: #757575; /** Prioritaet 'Irgendwann' — Checkbox. */
-  --color-category-green-cb: #388e3c; /** Projekt — Checkbox. */
-  --color-architecture-workflow: #1565c0; /** Workflow-Knoten — Fuellfarbe. */
-  --color-architecture-workflow-light: #e3f2fd; /** Workflow-Knoten — helle Hintergrund-Variante. */
-  --color-architecture-integration: #6a1b9a; /** Integrations-Knoten — Fuellfarbe. */
-  --color-architecture-integration-light: #f3e5f5; /** Integrations-Knoten — helle Hintergrund-Variante. */
-  --color-architecture-data: #00695c; /** Daten-Knoten — Fuellfarbe. */
-  --color-architecture-data-light: #e0f2f1; /** Daten-Knoten — helle Hintergrund-Variante. */
+  --color-category-prio-sofort-bg: #ffebee; /** Prioritaet 'Sofort' — Zeilen-Hintergrund (rosa-blass). */
+  --color-category-prio-sofort-text: #dc2626; /** Prioritaet 'Sofort' — Zeilen-Text (red-600, leuchtend). */
+  --color-category-prio-sofort-header-text: #b91c1c; /** Prioritaet 'Sofort' — Sektions-Header-Text. Tailwind red-700 — dunkler als severity.high, erreicht >=4.5:1 (5.66:1) auf prio-sofort-bg fuer Kleintext-WCAG-AA. Einziges Hex-Literal der category-Familie: red-700 hat keinen bestehenden Token, fuegt sich aber in die Tailwind-Rot-Skala (severity.high=red-600, status.error=red-ish) ein. */
+  --color-category-prio-demnaechst-bg: #fef3c7; /** Prioritaet 'Demnaechst' — Zeilen-Hintergrund (amber-100, hell). */
+  --color-category-prio-demnaechst-text: #78350f; /** Prioritaet 'Demnaechst' — Zeilen-Text (amber-900, 8.15:1 auf bg). */
+  --color-category-prio-klaeren-bg: #e0e7ff; /** Prioritaet 'Klaeren' — Zeilen-Hintergrund (indigo-100, kuehl). */
+  --color-category-prio-klaeren-text: #4338ca; /** Prioritaet 'Klaeren' — Zeilen-Text (indigo-700, 6.41:1 auf bg). */
+  --color-category-prio-irgendwann-bg: #f5f5f5; /** Prioritaet 'Irgendwann' — Zeilen-Hintergrund (grey-50, neutral). */
+  --color-category-prio-irgendwann-text: #6b7280; /** Prioritaet 'Irgendwann' — Zeilen-Text (grey-500, unauffaellig). */
+  --color-category-prio-irgendwann-header-text: #374151; /** Prioritaet 'Irgendwann' — Sektions-Header-Text. grey-700, 9.45:1 auf prio-irgendwann-bg (Kleintext-WCAG-AA). */
+  --color-category-checkbox: #4F46E5; /** Einheitliche Checkbox-Farbe fuer alle Prioritaets-Stufen — Action-Indigo. Loest die vier stufenspezifischen Checkbox-Toene (red-cb / yellow-cb / blue-cb / gray-cb) ab: die Checkbox ist ein interaktives Element, traegt die Action-Farbe, nicht die Prioritaets-Temperatur. */
+  --color-diagram-crimson-base: #ef1e6e; /** Kategorie 1 — Hue 6.97 Grad. base: Linien/Rahmen/Text. */
+  --color-diagram-crimson-nuance: #f8ebed; /** Kategorie 1 — helle Fuellung. */
+  --color-diagram-crimson-dark: #840c39; /** Kategorie 1 — Text auf Nuance. */
+  --color-diagram-copper-base: #e34b16; /** Kategorie 2 — Hue 36.97 Grad. */
+  --color-diagram-copper-nuance: #f8ebe8;
+  --color-diagram-copper-dark: #7d2507;
+  --color-diagram-amber-base: #b97417; /** Kategorie 3 — Hue 66.97 Grad. */
+  --color-diagram-amber-nuance: #f8ece1;
+  --color-diagram-amber-dark: #653d07;
+  --color-diagram-citron-base: #9b8517; /** Kategorie 4 — Hue 96.97 Grad. */
+  --color-diagram-citron-nuance: #f7efcd;
+  --color-diagram-citron-dark: #544708;
+  --color-diagram-green-base: #6d9617; /** Kategorie 5 — Hue 126.97 Grad. */
+  --color-diagram-green-nuance: #e6f5d5;
+  --color-diagram-green-dark: #395108;
+  --color-diagram-emerald-base: #1b9b60; /** Kategorie 6 — Hue 156.97 Grad. */
+  --color-diagram-emerald-nuance: #d8f8e3;
+  --color-diagram-emerald-dark: #0a5633;
+  --color-diagram-teal-base: #1b9a90; /** Kategorie 7 — Hue 186.97 Grad. */
+  --color-diagram-teal-nuance: #d2f8f3;
+  --color-diagram-teal-dark: #0a534e;
+  --color-diagram-azure-base: #1b95af; /** Kategorie 8 — Hue 216.97 Grad. */
+  --color-diagram-azure-nuance: #e0f2f8;
+  --color-diagram-azure-dark: #0a505f;
+  --color-diagram-blue-base: #198bdd; /** Kategorie 9 — Hue 246.97 Grad. */
+  --color-diagram-blue-nuance: #e7f0f8;
+  --color-diagram-blue-dark: #094b7a;
+  --color-diagram-indigo-base: #6c73f9; /** Kategorie 10 — Hue 276.97 Grad = Anker, Hue von indigo-600. indigo-600 #4F46E5 selbst dient als dark-Variante in der Konsumenten-Schicht. */
+  --color-diagram-indigo-nuance: #eceef8;
+  --color-diagram-indigo-dark: #3812c1;
+  --color-diagram-violet-base: #af47f9; /** Kategorie 11 — Hue 306.97 Grad. */
+  --color-diagram-violet-nuance: #f1ecf8;
+  --color-diagram-violet-dark: #640e97;
+  --color-diagram-magenta-base: #dd1ebd; /** Kategorie 12 — Hue 336.97 Grad. */
+  --color-diagram-magenta-nuance: #f8eaf3;
+  --color-diagram-magenta-dark: #7a0b67;
   --color-light-bg: #fdfdfd;
   --color-light-surface: #ffffff;
   --color-light-surface-subtle: #f6f6f6;
