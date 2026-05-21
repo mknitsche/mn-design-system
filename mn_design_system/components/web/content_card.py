@@ -10,8 +10,8 @@ Konsumiert ContentCardInput und CardGridInput aus `_patterns.contracts`.
   wird als CSS-Variable `--mn-card-grid-cols` am Wrapper gesetzt (kein Hex,
   keine inline-Grid-Template-Hardcodes).
 
-CSS-Strategie wie kpi_card / wetter_strip: Farb- und Schrift-Token via CSS
-Custom Properties, Layout-Werte (Grid, Schriftgroessen in rem) inline.
+CSS-Strategie: alle Masse, Schriftgroessen und Linien aus Web-Foundation-Tokens
+(var(--web-*) / var(--space-*)). Die Tier-Toene bleiben CSS Custom Properties.
 
 Verlinkte Card (Affordance): bei gesetztem href wird der Titel zum `<a>` UND
 die ganze Card via Stretched-Link-Pattern (`__link::after { inset: 0 }`)
@@ -97,21 +97,21 @@ def render_content_card_css() -> str:
 .mn-content-card {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
-  padding: 1rem 1.125rem;
+  gap: var(--space-2, 8px);
+  padding: var(--space-4, 16px);
   background: var(--color-light-surface, #ffffff);
-  border: 1px solid var(--color-light-border, #cbd5e1);
-  border-radius: var(--radius-card, 6px);
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
+  border: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
+  border-radius: var(--radius-card, 4px);
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
 }
 .mn-content-card--linked {
   position: relative;
   cursor: pointer;
 }
 .mn-content-card__title {
-  font-size: 1rem;
+  font-size: var(--web-text-body, 16px);
+  line-height: var(--web-leading-body, 1.6);
   font-weight: 700;
-  line-height: 1.25;
   margin: 0;
   color: var(--color-light-h1, #312e81);
 }
@@ -128,12 +128,12 @@ def render_content_card_css() -> str:
   text-decoration: underline;
 }
 .mn-content-card__link:focus-visible {
-  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: 2px;
 }
 .mn-content-card__body {
-  font-size: 0.8125rem;
-  line-height: 1.5;
+  font-size: var(--web-text-ui, 14px);
+  line-height: var(--web-leading-body, 1.6);
   margin: 0;
   color: var(--color-light-text-muted, #6b7280);
 }
@@ -179,6 +179,6 @@ def render_card_grid_css() -> str:
 .mn-card-grid {
   display: grid;
   grid-template-columns: repeat(var(--mn-card-grid-cols, 3), 1fr);
-  gap: 1rem;
+  gap: var(--space-4, 16px);
 }
 """.strip()
