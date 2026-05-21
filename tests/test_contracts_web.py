@@ -25,9 +25,9 @@ from mn_design_system.components._patterns.contracts import (
     CardGridInput,
     ContentCardInput,
     EmptyStateInput,
-    FooterColumn,
     FooterInput,
     FooterLink,
+    FooterSegment,
     PageHeaderInput,
     SubNavInput,
     SubNavTab,
@@ -430,44 +430,33 @@ class TestFooterLink:
 
 
 # ---------------------------------------------------------------------------
-# FooterColumn
+# FooterSegment
 # ---------------------------------------------------------------------------
 
 
-class TestFooterColumn:
+class TestFooterSegment:
     def test_minimal_valid(self):
-        inp = FooterColumn(
-            title="Rechtliches",
-            links=[FooterLink(label="Impressum", href="/impressum")],
-        )
-        assert len(inp.links) == 1
+        seg = FooterSegment(text="mkn-desk.com")
+        assert seg.text == "mkn-desk.com"
+        assert seg.slot_id is None  # Default
 
-    def test_title_min_length(self):
+    def test_text_min_length(self):
         with pytest.raises(ValidationError):
-            FooterColumn(
-                title="", links=[FooterLink(label="Impressum", href="/impressum")]
-            )
+            FooterSegment(text="")
 
-    def test_links_min_length(self):
-        """links: mind. 1 — leere Liste wird abgelehnt."""
-        with pytest.raises(ValidationError):
-            FooterColumn(title="Rechtliches", links=[])
+    def test_slot_id_accepts_string(self):
+        """Ein Segment mit slot_id wird zum client-seitigen Hydration-Slot."""
+        seg = FooterSegment(text="Profil …", slot_id="footer-user-info")
+        assert seg.slot_id == "footer-user-info"
 
     def test_frozen(self):
-        inp = FooterColumn(
-            title="Rechtliches",
-            links=[FooterLink(label="Impressum", href="/impressum")],
-        )
+        seg = FooterSegment(text="mkn-desk.com")
         with pytest.raises(ValidationError):
-            inp.title = "Geaendert"
+            seg.text = "geaendert"
 
     def test_extra_forbidden(self):
         with pytest.raises(ValidationError):
-            FooterColumn(
-                title="Rechtliches",
-                links=[FooterLink(label="Impressum", href="/impressum")],
-                foo="bar",
-            )
+            FooterSegment(text="X", foo="bar")
 
 
 # ---------------------------------------------------------------------------
@@ -475,61 +464,56 @@ class TestFooterColumn:
 # ---------------------------------------------------------------------------
 
 
-def _footer_column(title: str = "Rechtliches") -> FooterColumn:
-    """Helper: gueltige FooterColumn fuer FooterInput-Tests."""
-    return FooterColumn(
-        title=title, links=[FooterLink(label="Impressum", href="/impressum")]
-    )
+def _segment(text: str = "mkn-desk.com") -> FooterSegment:
+    """Helper: gueltiges FooterSegment fuer FooterInput-Tests."""
+    return FooterSegment(text=text)
+
+
+def _link(label: str = "Impressum") -> FooterLink:
+    """Helper: gueltiger FooterLink fuer FooterInput-Tests."""
+    return FooterLink(label=label, href="/impressum")
 
 
 class TestFooterInput:
     def test_minimal_valid(self):
-        inp = FooterInput(columns=[_footer_column()])
+        inp = FooterInput(segments=[_segment()], links=[_link()])
         assert inp.version is None  # Default
-        assert inp.note is None  # Default
 
     def test_all_fields(self):
         inp = FooterInput(
-            columns=[_footer_column()],
-            version="v0.8.0",
-            note="(c) 2026 Matthias Nitsche",
+            segments=[_segment(), _segment("Atelier · AMBER")],
+            links=[_link(), _link("Datenschutz")],
+            version="v0.2.1",
         )
-        assert inp.version == "v0.8.0"
+        assert inp.version == "v0.2.1"
+        assert len(inp.segments) == 2
 
-    def test_columns_min_length(self):
-        """columns: mind. 1 — leere Liste wird abgelehnt."""
+    def test_segments_min_length(self):
+        """segments: mind. 1 — leere Liste wird abgelehnt."""
         with pytest.raises(ValidationError):
-            FooterInput(columns=[])
+            FooterInput(segments=[], links=[_link()])
 
-    def test_columns_max_length(self):
-        """columns: max 3 — die vierte Spalte wird abgelehnt."""
-        three = [_footer_column(f"Spalte {i}") for i in range(3)]
-        FooterInput(columns=three)  # genau 3 ist gueltig
+    def test_links_min_length(self):
+        """links: mind. 1 — leere Liste wird abgelehnt."""
         with pytest.raises(ValidationError):
-            FooterInput(columns=[*three, _footer_column("Spalte 4")])
+            FooterInput(segments=[_segment()], links=[])
 
     def test_frozen(self):
-        inp = FooterInput(columns=[_footer_column()])
+        inp = FooterInput(segments=[_segment()], links=[_link()])
         with pytest.raises(ValidationError):
             inp.version = "v9.9.9"
 
     def test_extra_forbidden(self):
         with pytest.raises(ValidationError):
-            FooterInput(columns=[_footer_column()], foo="bar")
+            FooterInput(segments=[_segment()], links=[_link()], foo="bar")
 
-    def test_user_info_id_default_none(self):
-        """user_info_id: optionaler Hydration-Slot, Default None (v0.9.0)."""
-        inp = FooterInput(columns=[_footer_column()])
-        assert inp.user_info_id is None
-
-    def test_user_info_id_accepts_string(self):
-        inp = FooterInput(columns=[_footer_column()], user_info_id="footer-user-info")
-        assert inp.user_info_id == "footer-user-info"
-
-    def test_user_info_label_default(self):
-        """user_info_label: Server-gerenderter Pre-Hydration-Text, Default '…'."""
-        inp = FooterInput(columns=[_footer_column()])
-        assert inp.user_info_label == "…"
+    def test_segment_with_slot(self):
+        """Ein Segment der Identitaets-Zeile kann einen Hydration-Slot tragen."""
+        inp = FooterInput(
+            segments=[_segment(), FooterSegment(text="Profil …", slot_id="x")],
+            links=[_link()],
+        )
+        assert inp.segments[1].slot_id == "x"
 
 
 # ---------------------------------------------------------------------------

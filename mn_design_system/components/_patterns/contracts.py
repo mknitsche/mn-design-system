@@ -246,7 +246,7 @@ class PageHeaderInput(BaseModel):
 
 
 class FooterLink(BaseModel):
-    """Ein Link in einer Footer-Spalte."""
+    """Ein Link im rechten Cluster der Footer-Schlusszeile."""
 
     model_config = {"extra": "forbid", "frozen": True}
 
@@ -254,27 +254,33 @@ class FooterLink(BaseModel):
     href: str = Field(min_length=1)
 
 
-class FooterColumn(BaseModel):
-    """Eine Spalte im 3-Block-Footer."""
+class FooterSegment(BaseModel):
+    """Ein Segment der linken Identitaets-Zeile.
+
+    Segmente werden in der Renderung mit einem `|`-Strich getrennt. Ist
+    `slot_id` gesetzt, wird das Segment zu einem client-seitig gefuellten
+    Hydration-Slot (z.B. Profil-Info aus /api/me); sonst ist es statischer Text.
+    """
 
     model_config = {"extra": "forbid", "frozen": True}
 
-    title: str = Field(min_length=1)
-    links: list[FooterLink] = Field(min_length=1)
+    text: str = Field(min_length=1)
+    slot_id: str | None = None
 
 
 class FooterInput(BaseModel):
-    """3-Spalten-Footer + optionale Version + Copyright-Notiz (Spec §Welle B)."""
+    """Schlanke einzeilige Seiten-Fusszeile (Spec §cld1-S19 / cld1-S21).
+
+    Links eine Identitaets-Zeile aus `|`-getrennten Segmenten, rechts die
+    Rechtslinks (`·`-getrennt) plus optionale Version. Tier-neutral — auf
+    jeder Seite identisch.
+    """
 
     model_config = {"extra": "forbid", "frozen": True}
 
-    columns: list[FooterColumn] = Field(min_length=1, max_length=3)
+    segments: list[FooterSegment] = Field(min_length=1)
+    links: list[FooterLink] = Field(min_length=1)
     version: str | None = None
-    note: str | None = None
-    user_info_id: str | None = None
-    """Optionaler Hydration-Slot in der Meta-Zeile (client-seitig gefüllter Span)."""
-    user_info_label: str = "…"
-    """Server-gerenderter Pre-Hydration-Text des User-Info-Spans."""
 
 
 class ContentCardInput(BaseModel):
