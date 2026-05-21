@@ -8,6 +8,30 @@ oder Doku.
 
 ---
 
+## [0.13.0] — 2026-05-21
+
+### Hinzugefuegt — Web-Foundation (`web.*` Token-Namespace + Masthead)
+
+Eine kohaerente Foundation fuer den Web-Tier (Design 2026-05-21, cld1-S21,
+Gemini-Gate 8,5/10). Neuer `web.*`-Token-Zweig: 7-stufige Typo-Skala
+(12-33px, Anker 16px), Zeilenhoehen, Web-Schriftfamilien, Strokes in ganzen
+Pixeln, Separator- + Fokus-Ring-Farben, Layout-Tokens (content-width,
+page-inset, Breakpoints). Die print-orientierten Tokens (`font.size.*`,
+`stroke.*` in pt) bleiben unberuehrt.
+
+Neue Komponente `masthead` — editorialer Zwei-Reihen-Kopf — loest `top_nav`
+und `brand_bar` ab. Neu: `render_foundation_css()` (responsive @media-Schicht)
+und `render_initiale_css()` (Drop-Cap + Wort-Initiale). Alle acht
+verbleibenden Web-Komponenten auf Foundation-Tokens re-tokenisiert: kein
+ad-hoc rem/pt mehr, Fokus-Ringe vereinheitlicht, totes `--font-body`-Token
+gefixt, `radius-card`-Fallback korrigiert.
+
+### Entfernt
+
+- `top_nav` + `brand_bar` (Komponenten, Contracts, Tests) — vom `masthead` abgeloest.
+
+---
+
 ## [0.12.0] — 2026-05-21
 
 ### Hinzugefuegt — Schaltbare Diagramm-Palette `color.diagram.*` (claudeAI Welle-3 Farb-Harmonie)
