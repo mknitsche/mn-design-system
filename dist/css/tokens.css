@@ -276,4 +276,30 @@
   --font-hyphenation-min-word-length: 6;
   --font-hyphenation-min-chars-before: 3;
   --font-hyphenation-min-chars-after: 3;
+  --web-text-caption: 12px; /** Chips, Feinzeile, Editions-Meta */
+  --web-text-ui: 14px; /** Navigation, Footer, Bedien-Elemente */
+  --web-text-body: 16px; /** Fliesstext — Anker der Skala */
+  --web-text-lead: 19px; /** Intro-Absatz */
+  --web-text-h3: 23px; /** Abschnitts-Ueberschrift */
+  --web-text-h2: 28px; /** Bereichs-Ueberschrift */
+  --web-text-h1: 33px; /** Seitentitel */
+  --web-leading-caption: 1.4;
+  --web-leading-ui: 1.35;
+  --web-leading-body: 1.6;
+  --web-leading-lead: 1.55;
+  --web-leading-h3: 1.3;
+  --web-leading-h2: 1.22;
+  --web-leading-h1: 1.18;
+  --web-font-sans: Geist; /** Web-Sans — Fliesstext, UI, Navigation */
+  --web-font-serif-editorial: Source Serif 4; /** Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print). */
+  --web-stroke-line: 1px; /** Trennlinie auf hellem Grund — ganze Pixel, blurfrei */
+  --web-stroke-line-strong: 2px; /** Trennlinie auf dunklem Grund (Masthead) */
+  --web-stroke-focus: 2px; /** Tastatur-Fokus-Ring */
+  --web-color-separator: #b4bcc8; /** Trennlinien-Grau auf hellem Grund — kraeftiger als color.light.border, sichtbar bei 1px */
+  --web-color-separator-on-dark: rgba(255,255,255,0.16); /** Trenner im dunklen Masthead (WCAG 1.4.11 >= 3:1 auf color.dark.surface pruefen) */
+  --web-color-focus-ring: #4F46E5; /** Tastatur-Fokus-Ring — Akzent-Indigo */
+  --web-layout-content-width: 1024px; /** Maximale Inhalts-Spalte; alle Bahnen fluchten daran (Design §8) */
+  --web-layout-page-inset: 44px; /** Seiten-Einzug Desktop; responsiv 32px Tablet / 16px Mobil via render_foundation_css() */
+  --web-layout-bp-mobile: 640px; /** Breakpoint: < 640 = mobil */
+  --web-layout-bp-tablet: 1024px; /** Breakpoint: 640-1024 = Tablet; >= 1024 = Desktop */
 }
