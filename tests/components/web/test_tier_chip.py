@@ -66,3 +66,20 @@ class TestRenderTierChipCss:
     def test_css_contains_loading_variant(self):
         css = render_tier_chip_css()
         assert ".mn-tier-chip--loading" in css
+
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Schriftgroesse, Schriftfamilie, Stroke und
+        Abstaende kommen aus der Web-Foundation."""
+        css = render_tier_chip_css()
+        assert "var(--web-text-caption" in css
+        assert "var(--web-leading-caption" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--web-stroke-line" in css
+        assert "var(--space-" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — der Tier-Chip ist rein web. Geprueft auf pt
+        als Einheit ('pt;' / 'pt '), der Token-Schritt 'caption' enthaelt das
+        Substring 'pt' legitim."""
+        css = render_tier_chip_css()
+        assert "pt;" not in css and "pt " not in css
