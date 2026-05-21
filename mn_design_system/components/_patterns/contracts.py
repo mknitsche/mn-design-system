@@ -155,32 +155,6 @@ class TierChipInput(BaseModel):
     bordered: bool = True
 
 
-class BrandBarChip(BaseModel):
-    """Ein Status-Chip in der Brand-Bar (Page-Tier oder User-Tier)."""
-
-    model_config = {"extra": "forbid", "frozen": True}
-
-    tier: WebTier
-    label: str = Field(min_length=1)
-
-
-class BrandBarInput(BaseModel):
-    """L2 — Brand-Text + Status-Chips. Affordance: Info, nicht klickbar.
-
-    chips: 0-3 Status-Chips (z.B. Page-Tier + User-Tier). Bordered.
-    """
-
-    model_config = {"extra": "forbid", "frozen": True}
-
-    brand_text: str = Field(min_length=1)
-    chips: list[BrandBarChip] = Field(default_factory=list, max_length=3)
-    user_chip_id: str | None = None
-    """Optionaler Hydration-Slot. Gesetzt → ein Lade-Chip mit dieser id wird
-    nach den statischen Chips gerendert; eine App füllt ihn client-seitig."""
-    user_chip_label: str = "…"
-    """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
-
-
 class SubNavTab(BaseModel):
     """Ein Tab in der Sub-Nav."""
 
@@ -207,33 +181,6 @@ class SubNavInput(BaseModel):
     tier: WebTier
     tabs: list[SubNavTab] = Field(min_length=1)
     aria_label: str = Field(default="Bereichs-Navigation", min_length=1)
-
-
-class TopNavItem(BaseModel):
-    """Ein Eintrag der Top-Nav (= ein Tier-Ziel)."""
-
-    model_config = {"extra": "forbid", "frozen": True}
-
-    label: str = Field(min_length=1)
-    href: str = Field(min_length=1)
-    tier: WebTier
-    active: bool = False
-
-
-class TopNavInput(BaseModel):
-    """L1 — Tier-Wechsel-Navigation (transparente Pills auf dunklem Grund).
-
-    items: mind. 1 Eintrag. Genau einer sollte active=True sein.
-    aria_label: Landmark-Label des <nav> (Barrierefreiheit, WCAG 2.4.1).
-                Mehrere <nav> pro Seite (L1 Top-Nav + L3 Sub-Nav) muessen
-                unterscheidbar sein — der Konsument kann ein praeziseres
-                Label setzen.
-    """
-
-    model_config = {"extra": "forbid", "frozen": True}
-
-    items: list[TopNavItem] = Field(min_length=1)
-    aria_label: str = Field(default="Hauptnavigation", min_length=1)
 
 
 class PageHeaderInput(BaseModel):

@@ -20,10 +20,6 @@ Status: Erst-Implementierung (Welle E.0). Foto-Homepage ist erster Konsument
 ab PRJ-9.
 """
 
-from mn_design_system.components.web.brand_bar import (
-    render_brand_bar_css,
-    render_brand_bar_html,
-)
 from mn_design_system.components.web.content_card import (
     render_card_grid_css,
     render_card_grid_html,
@@ -63,18 +59,12 @@ from mn_design_system.components.web.tier_chip import (
     render_tier_chip_css,
     render_tier_chip_html,
 )
-from mn_design_system.components.web.top_nav import (
-    render_top_nav_css,
-    render_top_nav_html,
-)
 from mn_design_system.components.web.wetter_strip import (
     render_wetter_strip_css,
     render_wetter_strip_html,
 )
 
 __all__ = [
-    "render_brand_bar_css",
-    "render_brand_bar_html",
     "render_card_grid_css",
     "render_card_grid_html",
     "render_content_card_css",
@@ -96,8 +86,6 @@ __all__ = [
     "render_sub_nav_html",
     "render_tier_chip_css",
     "render_tier_chip_html",
-    "render_top_nav_css",
-    "render_top_nav_html",
     "render_wetter_strip_css",
     "render_wetter_strip_html",
 ]
