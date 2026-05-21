@@ -6,8 +6,8 @@ Seiten-Fusszeile von mkn-desk.com: links eine Identitaets-Zeile aus
 gefuellter Profil-Slot), rechts die Rechtslinks (`·`-getrennt) plus optionale
 Version.
 
-CSS-Strategie wie brand_bar / kpi_card: Farb- und Schrift-Token via CSS Custom
-Properties, Layout inline. Die "Hochstrich"-Trennlinie ueber dem Footer ist
+CSS-Strategie: alle Masse, Schriftgroessen und Linien aus Web-Foundation-Tokens
+(var(--web-*) / var(--space-*)). Die "Hochstrich"-Trennlinie ueber dem Footer ist
 eine duenne `border-top` (Spec §cld1-S19 Variante E, Schlusszeilen-Form cld1-S21).
 """
 
@@ -71,18 +71,22 @@ def render_footer_css() -> str:
     """
     return """
 .mn-footer {
-  font-family: var(--font-body, "Geist"), system-ui, sans-serif;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: var(--stroke-thin, 0.5pt) solid var(--color-light-border, #cbd5e1);
+  font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
+  margin-top: var(--space-8, 32px);
+  padding-top: var(--space-4, 16px);
+  border-top: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
 }
 .mn-footer__inner {
+  max-width: var(--web-layout-content-width, 1024px);
+  margin-inline: auto;
+  padding-inline: var(--web-layout-page-inset, 44px);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 0.35rem 1.5rem;
-  font-size: 0.8125rem;
+  gap: var(--space-2, 8px) var(--space-6, 24px);
+  font-size: var(--web-text-ui, 14px);
+  line-height: var(--web-leading-ui, 1.35);
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-footer__identity,
@@ -92,7 +96,7 @@ def render_footer_css() -> str:
   align-items: baseline;
 }
 .mn-footer__sep {
-  margin: 0 0.5rem;
+  margin: 0 var(--space-2, 8px);
   opacity: 0.5;
 }
 .mn-footer__link {
@@ -103,7 +107,7 @@ def render_footer_css() -> str:
   text-decoration: underline;
 }
 .mn-footer__link:focus-visible {
-  outline: 2px solid var(--color-light-accent, #4F46E5);
+  outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: 2px;
 }
 .mn-footer__version {

@@ -15,7 +15,6 @@ from mn_design_system.components.web.footer import (
     render_footer_css,
     render_footer_html,
 )
-from mn_design_system.tokens import get
 
 
 def _make_input(**overrides) -> FooterInput:
@@ -144,24 +143,33 @@ class TestRenderFooterHtml:
 class TestRenderFooterCss:
     def test_uses_custom_properties(self):
         css = render_footer_css()
-        assert "var(--color-light-border" in css
+        assert "var(--web-color-separator" in css
         assert "var(--color-light-text" in css
 
-    def test_stroke_thin_fallback_matches_token_unit(self):
-        """Der var()-Fallback fuer stroke.thin muss in Wert UND Einheit dem
-        Token entsprechen (0.5pt, nicht 0.5px)."""
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Stroke, Schriftgroesse, Schriftfamilie, Inhalts-
+        Breite und Seiten-Einzug kommen aus der Web-Foundation."""
         css = render_footer_css()
-        soll = get("stroke.thin")
-        assert soll == "0.5pt"
-        assert f"var(--stroke-thin, {soll})" in css
+        assert "var(--web-stroke-line" in css
+        assert "var(--web-text-ui" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--web-layout-content-width" in css
+        assert "var(--web-layout-page-inset" in css
+
+    def test_no_print_pt_units(self):
+        """Der Footer trug die einzige print-Linie (stroke.thin 0.5pt) — nach
+        der Re-Tokenisierung ist der Footer rein web, keine pt-Einheit mehr."""
+        css = render_footer_css()
+        assert "pt" not in css
 
     def test_link_has_focus_visible(self):
         """Footer-Links haben einen sichtbaren, Token-basierten
-        :focus-visible-Indikator (WCAG 2.4.7)."""
+        :focus-visible-Indikator (WCAG 2.4.7) — Foundation-Fokus-Ring."""
         css = render_footer_css()
         assert ".mn-footer__link:focus-visible" in css
         assert "outline" in css
-        assert "var(--color-light-accent" in css
+        assert "var(--web-stroke-focus" in css
+        assert "var(--web-color-focus-ring" in css
 
     def test_hochstrich_border_top(self):
         """Die Hochstrich-Trennlinie ist ein border-top am <footer>."""
