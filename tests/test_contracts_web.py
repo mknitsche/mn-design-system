@@ -1,4 +1,4 @@
-"""Verhaltens-Tests fuer die 13 Web-Tier-Contracts (UX-Welle v0.2).
+"""Verhaltens-Tests fuer die 9 Web-Tier-Contracts (UX-Welle v0.2).
 
 Die Pydantic-Contracts in components/_patterns/contracts.py sind die API des
 Design-Systems — Renderer (web/, pdf/, latex/) muessen sie als Eingabe
@@ -20,8 +20,6 @@ from __future__ import annotations
 
 import pytest
 from mn_design_system.components._patterns.contracts import (
-    BrandBarChip,
-    BrandBarInput,
     CardGridInput,
     ContentCardInput,
     EmptyStateInput,
@@ -32,8 +30,6 @@ from mn_design_system.components._patterns.contracts import (
     SubNavInput,
     SubNavTab,
     TierChipInput,
-    TopNavInput,
-    TopNavItem,
     WebTier,
 )
 from pydantic import ValidationError
@@ -125,90 +121,6 @@ class TestEmptyStateInput:
 
 
 # ---------------------------------------------------------------------------
-# BrandBarChip
-# ---------------------------------------------------------------------------
-
-
-class TestBrandBarChip:
-    def test_minimal_valid(self):
-        inp = BrandBarChip(tier=WebTier.KABINETT, label="Privat")
-        assert inp.tier is WebTier.KABINETT
-
-    def test_label_min_length(self):
-        with pytest.raises(ValidationError):
-            BrandBarChip(tier=WebTier.KABINETT, label="")
-
-    def test_frozen(self):
-        inp = BrandBarChip(tier=WebTier.KABINETT, label="Privat")
-        with pytest.raises(ValidationError):
-            inp.label = "Geaendert"
-
-    def test_extra_forbidden(self):
-        with pytest.raises(ValidationError):
-            BrandBarChip(tier=WebTier.KABINETT, label="Privat", foo="bar")
-
-
-# ---------------------------------------------------------------------------
-# BrandBarInput
-# ---------------------------------------------------------------------------
-
-
-class TestBrandBarInput:
-    def test_minimal_valid(self):
-        inp = BrandBarInput(brand_text="mkn-desk")
-        assert inp.chips == []  # default_factory=list
-
-    def test_with_chips(self):
-        chips = [
-            BrandBarChip(tier=WebTier.BIBLIOTHEK, label="Bibliothek"),
-            BrandBarChip(tier=WebTier.START, label="Stufe START"),
-        ]
-        inp = BrandBarInput(brand_text="mkn-desk", chips=chips)
-        assert len(inp.chips) == 2
-
-    def test_brand_text_min_length(self):
-        with pytest.raises(ValidationError):
-            BrandBarInput(brand_text="")
-
-    def test_chips_max_length(self):
-        """chips: max 3 — der vierte Chip wird abgelehnt."""
-        chips = [
-            BrandBarChip(tier=WebTier.BIBLIOTHEK, label="A"),
-            BrandBarChip(tier=WebTier.ATELIER, label="B"),
-            BrandBarChip(tier=WebTier.KABINETT, label="C"),
-        ]
-        BrandBarInput(brand_text="ok", chips=chips)  # genau 3 ist gueltig
-        with pytest.raises(ValidationError):
-            BrandBarInput(
-                brand_text="zu viel",
-                chips=[*chips, BrandBarChip(tier=WebTier.START, label="D")],
-            )
-
-    def test_frozen(self):
-        inp = BrandBarInput(brand_text="mkn-desk")
-        with pytest.raises(ValidationError):
-            inp.brand_text = "Geaendert"
-
-    def test_extra_forbidden(self):
-        with pytest.raises(ValidationError):
-            BrandBarInput(brand_text="mkn-desk", foo="bar")
-
-    def test_user_chip_id_default_none(self):
-        """Hydration-Slot ist optional — ohne Angabe None."""
-        inp = BrandBarInput(brand_text="mkn-desk")
-        assert inp.user_chip_id is None
-
-    def test_user_chip_id_accepts_string(self):
-        inp = BrandBarInput(brand_text="mkn-desk", user_chip_id="brand-user-chip")
-        assert inp.user_chip_id == "brand-user-chip"
-
-    def test_user_chip_label_default(self):
-        """Pre-Hydration-Text hat einen Default."""
-        inp = BrandBarInput(brand_text="mkn-desk")
-        assert inp.user_chip_label == "…"
-
-
-# ---------------------------------------------------------------------------
 # SubNavTab
 # ---------------------------------------------------------------------------
 
@@ -287,88 +199,6 @@ class TestSubNavInput:
             SubNavInput(
                 tier=WebTier.BIBLIOTHEK,
                 tabs=[SubNavTab(label="Alle", href="/bibliothek")],
-                foo="bar",
-            )
-
-
-# ---------------------------------------------------------------------------
-# TopNavItem
-# ---------------------------------------------------------------------------
-
-
-class TestTopNavItem:
-    def test_minimal_valid(self):
-        inp = TopNavItem(
-            label="Bibliothek", href="/bibliothek", tier=WebTier.BIBLIOTHEK
-        )
-        assert inp.active is False  # Default
-
-    def test_all_fields(self):
-        inp = TopNavItem(
-            label="Atelier", href="/atelier", tier=WebTier.ATELIER, active=True
-        )
-        assert inp.active is True
-
-    def test_label_min_length(self):
-        with pytest.raises(ValidationError):
-            TopNavItem(label="", href="/x", tier=WebTier.START)
-
-    def test_href_min_length(self):
-        with pytest.raises(ValidationError):
-            TopNavItem(label="X", href="", tier=WebTier.START)
-
-    def test_frozen(self):
-        inp = TopNavItem(label="X", href="/x", tier=WebTier.START)
-        with pytest.raises(ValidationError):
-            inp.label = "Geaendert"
-
-    def test_extra_forbidden(self):
-        with pytest.raises(ValidationError):
-            TopNavItem(label="X", href="/x", tier=WebTier.START, foo="bar")
-
-
-# ---------------------------------------------------------------------------
-# TopNavInput
-# ---------------------------------------------------------------------------
-
-
-class TestTopNavInput:
-    def test_minimal_valid(self):
-        inp = TopNavInput(
-            items=[TopNavItem(label="Start", href="/start", tier=WebTier.START)]
-        )
-        assert inp.aria_label == "Hauptnavigation"  # Default
-
-    def test_custom_aria_label(self):
-        inp = TopNavInput(
-            items=[TopNavItem(label="Start", href="/start", tier=WebTier.START)],
-            aria_label="Tier-Wechsel",
-        )
-        assert inp.aria_label == "Tier-Wechsel"
-
-    def test_items_min_length(self):
-        """items: mind. 1 — leere Liste wird abgelehnt."""
-        with pytest.raises(ValidationError):
-            TopNavInput(items=[])
-
-    def test_aria_label_min_length(self):
-        with pytest.raises(ValidationError):
-            TopNavInput(
-                items=[TopNavItem(label="Start", href="/start", tier=WebTier.START)],
-                aria_label="",
-            )
-
-    def test_frozen(self):
-        inp = TopNavInput(
-            items=[TopNavItem(label="Start", href="/start", tier=WebTier.START)]
-        )
-        with pytest.raises(ValidationError):
-            inp.aria_label = "Geaendert"
-
-    def test_extra_forbidden(self):
-        with pytest.raises(ValidationError):
-            TopNavInput(
-                items=[TopNavItem(label="Start", href="/start", tier=WebTier.START)],
                 foo="bar",
             )
 
