@@ -8,6 +8,33 @@ oder Doku.
 
 ---
 
+## [0.10.0] — 2026-05-21
+
+### Geaendert — Footer als schlanke Schlusszeile (BREAKING)
+
+Die Footer-Komponente wurde von einem 3-Spalten-Sitemap-Raster auf eine
+**schlanke einzeilige Schlusszeile** umgebaut. KT-1-Befund cld1-S21: das
+Raster, in der Praxis mit nur einer Spalte befuellt, wirkte als abgebrochener
+Stummel — nicht als Fusszeile.
+
+Neue Form: links eine Identitaets-Zeile aus `|`-getrennten Segmenten (Marke,
+Seiten-Kontext, optional ein Profil-Hydration-Slot), rechts die Rechtslinks
+(`·`-getrennt) plus optionale Version, darueber ein feiner Hochstrich.
+
+**Breaking — `FooterInput` umgestaltet:**
+
+- `columns: list[FooterColumn]` → `segments: list[FooterSegment]` (linke Zeile)
+- neu: `links: list[FooterLink]` — die Rechtslinks (vorher Teil der Spalten)
+- entfernt: `note`, `user_info_id`, `user_info_label` — der Hydration-Slot
+  wird jetzt ueber `FooterSegment.slot_id` ausgedrueckt
+- `FooterColumn` entfaellt zugunsten von `FooterSegment` (`title`/`links` →
+  `text`/`slot_id`)
+- `version` unveraendert
+
+Renderer-API (`render_footer_html` / `render_footer_css`) sowie die
+`:focus-visible`-, XSS-Escape- und Token-Garantien bleiben. Konsumenten
+(mkn-desk.com) ziehen mit v0.2.1 nach.
+
 ## [0.9.0] — 2026-05-20
 
 ### Hinzugefuegt — Hydration-Slots + Empty-State (UX-Welle B, Foundation)
