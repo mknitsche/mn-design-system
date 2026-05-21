@@ -124,3 +124,21 @@ class TestRenderWetterStripCss:
         css = render_wetter_strip_css()
         assert "var(--color-light-h1" in css
         assert "var(--color-status-success" in css
+
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Schriftgroessen, Schriftfamilie, Stroke und
+        Abstaende kommen aus der Web-Foundation."""
+        css = render_wetter_strip_css()
+        assert "var(--web-text-caption" in css
+        assert "var(--web-text-h2" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--web-stroke-line" in css
+        assert "var(--web-color-separator" in css
+        assert "var(--space-" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — der Wetter-Strip ist rein web. Geprueft auf
+        pt als Einheit ('pt;' / 'pt '), der Token-Schritt 'caption' enthaelt
+        das Substring 'pt' legitim."""
+        css = render_wetter_strip_css()
+        assert "pt;" not in css and "pt " not in css
