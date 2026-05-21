@@ -8,6 +8,38 @@ oder Doku.
 
 ---
 
+## [0.11.0] — 2026-05-21
+
+### Hinzugefuegt — Kategorie- + Architektur-Farbtokens (claudeAI Welle 3)
+
+19 neue Farbtokens, damit der `pdf_layer` der claudeAI-PKA token-clean wird
+(null hartkodierte Farben). Die Werte sind 1:1-Kopien der bislang in
+`pdf_utils.py` hartkodierten Material-Design-Literale — **rein additiv, kein
+visueller Unterschied**, rueckwaertskompatibel zu v0.10.0.
+
+Neue Token-Familie `color.category.*` (13) — Kategorie- und
+To-Do-Prioritaets-Farben fuer PDF-Tabellen (Aufgaben-Cockpit / Briefing):
+vier Prioritaets-Familien (Sofort=red, Demnaechst=yellow, Klaeren=blue,
+Irgendwann=gray) je `bg`/`text`/`cb` (Checkbox), plus `green-cb` (Projekt)
+und `yellow` (Warm-Gelb Akzent-Basis).
+
+Neue Token-Familie `color.architecture.*` (6) — Architektur-Diagramm-
+Knotenfarben fuer die PDF-Visualisierung: drei Knoten-Rollen (`workflow`,
+`integration`, `data`) je Fuellfarbe + helle Hintergrund-Variante. Ergaenzt
+`color.viz.*` (generische Diagramm-Box-Toene) um rollensemantisch benannte
+Knotenfarben.
+
+Erweiterte Familien:
+
+- `color.status.success-bg` (`#e8f5e9`) — Erfolg/Projekt-Hintergrund,
+  Gegenstueck zu den vorhandenen `error-bg`/`warning-bg`.
+- `color.light.row-alt` (`#f0f4ff`) — alternierender Tabellen-Zeilen-
+  Hintergrund (heller Indigo-Tint).
+
+`#1565c0` und `#e3f2fd` erscheinen bewusst unter zwei semantischen Keys
+(`category.blue-*` und `architecture.workflow*`) — gleicher Wert, andere
+Rolle, korrekt fuer ein semantisches Token-System.
+
 ## [0.10.0] — 2026-05-21
 
 ### Geaendert — Footer als schlanke Schlusszeile (BREAKING)

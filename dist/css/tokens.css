@@ -24,6 +24,7 @@
   --color-grey-700: #374151;
   --color-brand: #C8102E; /** Crimson — NUR Logo, Brand-Strich, Foto-Logo. Niemals UI-interaktiv. */
   --color-status-success: #2e7d32;
+  --color-status-success-bg: #e8f5e9; /** Erfolg/Projekt Hintergrund (gruen-blass). Gegenstueck zu error-bg/warning-bg. */
   --color-status-warning: #f59e0b; /** Amber, statt Orange */
   --color-status-urgent: #e65100; /** Tieferes Orange fuer Urgent/Fortschritt-Indikator */
   --color-status-error: #D32F2F; /** klar abgegrenzt von Brand-Crimson */
@@ -47,10 +48,28 @@
   --color-viz-neutral-soft: #e0e0e0; /** Diagramm-Box neutraler Grau */
   --color-viz-dark-navy: #1a237e; /** Visualisierungs-Prompt: Indigo-900-Variante */
   --color-viz-medium-blue: #283593; /** Visualisierungs-Prompt: Indigo-800-Variante */
+  --color-category-yellow: #f9a825; /** Warm-Gelb Akzent-Basis (Categories). */
+  --color-category-red-bg: #fce4ec; /** Prioritaet 'Sofort' — Zeilen-Hintergrund. */
+  --color-category-red-cb: #c62828; /** Prioritaet 'Sofort' — Checkbox. */
+  --color-category-yellow-bg: #fff8e1; /** Prioritaet 'Demnaechst' — Zeilen-Hintergrund. */
+  --color-category-yellow-cb: #f57f17; /** Prioritaet 'Demnaechst' — Checkbox. */
+  --color-category-blue-bg: #e3f2fd; /** Prioritaet 'Klaeren' — Zeilen-Hintergrund. */
+  --color-category-blue-text: #1565c0; /** Prioritaet 'Klaeren' — Text. */
+  --color-category-blue-cb: #1976d2; /** Prioritaet 'Klaeren' — Checkbox. */
+  --color-category-gray-text: #616161; /** Prioritaet 'Irgendwann' — Text. */
+  --color-category-gray-cb: #757575; /** Prioritaet 'Irgendwann' — Checkbox. */
+  --color-category-green-cb: #388e3c; /** Projekt — Checkbox. */
+  --color-architecture-workflow: #1565c0; /** Workflow-Knoten — Fuellfarbe. */
+  --color-architecture-workflow-light: #e3f2fd; /** Workflow-Knoten — helle Hintergrund-Variante. */
+  --color-architecture-integration: #6a1b9a; /** Integrations-Knoten — Fuellfarbe. */
+  --color-architecture-integration-light: #f3e5f5; /** Integrations-Knoten — helle Hintergrund-Variante. */
+  --color-architecture-data: #00695c; /** Daten-Knoten — Fuellfarbe. */
+  --color-architecture-data-light: #e0f2f1; /** Daten-Knoten — helle Hintergrund-Variante. */
   --color-light-bg: #fdfdfd;
   --color-light-surface: #ffffff;
   --color-light-surface-subtle: #f6f6f6;
   --color-light-surface-elev: #f6f6f6;
+  --color-light-row-alt: #f0f4ff; /** Alternierender Tabellen-Zeilen-Hintergrund (PDF). Sehr heller Indigo-Tint. S260 Welle 3. */
   --color-light-border: #cbd5e1;
   --color-light-border-subtle: #e5e7eb;
   --color-light-text: #1e1b4b;
