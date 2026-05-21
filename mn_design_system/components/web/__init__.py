@@ -46,6 +46,10 @@ from mn_design_system.components.web.kpi_card import (
     render_kpi_card_css,
     render_kpi_card_html,
 )
+from mn_design_system.components.web.masthead import (
+    render_masthead_css,
+    render_masthead_html,
+)
 from mn_design_system.components.web.page_header import (
     render_page_header_css,
     render_page_header_html,
@@ -83,6 +87,8 @@ __all__ = [
     "render_initiale_css",
     "render_kpi_card_css",
     "render_kpi_card_html",
+    "render_masthead_css",
+    "render_masthead_html",
     "render_page_header_css",
     "render_page_header_html",
     "render_sparkline_svg",

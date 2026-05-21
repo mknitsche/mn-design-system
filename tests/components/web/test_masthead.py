@@ -72,3 +72,120 @@ class TestMastheadContracts:
         masthead = _make_masthead_input()
         with pytest.raises(ValidationError):
             masthead.wordmark = "changed"
+
+
+from mn_design_system.components.web.masthead import (  # noqa: E402
+    render_masthead_css,
+    render_masthead_html,
+)
+from mn_design_system.tokens import get  # noqa: E402
+
+
+class TestRenderMastheadHtml:
+    def test_minimal_renders_both_rows(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert 'class="mn-masthead"' in html
+        assert "mn-masthead__identity" in html
+        assert "mn-masthead__tiers" in html
+
+    def test_emblem_rendered_and_linked(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert 'class="mn-masthead__emblem" href="/start/"' in html
+        assert "/assets/logo-mkn2ndbrain-kopf.png" in html
+
+    def test_wordmark_rendered(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert "from the desk of mn" in html
+
+    def test_edition_date_rendered_when_present(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert "21. Mai 2026" in html
+        assert "mn-masthead__edition" in html
+
+    def test_edition_date_absent_when_none(self):
+        html = render_masthead_html(_make_masthead_input(edition_date=None))
+        assert "mn-masthead__edition" not in html
+
+    def test_tier_pills_rendered(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert html.count("mn-masthead__pill--") == 4
+
+    def test_active_pill_marked_once(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert html.count("is-active") == 1
+        assert html.count('aria-current="page"') == 1
+
+    def test_context_chip_rendered(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert "mn-masthead__chip--atelier" in html
+        assert "Atelier · AMBER" in html
+
+    def test_hydration_chip_rendered_when_id_set(self):
+        html = render_masthead_html(
+            _make_masthead_input(user_chip_id="masthead-user-chip")
+        )
+        assert 'id="masthead-user-chip"' in html
+        assert "mn-masthead__chip--loading" in html
+
+    def test_nav_has_aria_label(self):
+        html = render_masthead_html(_make_masthead_input())
+        assert 'aria-label="Hauptnavigation"' in html
+
+    def test_xss_label_escaped(self):
+        html = render_masthead_html(
+            _make_masthead_input(
+                tier_items=[
+                    MastheadTierItem(
+                        label="<script>alert(1)</script>",
+                        href="/x",
+                        tier=WebTier.START,
+                    )
+                ]
+            )
+        )
+        assert "<script>" not in html
+        assert "&lt;script&gt;" in html
+
+    def test_xss_wordmark_escaped(self):
+        html = render_masthead_html(
+            _make_masthead_input(wordmark="<img src=x onerror=alert(1)>")
+        )
+        assert "<img src=x" not in html
+
+    def test_inline_css_embedded(self):
+        html = render_masthead_html(_make_masthead_input(), inline_css=True)
+        assert "<style>" in html
+        assert ".mn-masthead" in html
+
+
+class TestRenderMastheadCss:
+    def test_uses_foundation_tokens(self):
+        css = render_masthead_css()
+        assert "var(--web-text-ui" in css
+        assert "var(--web-layout-content-width" in css
+        assert "var(--web-layout-page-inset" in css
+        assert "var(--web-stroke-line-strong" in css
+
+    def test_divider_uses_separator_on_dark(self):
+        css = render_masthead_css()
+        assert "var(--web-color-separator-on-dark" in css
+
+    def test_focus_ring_from_tokens(self):
+        css = render_masthead_css()
+        assert "var(--web-stroke-focus" in css
+        assert "var(--web-color-focus-ring" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — der Masthead ist rein web."""
+        css = render_masthead_css()
+        assert "pt;" not in css and "pt " not in css
+
+    def test_tier_fallback_matches_real_tokens(self):
+        """Der var()-Fallback je Tier-Pill/Chip muss der ECHTE Tier-Wert sein."""
+        css = render_masthead_css()
+        for tier in ("bibliothek", "atelier", "kabinett", "start"):
+            soll_bg = get(f"color.tier.{tier}.bg")
+            soll_text = get(f"color.tier.{tier}.text")
+            assert soll_bg is not None and soll_text is not None
+            assert f"var(--color-tier-{tier}-bg, {soll_bg})" in css
+            assert f"var(--color-tier-{tier}-text, {soll_text})" in css
