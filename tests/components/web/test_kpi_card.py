@@ -108,3 +108,30 @@ class TestRenderKpiCardCss:
         assert "padding" in css
         assert "border-radius" in css
         assert "font-size" in css
+
+    def test_uses_foundation_tokens(self):
+        """Re-Tokenisierung: die KPI-Mikro-Skala (frueher 7-11px) tritt auf die
+        Web-Foundation — Label/Change/Caption auf web.text.caption (12px),
+        der Headline-Wert auf web.text.h3 (23px)."""
+        css = render_kpi_card_css()
+        assert "var(--web-text-caption" in css
+        assert "var(--web-text-h3" in css
+        assert "var(--web-leading-h3" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--web-stroke-line" in css
+        assert "var(--web-color-separator" in css
+        assert "var(--space-" in css
+
+    def test_radius_card_fallback_is_4px(self):
+        """Der radius-card-Fallback entspricht dem echten Token (4px)."""
+        css = render_kpi_card_css()
+        assert "var(--radius-card, 4px)" in css
+
+    def test_no_print_pt_units(self):
+        """Keine pt-Einheiten — die KPI-Card ist rein web. Die alten
+        rem-Kommentare (~9pt/~7pt) sind mit der Re-Tokenisierung weg.
+
+        Geprueft wird auf pt als Einheit ('pt;' / 'pt '), nicht auf das
+        Substring 'pt' — der Token-Schritt 'caption' enthaelt es legitim."""
+        css = render_kpi_card_css()
+        assert "pt;" not in css and "pt " not in css
