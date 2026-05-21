@@ -41,3 +41,35 @@ def test_exported_from_web_package():
     from mn_design_system.components.web import render_foundation_css as exported
 
     assert exported is render_foundation_css
+
+
+from mn_design_system.components.web.foundation import (  # noqa: E402
+    render_initiale_css,
+)
+
+
+def test_initiale_dropcap_uses_initial_letter():
+    """Drop-Cap per initial-letter, mit @supports-Fallback auf float (Design §4)."""
+    css = render_initiale_css()
+    assert "initial-letter: 2" in css
+    assert "@supports not (initial-letter: 2)" in css
+    assert "float: left" in css
+
+
+def test_initiale_uses_editorial_serif():
+    css = render_initiale_css()
+    assert "var(--web-font-serif-editorial" in css
+    assert "font-style: italic" in css
+
+
+def test_initiale_wort_form_present():
+    """Spielform 2 — Wort-Initiale, erstes Wort 1,3x auf der Grundlinie."""
+    css = render_initiale_css()
+    assert ".mn-initiale-wort" in css
+    assert "font-size: 1.3em" in css
+
+
+def test_initiale_exported_from_web_package():
+    from mn_design_system.components.web import render_initiale_css as exported
+
+    assert exported is render_initiale_css
