@@ -37,6 +37,7 @@
 
     "status": {
       "success":      { "value": "#2e7d32" },
+      "success-bg":   { "value": "#e8f5e9", "comment": "Erfolg/Projekt Hintergrund (gruen-blass). Gegenstueck zu error-bg/warning-bg." },
       "warning":      { "value": "#f59e0b", "comment": "Amber, statt Orange" },
       "urgent":       { "value": "#e65100", "comment": "Tieferes Orange fuer Urgent/Fortschritt-Indikator" },
       "error":        { "value": "#D32F2F", "comment": "klar abgegrenzt von Brand-Crimson" },
@@ -76,12 +77,38 @@
       "medium-blue":  { "value": "#283593", "comment": "Visualisierungs-Prompt: Indigo-800-Variante" }
     },
 
+    "category": {
+      "_meta":     { "value": "Kategorie- und To-Do-Prioritaets-Farben fuer PDF-Tabellen (pdf_utils.py, Aufgaben-Cockpit / Briefing). Vier Prioritaets-Familien (Sofort=red, Demnaechst=yellow, Klaeren=blue, Irgendwann=gray) je bg / text / cb (Checkbox) plus green (Projekt) und yellow Akzent-Basis. S260 Welle 3 — Material-Design-Werte 1:1 in Tokens ueberfuehrt (kein visueller Unterschied, additive Aufnahme)." },
+      "yellow":      { "value": "#f9a825", "comment": "Warm-Gelb Akzent-Basis (Categories)." },
+      "red-bg":      { "value": "#fce4ec", "comment": "Prioritaet 'Sofort' — Zeilen-Hintergrund." },
+      "red-cb":      { "value": "#c62828", "comment": "Prioritaet 'Sofort' — Checkbox." },
+      "yellow-bg":   { "value": "#fff8e1", "comment": "Prioritaet 'Demnaechst' — Zeilen-Hintergrund." },
+      "yellow-cb":   { "value": "#f57f17", "comment": "Prioritaet 'Demnaechst' — Checkbox." },
+      "blue-bg":     { "value": "#e3f2fd", "comment": "Prioritaet 'Klaeren' — Zeilen-Hintergrund." },
+      "blue-text":   { "value": "#1565c0", "comment": "Prioritaet 'Klaeren' — Text." },
+      "blue-cb":     { "value": "#1976d2", "comment": "Prioritaet 'Klaeren' — Checkbox." },
+      "gray-text":   { "value": "#616161", "comment": "Prioritaet 'Irgendwann' — Text." },
+      "gray-cb":     { "value": "#757575", "comment": "Prioritaet 'Irgendwann' — Checkbox." },
+      "green-cb":    { "value": "#388e3c", "comment": "Projekt — Checkbox." }
+    },
+
+    "architecture": {
+      "_meta":             { "value": "Architektur-Diagramm-Knotenfarben fuer PDF-Visualisierung (pdf_utils.py, system-dokumentation). Drei Knoten-Rollen (workflow / integration / data) je Fuellfarbe + helle Hintergrund-Variante. S260 Welle 3 — Material-Design-Werte 1:1 in Tokens ueberfuehrt. workflow=blau und integration=lila/data=teal: rollensemantisch benannt, ergaenzt color.viz.* (generische Diagramm-Box-Toene)." },
+      "workflow":          { "value": "#1565c0", "comment": "Workflow-Knoten — Fuellfarbe." },
+      "workflow-light":    { "value": "#e3f2fd", "comment": "Workflow-Knoten — helle Hintergrund-Variante." },
+      "integration":       { "value": "#6a1b9a", "comment": "Integrations-Knoten — Fuellfarbe." },
+      "integration-light": { "value": "#f3e5f5", "comment": "Integrations-Knoten — helle Hintergrund-Variante." },
+      "data":              { "value": "#00695c", "comment": "Daten-Knoten — Fuellfarbe." },
+      "data-light":        { "value": "#e0f2f1", "comment": "Daten-Knoten — helle Hintergrund-Variante." }
+    },
+
     "light": {
       "_meta": { "value": "Default-Mode" },
       "bg":            { "value": "#fdfdfd" },
       "surface":       { "value": "#ffffff" },
       "surface-subtle":{ "value": "#f6f6f6" },
       "surface-elev":  { "value": "#f6f6f6" },
+      "row-alt":       { "value": "#f0f4ff", "comment": "Alternierender Tabellen-Zeilen-Hintergrund (PDF). Sehr heller Indigo-Tint. S260 Welle 3." },
       "border":        { "value": "{color.grey.300.value}" },
       "border-subtle": { "value": "#e5e7eb" },
       "text":          { "value": "{color.indigo.950.value}" },
