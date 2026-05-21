@@ -38,3 +38,46 @@ def render_foundation_css() -> str:
   }}
 }}
 """.strip()
+
+
+def render_initiale_css() -> str:
+    """CSS fuer die zwei Initiale-Spielformen (Design §4 / §15.3).
+
+    .mn-initiale       — Drop-Cap, 2 Zeilen hoch, Source Serif Italic.
+                         initial-letter mit @supports-Fallback auf float.
+    .mn-initiale-wort  — Wort-Initiale: erstes Wort in Source Serif Italic
+                         1,3x, auf der Grundlinie stehend (kein Drop-Cap).
+
+    Einsatz nur auf besonderen / textlastigen Seiten. Der Konsument kapselt
+    den Eroeffnungs-Buchstaben bzw. das erste Wort in das jeweilige <span>.
+    """
+    return """
+.mn-initiale {
+  font-family: var(--web-font-serif-editorial, "Source Serif 4"), Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-light-h1, #312e81);
+}
+@supports (initial-letter: 2) {
+  .mn-initiale {
+    -webkit-initial-letter: 2;
+    initial-letter: 2;
+    margin-right: var(--space-2, 8px);
+  }
+}
+@supports not (initial-letter: 2) {
+  .mn-initiale {
+    float: left;
+    font-size: 3.1em;
+    line-height: 0.82;
+    margin: 0.04em var(--space-2, 8px) 0 0;
+  }
+}
+.mn-initiale-wort {
+  font-family: var(--web-font-serif-editorial, "Source Serif 4"), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.3em;
+  color: var(--color-light-h1, #312e81);
+}
+""".strip()
