@@ -34,6 +34,7 @@ from mn_design_system.components.web.empty_state import (
     render_empty_state_css,
     render_empty_state_html,
 )
+from mn_design_system.components.web.foundation import render_foundation_css
 from mn_design_system.components.web.footer import (
     render_footer_css,
     render_footer_html,
@@ -73,6 +74,7 @@ __all__ = [
     "render_content_card_html",
     "render_empty_state_css",
     "render_empty_state_html",
+    "render_foundation_css",
     "render_footer_css",
     "render_footer_html",
     "render_kpi_card_css",
