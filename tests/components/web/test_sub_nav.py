@@ -105,8 +105,25 @@ class TestRenderSubNavCss:
     def test_tab_has_focus_visible(self):
         """A2 welle-weit: jeder Sub-Nav-Tab hat einen sichtbaren,
         Token-basierten :focus-visible-Indikator (WCAG 2.4.7) — die Sub-Nav
-        ist tastaturbedienbar."""
+        ist tastaturbedienbar. Foundation: Fokus-Ring aus web.stroke/web.color."""
         css = render_sub_nav_css()
         assert ".mn-sub-nav__tab:focus-visible" in css
         assert "outline" in css
-        assert "var(--color-light-accent" in css
+        assert "var(--web-stroke-focus" in css
+        assert "var(--web-color-focus-ring" in css
+
+    def test_css_uses_foundation_tokens(self):
+        """Re-Tokenisierung: Stroke, Schriftgroesse und Schriftfamilie kommen
+        aus der Web-Foundation, nicht mehr aus ad-hoc rem/Print-Tokens."""
+        css = render_sub_nav_css()
+        assert "var(--web-stroke-line" in css
+        assert "var(--web-color-separator" in css
+        assert "var(--web-text-ui" in css
+        assert "var(--web-font-sans" in css
+        assert "var(--web-layout-content-width" in css
+        assert "var(--web-layout-page-inset" in css
+
+    def test_css_no_print_pt_units(self):
+        """Keine pt-Einheiten — die Sub-Nav ist rein web."""
+        css = render_sub_nav_css()
+        assert "pt" not in css
