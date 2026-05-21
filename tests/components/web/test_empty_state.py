@@ -35,3 +35,30 @@ def test_css_smoke():
     css = render_empty_state_css()
     assert ".mn-empty-state" in css
     assert "{" in css and "}" in css
+
+
+def test_css_uses_foundation_tokens():
+    """Re-Tokenisierung: Stroke, Schriftgroesse, Schriftfamilie und Abstaende
+    kommen aus der Web-Foundation."""
+    css = render_empty_state_css()
+    assert "var(--web-stroke-line-strong" in css
+    assert "var(--web-color-separator" in css
+    assert "var(--web-text-ui" in css
+    assert "var(--web-leading-ui" in css
+    assert "var(--web-font-sans" in css
+    assert "var(--space-" in css
+
+
+def test_css_tier_modifier_uses_border_token():
+    """Pro Tier eine border-left-color aus der color.tier-Familie."""
+    css = render_empty_state_css()
+    for tier in ("bibliothek", "atelier", "kabinett", "start"):
+        assert f"var(--color-tier-{tier}-border" in css
+
+
+def test_css_no_print_pt_units():
+    """Keine pt-Einheiten — der Empty-State ist rein web. Geprueft auf pt als
+    Einheit ('pt;' / 'pt '), nicht auf das Substring 'pt' — der Komponenten-
+    Name 'mn-empty-state' enthaelt es legitim."""
+    css = render_empty_state_css()
+    assert "pt;" not in css and "pt " not in css
