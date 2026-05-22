@@ -28,14 +28,15 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
 )
 
-# var()-Fallback je Tier (bg + text) — die ECHTEN color.tier.<tier>.* Werte
-# aus tokens.py, damit Pills/Chips auch ohne geladene tokens.css ihren
-# Tier-Ton behalten. Per test_tier_fallback_matches_real_tokens abgesichert.
-_TIER_FALLBACK: dict[WebTier, tuple[str, str]] = {
-    WebTier.BIBLIOTHEK: ("#f0fdf4", "#166534"),
-    WebTier.ATELIER: ("#fffbeb", "#92400e"),
-    WebTier.KABINETT: ("#fef2f2", "#991b1b"),
-    WebTier.START: ("#f0fdf4", "#166534"),
+# var()-Fallback je Tier (bg + text + hover-on-dark) — die ECHTEN
+# color.tier.<tier>.* Werte aus tokens.py, damit Pills/Chips auch ohne
+# geladene tokens.css ihren Tier-Ton behalten. Per
+# test_tier_fallback_matches_real_tokens abgesichert.
+_TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
+    WebTier.BIBLIOTHEK: ("#f0fdf4", "#166534", "rgba(187,247,208,0.5)"),
+    WebTier.ATELIER: ("#fffbeb", "#92400e", "rgba(253,230,138,0.5)"),
+    WebTier.KABINETT: ("#fef2f2", "#991b1b", "rgba(254,202,202,0.5)"),
+    WebTier.START: ("#f0fdf4", "#166534", "rgba(187,247,208,0.5)"),
 }
 
 
@@ -193,9 +194,6 @@ def render_masthead_css() -> str:
   background: transparent;
   transition: background 120ms;
 }
-.mn-masthead__pill:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
 .mn-masthead__pill:focus-visible {
   outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: 2px;
@@ -222,7 +220,12 @@ def render_masthead_css() -> str:
     ]
     for tier in _TIERS:
         t = tier.value
-        fb_bg, fb_text = _TIER_FALLBACK[tier]
+        fb_bg, fb_text, fb_hover = _TIER_FALLBACK[tier]
+        rules.append(
+            f".mn-masthead__pill--{t}:not(.is-active):hover {{\n"
+            f"  background: var(--color-tier-{t}-hover-on-dark, {fb_hover});\n"
+            f"}}"
+        )
         rules.append(
             f".mn-masthead__pill--{t}.is-active {{\n"
             f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
