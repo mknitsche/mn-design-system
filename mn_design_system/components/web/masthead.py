@@ -224,6 +224,8 @@ def render_masthead_css() -> str:
         rules.append(
             f".mn-masthead__pill--{t}:not(.is-active):hover {{\n"
             f"  background: var(--color-tier-{t}-hover-on-dark, {fb_hover});\n"
+            f"  color: var(--color-dark-text, #f5f5f7);\n"
+            f"  text-decoration: none;\n"
             f"}}"
         )
         rules.append(

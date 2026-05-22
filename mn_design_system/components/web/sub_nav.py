@@ -6,10 +6,11 @@ Tier-Kontext der Sub-Nav.
 
 CSS-Verhalten (Spec §A5/A6, Hover-Revision cld1-S21):
 - Inaktiver Tab: nur Text, transparenter Hintergrund.
-- Hover inaktiv: `var(--color-tier-<tier>-bg)` — der zarte Tier-Tint als
-  Vorschau auf den Aktiv-Zustand (analog zum Masthead-Tier-Hover).
-- Aktiver Tab (`is-active`): `border` + `text` des Tiers — die kraeftigere
-  Stufe, deutlicher Chip-Look. Drei-Stufen-Leiter: weiss -> Hover -> Aktiv.
+- Hover inaktiv: `var(--color-tier-<tier>-border)` — ein klar sichtbarer
+  Tier-Tint (analog zum Masthead-Tier-Hover); die Link-Unterstreichung des
+  Konsumenten wird im Nav-Kontext unterdrueckt.
+- Aktiver Tab (`is-active`): `bg` + `text` des Tiers, dauerhafter Chip-Look —
+  das Aktiv-Signal traegt die Tier-Textfarbe, der Hover die Tier-Flaeche.
 - `transition: background 120ms`.
 - Sub-Nav-Background bleibt weiss (Barrierefreiheit, Spec §A6).
 
@@ -124,12 +125,14 @@ def render_sub_nav_css() -> str:
         fb_bg, fb_border, fb_text = _TIER_FALLBACK[tier]
         rules.append(
             f".mn-sub-nav--{t} .mn-sub-nav__tab:not(.is-active):hover {{\n"
-            f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
+            f"  background: var(--color-tier-{t}-border, {fb_border});\n"
+            f"  color: var(--color-light-text, #1e1b4b);\n"
+            f"  text-decoration: none;\n"
             f"}}"
         )
         rules.append(
             f".mn-sub-nav--{t} .mn-sub-nav__tab.is-active {{\n"
-            f"  background: var(--color-tier-{t}-border, {fb_border});\n"
+            f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
             f"  color: var(--color-tier-{t}-text, {fb_text});\n"
             f"}}"
         )
