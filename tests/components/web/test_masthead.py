@@ -189,3 +189,14 @@ class TestRenderMastheadCss:
             assert soll_bg is not None and soll_text is not None
             assert f"var(--color-tier-{tier}-bg, {soll_bg})" in css
             assert f"var(--color-tier-{tier}-text, {soll_text})" in css
+
+    def test_pill_hover_is_tier_preview(self):
+        """Hover-Revision cld1-S21: der Pill-Hover leuchtet im Tier-Farbton
+        (hover-on-dark-Token), nicht im alten neutralen 8%-Schimmer — eine
+        Vorschau auf den Aktiv-Zustand, nur fuer inaktive Pills."""
+        css = render_masthead_css()
+        assert "rgba(255, 255, 255, 0.08)" not in css
+        for tier in ("bibliothek", "atelier", "kabinett", "start"):
+            assert f".mn-masthead__pill--{tier}:not(.is-active):hover" in css
+            assert f"var(--color-tier-{tier}-hover-on-dark" in css
+            assert get(f"color.tier.{tier}.hover-on-dark") is not None

@@ -94,13 +94,20 @@ class TestRenderSubNavHtml:
 
 
 class TestRenderSubNavCss:
-    def test_css_hover_uses_bg_soft(self):
+    def test_css_hover_uses_tier_bg(self):
+        """Hover-Revision cld1-S21: der Hover zeigt den zarten Tier-Tint (bg) —
+        Vorschau auf den Aktiv-Zustand, nur fuer inaktive Tabs."""
         css = render_sub_nav_css()
-        assert "var(--color-tier-bibliothek-bg-soft" in css
+        assert ".mn-sub-nav__tab:not(.is-active):hover" in css
+        assert "var(--color-tier-bibliothek-bg, #f0fdf4)" in css
 
-    def test_css_active_uses_bg(self):
+    def test_css_active_uses_tier_border(self):
+        """Hover-Revision cld1-S21: der aktive Tab traegt die kraeftigere
+        border-Stufe — klar staerker als der Hover (Drei-Stufen-Leiter
+        weiss -> Hover -> Aktiv)."""
         css = render_sub_nav_css()
-        assert "var(--color-tier-bibliothek-bg" in css
+        assert "var(--color-tier-bibliothek-border, #bbf7d0)" in css
+        assert "var(--color-tier-bibliothek-text, #166534)" in css
 
     def test_tab_has_focus_visible(self):
         """A2 welle-weit: jeder Sub-Nav-Tab hat einen sichtbaren,

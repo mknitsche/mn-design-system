@@ -4,11 +4,12 @@ Konsumiert SubNavInput aus `_patterns.contracts`. L3 der 3-Layer-Affordance
 (Spec §A5/A6): Auswahl-Navigation INNERHALB eines Tiers. Alle Tabs teilen den
 Tier-Kontext der Sub-Nav.
 
-CSS-Verhalten (Spec §A5/A6):
+CSS-Verhalten (Spec §A5/A6, Hover-Revision cld1-S21):
 - Inaktiver Tab: nur Text, transparenter Hintergrund.
-- Hover inaktiv: `var(--color-tier-<tier>-bg-soft)` — bg-soft-Token, zarter als
-  Aktiv-bg, kein color-mix im Konsumenten (Gemini-Gate Punkt 1).
-- Aktiver Tab (`is-active`): `bg` + `text` des Tiers, dauerhafter Chip-Look.
+- Hover inaktiv: `var(--color-tier-<tier>-bg)` — der zarte Tier-Tint als
+  Vorschau auf den Aktiv-Zustand (analog zum Masthead-Tier-Hover).
+- Aktiver Tab (`is-active`): `border` + `text` des Tiers — die kraeftigere
+  Stufe, deutlicher Chip-Look. Drei-Stufen-Leiter: weiss -> Hover -> Aktiv.
 - `transition: background 120ms`.
 - Sub-Nav-Background bleibt weiss (Barrierefreiheit, Spec §A6).
 
@@ -35,6 +36,16 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.KABINETT,
     WebTier.START,
 )
+
+# var()-Fallback je Tier (bg + border + text) — die ECHTEN color.tier.<tier>.*
+# Werte aus tokens.py, damit Hover/Aktiv-Tabs auch ohne geladene tokens.css
+# ihren Tier-Ton behalten.
+_TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
+    WebTier.BIBLIOTHEK: ("#f0fdf4", "#bbf7d0", "#166534"),
+    WebTier.ATELIER: ("#fffbeb", "#fde68a", "#92400e"),
+    WebTier.KABINETT: ("#fef2f2", "#fecaca", "#991b1b"),
+    WebTier.START: ("#f0fdf4", "#bbf7d0", "#166534"),
+}
 
 
 def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
@@ -73,7 +84,7 @@ def render_sub_nav_css() -> str:
     """Komponenten-CSS — Layout + 4 Tier-Modifier, Token-Werte via Custom Properties.
 
     Konsument muss `dist/css/tokens.css` einbinden, damit
-    `var(--color-tier-bibliothek-bg-soft)` etc. greift.
+    `var(--color-tier-bibliothek-bg)` etc. greift.
     """
     rules = [
         """
@@ -110,15 +121,16 @@ def render_sub_nav_css() -> str:
     ]
     for tier in _TIERS:
         t = tier.value
+        fb_bg, fb_border, fb_text = _TIER_FALLBACK[tier]
         rules.append(
-            f".mn-sub-nav--{t} .mn-sub-nav__tab:hover {{\n"
-            f"  background: var(--color-tier-{t}-bg-soft, #f7fef9);\n"
+            f".mn-sub-nav--{t} .mn-sub-nav__tab:not(.is-active):hover {{\n"
+            f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
             f"}}"
         )
         rules.append(
             f".mn-sub-nav--{t} .mn-sub-nav__tab.is-active {{\n"
-            f"  background: var(--color-tier-{t}-bg, #f0fdf4);\n"
-            f"  color: var(--color-tier-{t}-text, #166534);\n"
+            f"  background: var(--color-tier-{t}-border, {fb_border});\n"
+            f"  color: var(--color-tier-{t}-text, {fb_text});\n"
             f"}}"
         )
     return "\n".join(rules)

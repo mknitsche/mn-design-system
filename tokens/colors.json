@@ -232,30 +232,34 @@
     },
 
     "tier": {
-      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 4 Familien je bg / bg-soft / border / text. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich)." },
+      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 4 Familien je bg / bg-soft / border / text / hover-on-dark. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich)." },
       "bibliothek": {
         "bg":      { "value": "#f0fdf4" },
         "bg-soft": { "value": "#f7fef9", "comment": "bg 55% ueber Weiss — Sub-Nav-Hover" },
         "border":  { "value": "#bbf7d0" },
-        "text":    { "value": "#166534" }
+        "text":    { "value": "#166534" },
+        "hover-on-dark": { "value": "rgba(187,247,208,0.5)", "comment": "Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent)" }
       },
       "atelier": {
         "bg":      { "value": "#fffbeb" },
         "bg-soft": { "value": "#fffdf4", "comment": "bg 55% ueber Weiss" },
         "border":  { "value": "#fde68a" },
-        "text":    { "value": "#92400e" }
+        "text":    { "value": "#92400e" },
+        "hover-on-dark": { "value": "rgba(253,230,138,0.5)", "comment": "Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent)" }
       },
       "kabinett": {
         "bg":      { "value": "#fef2f2" },
         "bg-soft": { "value": "#fef8f8", "comment": "bg 55% ueber Weiss" },
         "border":  { "value": "#fecaca" },
-        "text":    { "value": "#991b1b" }
+        "text":    { "value": "#991b1b" },
+        "hover-on-dark": { "value": "rgba(254,202,202,0.5)", "comment": "Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent)" }
       },
       "start": {
         "bg":      { "value": "{color.tier.bibliothek.bg.value}" },
         "bg-soft": { "value": "{color.tier.bibliothek.bg-soft.value}" },
         "border":  { "value": "{color.tier.bibliothek.border.value}" },
-        "text":    { "value": "{color.tier.bibliothek.text.value}" }
+        "text":    { "value": "{color.tier.bibliothek.text.value}" },
+        "hover-on-dark": { "value": "{color.tier.bibliothek.hover-on-dark.value}" }
       }
     }
   }
