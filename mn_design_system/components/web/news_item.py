@@ -201,13 +201,13 @@ def render_news_item_css() -> str:
   color: var(--color-grey-700, #374151);
 }
 .mn-news-item__level {
-  display: inline-block;
+  display: block;
   font-size: var(--web-text-caption, 12px);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-light-accent, #4F46E5);
-  margin-bottom: var(--space-1, 4px);
+  margin-bottom: var(--space-2, 8px);
 }
 .mn-news-item__detail-text {
   margin: 0;
