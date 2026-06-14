@@ -26,7 +26,11 @@ from mn_design_system.components._patterns.contracts import (
     FooterInput,
     FooterLink,
     FooterSegment,
+    NewsItemDetail,
+    NewsItemInput,
     PageHeaderInput,
+    SourceLink,
+    SourceRefInput,
     SubNavInput,
     SubNavTab,
     TierChipInput,
@@ -431,3 +435,179 @@ class TestCardGridInput:
     def test_extra_forbidden(self):
         with pytest.raises(ValidationError):
             CardGridInput(cards=[_content_card()], foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# SourceLink
+# ---------------------------------------------------------------------------
+
+
+class TestSourceLink:
+    def test_minimal_valid(self):
+        link = SourceLink(href="https://euronews.com", label="euronews.com")
+        assert link.label == "euronews.com"
+
+    def test_href_min_length(self):
+        with pytest.raises(ValidationError):
+            SourceLink(href="", label="x")
+
+    def test_label_min_length(self):
+        with pytest.raises(ValidationError):
+            SourceLink(href="/x", label="")
+
+    def test_frozen(self):
+        link = SourceLink(href="/x", label="x")
+        with pytest.raises(ValidationError):
+            link.label = "y"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            SourceLink(href="/x", label="x", foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# SourceRefInput
+# ---------------------------------------------------------------------------
+
+
+def _source_link(label: str = "euronews.com") -> SourceLink:
+    """Helper: gueltiger SourceLink fuer Source-Ref-Tests."""
+    return SourceLink(href="https://example.com", label=label)
+
+
+class TestSourceRefInput:
+    def test_minimal_valid(self):
+        ref = SourceRefInput(primary=_source_link())
+        assert ref.weitere == []  # Default: leere Liste
+
+    def test_with_weitere(self):
+        ref = SourceRefInput(
+            primary=_source_link("a"),
+            weitere=[_source_link("b"), _source_link("c")],
+        )
+        assert len(ref.weitere) == 2
+
+    def test_default_weitere_is_independent(self):
+        """Default-Liste darf nicht zwischen Instanzen geteilt werden."""
+        a = SourceRefInput(primary=_source_link())
+        b = SourceRefInput(primary=_source_link())
+        assert a.weitere is not b.weitere
+
+    def test_primary_required(self):
+        with pytest.raises(ValidationError):
+            SourceRefInput(weitere=[_source_link()])
+
+    def test_frozen(self):
+        ref = SourceRefInput(primary=_source_link())
+        with pytest.raises(ValidationError):
+            ref.primary = _source_link("other")
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            SourceRefInput(primary=_source_link(), foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# NewsItemDetail
+# ---------------------------------------------------------------------------
+
+
+class TestNewsItemDetail:
+    def test_minimal_valid(self):
+        d = NewsItemDetail(level_label="Detailliert", text="Vertiefung.")
+        assert d.sources is None  # Default
+        assert d.summary_label == "mehr"  # Default
+
+    def test_all_fields(self):
+        d = NewsItemDetail(
+            level_label="Medium · Lagebericht",
+            text="Vertiefung.",
+            sources=SourceRefInput(primary=_source_link()),
+            summary_label="medium",
+        )
+        assert d.summary_label == "medium"
+        assert d.sources is not None
+
+    def test_level_label_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemDetail(level_label="", text="x")
+
+    def test_text_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemDetail(level_label="L", text="")
+
+    def test_summary_label_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemDetail(level_label="L", text="x", summary_label="")
+
+    def test_frozen(self):
+        d = NewsItemDetail(level_label="L", text="x")
+        with pytest.raises(ValidationError):
+            d.text = "y"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            NewsItemDetail(level_label="L", text="x", foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# NewsItemInput
+# ---------------------------------------------------------------------------
+
+
+class TestNewsItemInput:
+    def test_minimal_valid(self):
+        item = NewsItemInput(
+            title="Schlagzeile",
+            text="Basis-Tiefe.",
+            kategorie="Politik",
+            zeitangabe="vor 3 Std",
+        )
+        assert item.rank is None
+        assert item.eyebrow is None
+        assert item.is_aufmacher is False
+        assert item.deeper_href is None
+        assert item.source is None
+        assert item.detail is None
+
+    def test_all_fields(self):
+        item = NewsItemInput(
+            rank="01",
+            eyebrow="Aufmacher · stand auf S1",
+            is_aufmacher=True,
+            title="Schlagzeile",
+            deeper_href="#fin-aufmacher",
+            text="Basis-Tiefe.",
+            kategorie="Finanzen",
+            zeitangabe="vor 4 Std",
+            source=SourceRefInput(primary=_source_link()),
+            detail=NewsItemDetail(level_label="Detailliert", text="Mehr."),
+        )
+        assert item.is_aufmacher is True
+        assert item.deeper_href == "#fin-aufmacher"
+        assert item.detail is not None
+
+    def test_title_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemInput(title="", text="x", kategorie="K", zeitangabe="Z")
+
+    def test_text_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemInput(title="T", text="", kategorie="K", zeitangabe="Z")
+
+    def test_kategorie_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemInput(title="T", text="x", kategorie="", zeitangabe="Z")
+
+    def test_zeitangabe_min_length(self):
+        with pytest.raises(ValidationError):
+            NewsItemInput(title="T", text="x", kategorie="K", zeitangabe="")
+
+    def test_frozen(self):
+        item = NewsItemInput(title="T", text="x", kategorie="K", zeitangabe="Z")
+        with pytest.raises(ValidationError):
+            item.title = "Geaendert"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            NewsItemInput(title="T", text="x", kategorie="K", zeitangabe="Z", foo="bar")

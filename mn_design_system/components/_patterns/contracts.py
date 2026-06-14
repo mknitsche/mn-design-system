@@ -338,3 +338,90 @@ class MastheadInput(BaseModel):
     nach dem Kontext-Chip gerendert; eine App fuellt ihn client-seitig."""
     user_chip_label: str = "…"
     """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
+
+
+# ---------------------------------------------------------------------------
+# Source-Ref + News-Item (Briefing-Web-Ausgabe, Welle 3)
+# ---------------------------------------------------------------------------
+
+
+class SourceLink(BaseModel):
+    """Eine einzelne Quelle: Ziel + sichtbares Label (z.B. Domain-Name)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    href: str = Field(min_length=1)
+    label: str = Field(min_length=1)
+
+
+class SourceRefInput(BaseModel):
+    """API-Contract fuer render_source_ref_html() — Quelle erstklassig.
+
+    Macht die Quelle zu einem eigenstaendigen Baustein statt einer beilaeufigen
+    Meta-Notiz. Eine primaere Quelle, optional begleitet von weiteren.
+
+    primary: die fuehrende Quelle ("Quelle: …").
+    weitere: zusaetzliche Belege ("… · weitere: …"). Leere Liste = nur primary.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    primary: SourceLink
+    weitere: list[SourceLink] = Field(default_factory=list)
+
+
+class NewsItemDetail(BaseModel):
+    """Die aufklappbare "+ mehr"-Stufe eines News-Items.
+
+    level_label: Tiefen-Etikett der aufgeklappten Stufe
+                 ("Medium · Lagebericht" / "Detailliert").
+    text: der vertiefende Text (eine Stufe tiefer als NewsItemInput.text).
+    sources: optionale Quelle(n) der vertieften Darstellung.
+    summary_label: das Wort in der Klammer der Summary-Zeile "+ mehr (…)".
+                   Default "mehr"; der Konsument setzt z.B. "medium" /
+                   "detailliert" je nach Seiten-Kontext (TOP vs. Themenfeld).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    level_label: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    sources: SourceRefInput | None = None
+    summary_label: str = Field(default="mehr", min_length=1)
+
+
+class NewsItemInput(BaseModel):
+    """API-Contract fuer render_news_item_html() — Kaskaden-Einheit der
+    Briefing-Web-Ausgabe (Welle 3).
+
+    Ein News-Item traegt eine Basis-Tiefe (kurz auf der TOP-Seite, medium im
+    Themenfeld — der Konsument fuellt `text` passend) und optional eine
+    aufklappbare Vertiefungs-Stufe (`detail`). Die Schlagzeile kann ein
+    interner "tiefer"-Link sein (`deeper_href`), der ins Themenfeld-Detail
+    fuehrt. `is_aufmacher` markiert das Item, das es auf die TOP-Seite ("S1")
+    geschafft hat — es wird im Themenfeld dezent prominent dargestellt.
+
+    rank: Reihungs-Marker ("01" / "★"); None = kein Rang-Spalten-Marker.
+    eyebrow: Augenbrauen-Zeile ("Aufmacher · stand auf S1"); None = keine.
+    is_aufmacher: True = Aufmacher-Modifier (Top-Akzentlinie + groesserer Titel).
+    title: Schlagzeile (Pflicht).
+    deeper_href: interner "tiefer"-Link auf der Schlagzeile; None = kein Link.
+    text: Basis-Tiefe (Pflicht).
+    kategorie: Sektions-Etikett der Meta-Zeile ("Politik").
+    zeitangabe: relative Zeit der Meta-Zeile ("vor 3 Std").
+    source: primaere Quelle in der Meta-Zeile; None = keine.
+    detail: die aufklappbare "+ mehr"-Stufe; None = kein Expander.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    rank: str | None = None
+    eyebrow: str | None = None
+    is_aufmacher: bool = False
+    title: str = Field(min_length=1)
+    deeper_href: str | None = None
+    text: str = Field(min_length=1)
+    kategorie: str = Field(min_length=1)
+    zeitangabe: str = Field(min_length=1)
+    source: SourceRefInput | None = None
+    detail: NewsItemDetail | None = None

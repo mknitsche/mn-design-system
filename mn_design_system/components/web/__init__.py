@@ -46,9 +46,17 @@ from mn_design_system.components.web.masthead import (
     render_masthead_css,
     render_masthead_html,
 )
+from mn_design_system.components.web.news_item import (
+    render_news_item_css,
+    render_news_item_html,
+)
 from mn_design_system.components.web.page_header import (
     render_page_header_css,
     render_page_header_html,
+)
+from mn_design_system.components.web.source_ref import (
+    render_source_ref_css,
+    render_source_ref_html,
 )
 from mn_design_system.components.web.sparkline import render_sparkline_svg
 from mn_design_system.components.web.sub_nav import (
@@ -79,8 +87,12 @@ __all__ = [
     "render_kpi_card_html",
     "render_masthead_css",
     "render_masthead_html",
+    "render_news_item_css",
+    "render_news_item_html",
     "render_page_header_css",
     "render_page_header_html",
+    "render_source_ref_css",
+    "render_source_ref_html",
     "render_sparkline_svg",
     "render_sub_nav_css",
     "render_sub_nav_html",
