@@ -8,6 +8,21 @@ oder Doku.
 
 ---
 
+## [0.14.0] — 2026-07-09
+
+### Hinzugefuegt — Chat-/Konversations-Komponenten (Twin-Chat, cld1-S57)
+
+Vier neue Web-Komponenten fuer den owner-AMBER Twin-Chat (Welle T-3):
+`chat_stream` (Nachrichtenverlauf, Nutzer/Twin-Rollen), `chat_composer`
+(Eingabezeile + Senden-Aktion), `stream_cursor` (Streaming-Indikator
+waehrend laufender Antwort) und `status_banner` (Verbindungs-/Fehler-
+Hinweise). Dazu `chat_contracts` — Pydantic-Input-Contracts fuer alle
+vier Komponenten, analog den bestehenden `_patterns`-Contracts. Additiv:
+keine Bestandskomponente, kein Token und kein bestehender Contract
+wurde veraendert.
+
+---
+
 ## [0.13.0] — 2026-05-21
 
 ### Hinzugefuegt — Web-Foundation (`web.*` Token-Namespace + Masthead)
