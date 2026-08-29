@@ -86,7 +86,8 @@ Das ist eine bewusste Unterscheidung:
 
 | | |
 |---|---|
-| **Lesen und nutzen** | erlaubt — dafuer ist es oeffentlich |
+| **Lesen** | erlaubt — dafuer ist es oeffentlich |
+| **Nutzen** | fuer nicht-kommerzielle Zwecke; PolyForm Strict deckt kommerzielle Nutzung durch Dritte NICHT (fragen kostet nichts) |
 | **Veraendern** | nur durch den Rechteinhaber |
 | **Weitergeben veraenderter Fassungen** | nicht erlaubt |
 | **Beitraege** | Issues ja, Pull Requests nein (siehe `CONTRIBUTING.md`) |
@@ -171,8 +172,9 @@ bei alten Pointern.
 
 ## Multi-KI-Edit-Workflow
 
-Das Repo ist **public** (MIT, ohne Logos). Damit koennen Browser-AI-Tools direkt
-am Token-Set arbeiten:
+Das Repo ist **public** — lesbar, aber source-available und nicht veraenderbar
+(siehe Abschnitt Rechte). Fuer KT-1s eigene Werkzeuge gilt diese Schranke nicht:
+sie arbeiten in seinem Namen und duerfen direkt am Token-Set arbeiten:
 
 - **Claude Design** (browser) — Token-/Komponenten-Edit ohne IDE-Roundtrip
 - **Codex Web** — gleiche Idee, andere KI
@@ -189,7 +191,7 @@ Heute aktiv: **Submodul-Live-Edit** (siehe Python-Setup oben).
 Zwei weitere Schichten **vorbereitet, YAGNI-deferred** bis erster externer Konsument:
 
 - **GitHub Packages** — versionierte Wheel-Distribution fuer Konsumenten ohne Submodul-Setup
-- **PyPI public** — Open-Source-Distribution falls Drittnutzer auftreten
+- **PyPI public** — oeffentliche Paket-Distribution falls Drittnutzer auftreten (die Lizenz bleibt source-available, siehe Abschnitt Rechte)
 
 Aktivierung pro Schicht: GitHub Action `release.yml` (Tag-Trigger) liefert Wheel.
 
