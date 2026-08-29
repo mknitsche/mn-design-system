@@ -90,7 +90,6 @@ Das ist eine bewusste Unterscheidung:
 | **Nutzen** | fuer nicht-kommerzielle Zwecke; PolyForm Strict deckt kommerzielle Nutzung durch Dritte NICHT (fragen kostet nichts) |
 | **Weitergeben** | nicht erlaubt — auch nicht unveraendert. Ein **Verweis auf dieses Repository** ist der richtige Weg; es als Submodul, Vendor-Kopie oder Spiegel in ein eigenes veroeffentlichtes Projekt aufzunehmen, ist es nicht |
 | **Veraendern** | nur durch den Rechteinhaber |
-| **Weitergeben veraenderter Fassungen** | nicht erlaubt |
 | **Beitraege** | Issues ja, Pull Requests nein (siehe `CONTRIBUTING.md`) |
 
 Gestaltung ist hier kein Sammelergebnis. Farbe, Typografie, Rhythmus und Ton
