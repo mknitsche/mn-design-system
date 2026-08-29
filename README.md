@@ -74,14 +74,43 @@ Token `font.hyphenation.enabled` (Default `true`) aktiviert deutsche Silbentrenn
 
 Löst das Blocksatz-Lückenproblem bei Body-Größen ≥10pt.
 
-## Lizenzen
+## Rechte
 
-- **Tokens + Code**: MIT (siehe `LICENSE`)
-- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, STIX) und Apache 2.0 (JetBrains Mono)
+> **In short (English):** This repository is public so that it can be **read and
+> used** — not so that it can be changed. It is not open source: the licence
+> withholds the right to modify or redistribute. Bug reports are welcome; pull
+> requests are not accepted. Bundled fonts keep their own (open) licences.
+
+Dieses Repository ist **oeffentlich lesbar, aber nicht offen zur Mitarbeit**.
+Das ist eine bewusste Unterscheidung:
+
+| | |
+|---|---|
+| **Lesen und nutzen** | erlaubt — dafuer ist es oeffentlich |
+| **Veraendern** | nur durch den Rechteinhaber |
+| **Weitergeben veraenderter Fassungen** | nicht erlaubt |
+| **Beitraege** | Issues ja, Pull Requests nein (siehe `CONTRIBUTING.md`) |
+
+Gestaltung ist hier kein Sammelergebnis. Farbe, Typografie, Rhythmus und Ton
+sind Entscheidungen einer Person und bleiben es — deshalb ist dies
+**source-available**, nicht Open Source. Jede OSI-Lizenz (MIT, Apache, GPL)
+raeumt ausdruecklich das Recht zur Veraenderung ein; genau das ist hier nicht
+gewollt.
+
+- **Design-System (Tokens, Komponenten, Doku, Build-Skripte)**:
+  PolyForm Strict 1.0.0 — siehe `LICENSE`
+- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, STIX) und
+  Apache 2.0 (JetBrains Mono) — **behalten ihre eigenen, offenen Lizenzen**;
+  `LICENSE` schraenkt sie nicht ein
 - **Symbole**: MIT (Phosphor Icons)
-- **Logos** (mkn-fotografie / PKA): proprietär — NICHT in diesem Repo
+- **Logos** (mkn-fotografie / PKA): proprietaer, keine Markenrechte eingeraeumt
+  — NICHT in diesem Repo, siehe `NOTICE`
 
-Quellenangaben + Lizenz-Texte: `CITATIONS.md`.
+Quellenangaben + Lizenz-Texte: `CITATIONS.md` · Marken und Fremdbestandteile:
+`NOTICE` · Sicherheitsmeldungen: `SECURITY.md`.
+
+Etwas Eigenes daraus machen? Das ist eine Frage, keine Sperre — fragen kostet
+nichts.
 
 ## Python-Setup (claudeAI als Konsument)
 

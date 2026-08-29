@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "MN PKA Design-System — Tokens, Typography, Components for the Personal Knowledge Assistant",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "author": "Matthias Nitsche",
   "main": "dist/json/tokens.json",
   "files": [
