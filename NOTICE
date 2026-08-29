@@ -1,0 +1,25 @@
+MN PKA Design-System (mn-design-system)
+Copyright (c) 2026 Matthias Nitsche
+
+Lizenz des Design-Systems: PolyForm Strict 1.0.0 (siehe LICENSE).
+Sie deckt die Design-Tokens, die Komponenten-Spezifikationen, die Doku und die
+Build-Skripte dieses Repositories.
+
+MARKEN, NAMEN, LOGOS
+--------------------
+"Matthias Nitsche", "Matthias-Nitsche-Fotografie", "MN PKA" und die zugehoerigen
+Logos und Markenzeichen sind NICHT Gegenstand der Lizenz in LICENSE. Es werden
+keine Markenrechte eingeraeumt. Das Matthias-Nitsche-Fotografie-Logo und das
+PKA-Marken-Logo werden ueber dieses Repository nicht verteilt.
+
+EINGEBUNDENE FREMDBESTANDTEILE
+------------------------------
+Schriften und Symbole behalten ihre EIGENEN Lizenzen. Die Lizenz in LICENSE gilt
+fuer sie ausdruecklich NICHT und schraenkt sie nicht ein.
+
+Insbesondere stehen die mitgelieferten Schriften unter der
+SIL Open Font License 1.1 und duerfen weiterhin unter deren Bedingungen genutzt
+und weitergegeben werden — unabhaengig von den Beschraenkungen, die LICENSE fuer
+das Design-System selbst setzt.
+
+Vollstaendige Aufstellung mit Designer, Lizenz und Quelle: CITATIONS.md
