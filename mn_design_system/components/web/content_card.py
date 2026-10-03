@@ -8,7 +8,11 @@ Konsumiert ContentCardInput und CardGridInput aus `_patterns.contracts`.
   (Trend/Sparkline), die Content-Card ist generisch.
 - Card-Grid: responsives Raster, das Content-Cards einbettet. Die Spaltenzahl
   wird als CSS-Variable `--mn-card-grid-cols` am Wrapper gesetzt (kein Hex,
-  keine inline-Grid-Template-Hardcodes).
+  keine inline-Grid-Template-Hardcodes). Darunter schrumpft das Raster: unter
+  `web.layout.bp-tablet` hoechstens zwei Spalten, unter `web.layout.bp-mobile`
+  eine. Die Tablet-Zahl rechnet der Renderer aus (`min(columns, 2)`) und setzt
+  sie als `--mn-card-grid-cols-tablet` — CSS-`min()` im `repeat()`-Zaehler
+  steht nicht zur Verfuegung (Browser-Unterstuetzung nicht belegt).
 
 CSS-Strategie: alle Masse, Schriftgroessen und Linien aus Web-Foundation-Tokens
 (var(--web-*) / var(--space-*)). Die Tier-Toene bleiben CSS Custom Properties.
@@ -28,6 +32,10 @@ from mn_design_system.components._patterns.contracts import (
     ContentCardInput,
     WebTier,
 )
+from mn_design_system.components.web.foundation import media_max_width_below
+
+# Hoechstzahl der Spalten zwischen bp-mobile und bp-tablet.
+_TABLET_MAX_COLUMNS = 2
 
 _TIERS: tuple[WebTier, ...] = (
     WebTier.BIBLIOTHEK,
@@ -153,7 +161,8 @@ def render_content_card_css() -> str:
 def render_card_grid_html(input: CardGridInput, *, inline_css: bool = False) -> str:
     """Card-Grid als HTML-Snippet (<div> mit eingebetteten Content-Cards).
 
-    Die Spaltenzahl landet als CSS-Variable `--mn-card-grid-cols` am Wrapper.
+    Die Spaltenzahl landet als CSS-Variable `--mn-card-grid-cols` am Wrapper,
+    die gedeckelte Tablet-Spaltenzahl als `--mn-card-grid-cols-tablet`.
     inline_css=True hangt Grid- UND Card-CSS in einem <style>-Block an.
     """
     parts = []
@@ -162,8 +171,11 @@ def render_card_grid_html(input: CardGridInput, *, inline_css: bool = False) -> 
             f"<style>{render_card_grid_css()}{render_content_card_css()}</style>"
         )
 
+    tablet_columns = min(input.columns, _TABLET_MAX_COLUMNS)
     parts.append(
-        f'<div class="mn-card-grid" style="--mn-card-grid-cols:{input.columns}">'
+        f'<div class="mn-card-grid" '
+        f'style="--mn-card-grid-cols:{input.columns};'
+        f'--mn-card-grid-cols-tablet:{tablet_columns}">'
     )
     for card in input.cards:
         parts.append(render_content_card_html(card))
@@ -174,11 +186,33 @@ def render_card_grid_html(input: CardGridInput, *, inline_css: bool = False) -> 
 def render_card_grid_css() -> str:
     """Komponenten-CSS fuer das Card-Grid — Spaltenzahl ueber die
     CSS-Variable `--mn-card-grid-cols` (Default 3 als Fallback).
+
+    Unter bp-tablet gilt `--mn-card-grid-cols-tablet` (vom Renderer gesetzt,
+    hoechstens 2; fehlt sie, etwa in aelterem Markup, bleibt es bei der
+    Desktop-Zahl), unter bp-mobile eine Spalte. Beide Regeln tragen denselben
+    Selektor wie die Desktop-Regel — die Reihenfolge entscheidet, mobil steht
+    deshalb zuletzt. Ab bp-tablet bleibt das Raster unveraendert.
     """
-    return """
+    return (
+        """
 .mn-card-grid {
   display: grid;
   grid-template-columns: repeat(var(--mn-card-grid-cols, 3), 1fr);
   gap: var(--space-4, 16px);
 }
+@media (%s) {
+  .mn-card-grid {
+    grid-template-columns: repeat(var(--mn-card-grid-cols-tablet, var(--mn-card-grid-cols, 3)), 1fr);
+  }
+}
+@media (%s) {
+  .mn-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
 """.strip()
+        % (
+            media_max_width_below("web.layout.bp-tablet"),
+            media_max_width_below("web.layout.bp-mobile"),
+        )
+    )

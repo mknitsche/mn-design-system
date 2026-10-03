@@ -62,7 +62,7 @@ CSS-Variable `--mn-card-grid-cols` (Wert aus `CardGridInput.columns`).
   die Card traegt zusaetzlich `mn-content-card--linked`.
 - `cursor: pointer` greift ausschliesslich ueber `.mn-content-card--linked` —
   eine Card ohne `href` behaelt den Default-Cursor (Affordance-Treue).
-- HTML-Struktur Grid: `<div class="mn-card-grid" style="--mn-card-grid-cols:{columns}">`
+- HTML-Struktur Grid: `<div class="mn-card-grid" style="--mn-card-grid-cols:{columns};--mn-card-grid-cols-tablet:{min(columns, 2)}">`
   mit eingebetteten Content-Cards.
 - `title`, `body` und `href` werden per `html.escape()` (href mit `quote=True`,
   da Attribut-Kontext) XSS-sicher ausgegeben.
@@ -70,6 +70,13 @@ CSS-Variable `--mn-card-grid-cols` (Wert aus `CardGridInput.columns`).
 - `render_card_grid_css()` setzt `grid-template-columns:
   repeat(var(--mn-card-grid-cols, 3), 1fr)` — Spaltenzahl rein ueber die
   CSS-Variable, kein Hardcode.
+- Responsiv: ab `web.layout.bp-tablet` gilt `--mn-card-grid-cols` unveraendert.
+  Darunter nimmt das Raster `--mn-card-grid-cols-tablet` (vom Renderer in Python
+  als `min(columns, 2)` gesetzt — ein Raster mit 1 Spalte bleibt bei 1; fehlt die
+  Variable in aelterem Markup, gilt weiter die Desktop-Zahl), unter
+  `web.layout.bp-mobile` eine Spalte. Die Schwellen liegen strikt UNTER dem
+  Breakpoint (`max-width: 639.98px` bzw. `1023.98px`), damit ein Viewport von
+  genau 1024px noch Desktop ist. Kein CSS-`min()` im `repeat()`-Zaehler.
 - `inline_css=True` von `render_card_grid_html` haengt Grid- UND Card-CSS an.
 
 ## Tier-Bezug
@@ -86,7 +93,7 @@ optionale Akzent-Variante, kein Pflicht-Kontext.
 - **Plain**: nur Titel + Text, keine Border-Akzentuierung, nicht klickbar.
 - **Linked**: `href` gesetzt — Titel verlinkt, `cursor: pointer`.
 - **Tier-getoent**: `tier` gesetzt — Akzent-Border in der Tier-Farbe.
-- **Card-Grid**: 1-4 Spalten ueber `columns`, responsiv ueber CSS-Variable.
+- **Card-Grid**: 1-4 Spalten ueber `columns`; unter bp-tablet hoechstens 2, unter bp-mobile 1.
 
 ## Plattform-Implementierungen
 

@@ -30,6 +30,7 @@ from __future__ import annotations
 from html import escape
 
 from mn_design_system.components._patterns.contracts import SubNavInput, WebTier
+from mn_design_system.components.web.foundation import media_max_width_below
 
 _TIERS: tuple[WebTier, ...] = (
     WebTier.BIBLIOTHEK,
@@ -118,7 +119,19 @@ def render_sub_nav_css() -> str:
   outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: 2px;
 }
+@media (%s) {
+  .mn-sub-nav__inner {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--web-color-separator, #b4bcc8) transparent;
+  }
+  .mn-sub-nav__tab {
+    flex: none;
+    white-space: nowrap;
+  }
+}
 """.strip()
+        % media_max_width_below("web.layout.bp-tablet")
     ]
     for tier in _TIERS:
         t = tier.value
