@@ -58,6 +58,12 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 - `label` und `href` werden per `html.escape()` (href mit `quote=True`)
   XSS-sicher ausgegeben.
 - `render_sub_nav_css()` gibt Hover- und Aktiv-Regeln fuer alle 4 Tiers aus.
+- Schmale Viewports (strikt unter `web.layout.bp-tablet`, `max-width: 1023.98px`):
+  die Tab-Zeile wird zu einer horizontal scrollbaren Leiste INNERHALB der
+  Sub-Nav (`overflow-x: auto`, schmale unauffaellige Scrollbar), die Tabs
+  behalten ihre Groesse und brechen nicht um (`flex: none`,
+  `white-space: nowrap`) — die Seite selbst scrollt nicht seitlich. Der aktive
+  Tab wird nicht automatisch in den sichtbaren Bereich gescrollt (reines CSS).
 
 ### Barrierefreiheit (Spec §A6)
 

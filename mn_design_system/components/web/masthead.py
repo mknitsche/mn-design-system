@@ -173,6 +173,7 @@ def render_masthead_css() -> str:
 }
 .mn-masthead__tiers-inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3, 12px);
@@ -200,6 +201,7 @@ def render_masthead_css() -> str:
 }
 .mn-masthead__context {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2, 8px);
 }

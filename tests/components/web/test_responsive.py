@@ -216,21 +216,23 @@ class TestCardGridCollapsesOnNarrowViewports:
             body,
         ), body
 
-    def test_below_tablet_is_at_most_two_columns(self):
+    def test_below_tablet_reads_the_tablet_column_variable(self):
+        """Tablet-Regel: die Spaltenzahl kommt aus --mn-card-grid-cols-tablet,
+        ohne diese Variable (aelteres Markup) aus --mn-card-grid-cols."""
         _, blocks = _split_media(render_card_grid_css(), _below("web.layout.bp-tablet"))
         assert len(blocks) == 1
-        block = blocks[0]
-        # Nur die Raster mit 3 oder 4 Spalten werden auf 2 gedeckelt; 1 und 2
-        # behalten ihre Zahl (im Live-Bestand gibt es Raster mit 1 Spalte).
-        m = re.search(
-            r"([^{}]*)\{\s*grid-template-columns:\s*repeat\(2,\s*1fr\)", block
+        body = _rule(blocks[0], ".mn-card-grid")
+        assert (
+            "grid-template-columns: repeat(var(--mn-card-grid-cols-tablet, "
+            "var(--mn-card-grid-cols, 3)), 1fr)"
+        ) in body, body
+
+    def test_no_css_min_inside_repeat(self):
+        """repeat() bekommt keine CSS-Math-Funktion als Zaehler — die
+        Browser-Unterstuetzung (Safari) ist nicht belegt."""
+        assert not re.search(
+            r"repeat\(\s*(min|max|clamp|calc)\(", render_card_grid_css()
         )
-        assert m, block
-        selector = m.group(1)
-        assert "--mn-card-grid-cols:3" in selector
-        assert "--mn-card-grid-cols:4" in selector
-        assert "--mn-card-grid-cols:1" not in selector
-        assert "--mn-card-grid-cols:2" not in selector
 
     def test_cascade_mobile_comes_after_tablet(self):
         """Gleiche Spezifitaet, spaeter gewinnt: mobil MUSS hinter tablet stehen."""
@@ -239,14 +241,36 @@ class TestCardGridCollapsesOnNarrowViewports:
         mobile = css.index(f"@media ({_below('web.layout.bp-mobile')})")
         assert tablet < mobile
 
-    def test_tablet_rule_does_not_outrank_the_mobile_rule(self):
-        """Die Tablet-Regel darf nicht spezifischer sein als die mobile — sonst
-        gewinnt sie auch auf dem Handy, egal wo sie steht."""
+    def test_tablet_and_mobile_use_the_same_selector(self):
+        """Gleicher Selektor = gleiche Spezifitaet; die Reihenfolge entscheidet."""
         css = render_card_grid_css()
-        _, tablet_blocks = _split_media(css, _below("web.layout.bp-tablet"))
-        selector = re.search(r"([^{}]*)\{", tablet_blocks[0]).group(1)
-        assert ":where(" in selector
+        _, tablet = _split_media(css, _below("web.layout.bp-tablet"))
+        _, mobile = _split_media(css, _below("web.layout.bp-mobile"))
+        assert _rule(tablet[0], ".mn-card-grid") and _rule(mobile[0], ".mn-card-grid")
 
+
+class TestCardGridRendersTabletColumns:
+    """Der Renderer rechnet die Tablet-Spaltenzahl in Python aus: min(columns, 2)."""
+
+    @pytest.mark.parametrize(("columns", "tablet"), [(1, 1), (2, 2), (3, 2), (4, 2)])
+    def test_tablet_columns_are_capped_at_two(self, columns, tablet):
+        grid = CardGridInput(
+            cards=[ContentCardInput(title="A", body="B")], columns=columns
+        )
+        html = render_card_grid_html(grid)
+        assert f"--mn-card-grid-cols:{columns}" in html
+        assert f"--mn-card-grid-cols-tablet:{tablet}" in html
+
+    def test_both_variables_live_in_the_same_inline_style(self):
+        grid = CardGridInput(cards=[ContentCardInput(title="A", body="B")], columns=4)
+        html = render_card_grid_html(grid)
+        assert (
+            '<div class="mn-card-grid" '
+            'style="--mn-card-grid-cols:4;--mn-card-grid-cols-tablet:2">'
+        ) in html
+
+
+class TestCardGridInlineCss:
     def test_inline_css_carries_the_responsive_rules(self):
         grid = CardGridInput(cards=[ContentCardInput(title="A", body="B")], columns=4)
         html = render_card_grid_html(grid, inline_css=True)
