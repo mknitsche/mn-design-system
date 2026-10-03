@@ -8,6 +8,41 @@ oder Doku.
 
 ---
 
+## [0.14.1] — 2026-10-03
+
+### Behoben — kein horizontaler Seiten-Scroll auf Handy-Breite (390 px)
+
+Auf einem 390-px-Viewport liefen drei Web-Komponenten ueber den Bildschirm
+und erzeugten auf jeder Seite seitlichen Scroll (gemessen im Browser:
+`scrollWidth` 813 bei `clientWidth` 390). Nur CSS dieser drei Komponenten;
+ab `web.layout.bp-tablet` (Desktop) ist das Aussehen pixelgleich.
+
+- **Masthead:** Kontext-Chips (`.mn-masthead__context`) und die Tier-Zeile
+  duerfen in eine zweite Zeile umbrechen (`flex-wrap: wrap`); die Pillen
+  bleiben eine Zeile.
+- **Sub-Nav:** unter `bp-tablet` ist die Tab-Zeile eine horizontal scrollbare
+  Leiste innerhalb der Sub-Nav (`overflow-x: auto`, Tabs `flex: none` +
+  `white-space: nowrap`, schmale Scrollbar). Der aktive Tab wird nicht
+  automatisch ins Bild gescrollt.
+- **Card-Grid:** unter `bp-tablet` hoechstens zwei, unter `bp-mobile` eine
+  Spalte. Der Renderer setzt dafuer zusaetzlich `--mn-card-grid-cols-tablet`
+  (`min(columns, 2)`, in Python berechnet) am Wrapper; ein Raster mit
+  `columns=1` bleibt einspaltig. Aelteres Markup ohne diese Variable behaelt
+  auf dem Tablet die Desktop-Spaltenzahl und wird erst auf dem Handy
+  einspaltig.
+
+Dazu `media_max_width_below(token)` in `foundation.py`: Media-Query
+"strikt unter dem Breakpoint" (`639.98px`/`1023.98px`), damit ein Viewport von
+genau 1024 px (iPad quer) Desktop bleibt. `render_foundation_css()` selbst ist
+unveraendert (inklusive `max-width: 640px`/`1024px`). Breakpoints kommen aus den
+Tokens, keine Hartwerte.
+
+Neue Tests `tests/components/web/test_responsive.py`: CSS-Struktur plus ein
+Browser-Beweis (Playwright/Chromium, optional — ohne beides wird er sichtbar
+uebersprungen).
+
+---
+
 ## [0.14.0] — 2026-07-09
 
 ### Hinzugefuegt — Chat-/Konversations-Komponenten (Twin-Chat, cld1-S57)
