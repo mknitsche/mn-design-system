@@ -81,3 +81,17 @@ def render_initiale_css() -> str:
   color: var(--color-light-h1, #312e81);
 }
 """.strip()
+
+
+def media_max_width_below(token: str) -> str:
+    """Media-Query-Bedingung "knapp unter dem Breakpoint <token>".
+
+    `render_foundation_css()` schaltet inklusiv (`max-width: 640px` gilt AUCH
+    bei genau 640px). Komponenten, die "unter bp-mobile/bp-tablet" reagieren
+    und ab dem Breakpoint unveraendert bleiben sollen (>= bp-tablet = Desktop),
+    brauchen die strikte Form — sonst wuerde z.B. ein iPad im Querformat bei
+    genau 1024px schon als Tablet gelten. 0,02px ist die uebliche Schrittweite
+    unterhalb eines Pixels (kein Viewport liegt dazwischen).
+    """
+    px = float(get(token).removesuffix("px"))
+    return f"max-width: {px - 0.02:g}px"
