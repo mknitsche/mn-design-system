@@ -8,6 +8,71 @@ oder Doku.
 
 ---
 
+## [0.14.2] — 2026-10-04
+
+### Behoben — Sub-Nav auf dem Handy: weitere Reiter sichtbar, aktiver Reiter im Bild; Masthead bei 320 px
+
+Zwei Befunde aus dem Durchklick von mkn-desk.com auf dem Handy. Alles nur im
+Bereich unter `web.layout.bp-tablet` (Desktop pixelgleich), Werte aus den Tokens.
+
+- **Sub-Nav, Rand-Hinweis (reines CSS):** die scrollbare Leiste zeigt an ihren
+  Raendern, dass es weitergeht — ein Schatten (`web.color.separator`, `space.4`)
+  genau dort, wo dahinter noch Reiter liegen. Links erscheint er erst nach dem
+  Scrollen, rechts verschwindet er am Ende; passen alle Reiter, gibt es keinen
+  Hinweis. Technik: zwei mitscrollende Deckflaechen in `color.light.surface`
+  (`background-attachment: local`) verdecken zwei am Rand stehende Schatten.
+  Funktioniert **ohne Skript**; keine Animation.
+- **Sub-Nav, aktiver Reiter im Ausschnitt:** `scroll-initial-target: nearest` mit
+  `scroll-snap-align: center` am aktiven Tab rollt die Leiste beim Laden mittig
+  auf ihn (beide Nachbarn bleiben sichtbar). Es scrollt nur die Leiste, nie die
+  Seite. Diese Property kennt nur **Chromium (ab 133)**; Safari und Firefox
+  brauchen den Rueckfall unten.
+- **Masthead:** die Tier-Pillen (`.mn-masthead__pills`) duerfen umbrechen
+  (`flex-wrap: wrap`). Auf 320 px war die Pillen-Zeile 9 px zu breit und
+  verbreiterte die Seite. Gemessen (Chromium, Geist): die Zeile ist 313 px breit
+  und bleibt eine Zeile ab 350 px (alle gaengigen Handys); bei 320 px sind es zwei
+  Zeilen. Das Masthead bleibt breakpoint-frei.
+
+### Hinzugefuegt — `render_sub_nav_js()` (optionales Skript fuer Safari und Firefox)
+
+`mn_design_system.components.web.render_sub_nav_js()` liefert ein kleines Skript,
+das den aktiven Tab der scrollbaren Sub-Nav mittig ins Bild rollt — dieselbe
+Position, die Chromium per CSS erreicht. **Optional:** wer es weglaesst, verliert
+nur das Zentrieren in Safari und Firefox; der Rand-Hinweis bleibt.
+
+**Einbindung durch den Konsumenten:**
+
+1. Beim Seitenbau den Text als **eigene Datei** ablegen, empfohlener Name
+   `mn-sub-nav.js` (neben dem CSS aus `render_sub_nav_css()`):
+   `Path("static/mn-sub-nav.js").write_text(render_sub_nav_js())`.
+2. Auf jeder Seite mit Sub-Nav im `<head>` einbinden:
+   `<script src="/static/mn-sub-nav.js" defer></script>`. `defer` wird empfohlen,
+   ist aber keine Pflicht — das Skript wartet im `<head>` selbst auf das fertige
+   Dokument.
+3. **CSP:** gebaut fuer `script-src 'self'`, ein `'unsafe-inline'` ist nicht
+   noetig. Es darf **nicht** als Inline-Skript in die Seite gelegt werden — eine
+   strenge CSP wuerde es blockieren.
+
+Das Skript scrollt ausschliesslich `.mn-sub-nav__inner` (`scrollLeft`), nie die
+Seite und keine Vorfahren (kein `scrollIntoView`), ohne Animation
+(`prefers-reduced-motion`-neutral), und laesst eine Leiste ohne Ueberlauf
+unberuehrt. Nach dem Laden der Schriften zentriert es einmal nach, aber nur, wenn
+die Leiste inzwischen nicht bewegt wurde. Ausfuehrlich: `README.md`, Abschnitt
+"Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)"; Verhalten:
+`components/_patterns/sub_nav.md`.
+
+Tests `tests/components/web/test_responsive.py` (79 statt 45): Struktur der CSS-
+Regeln plus Browser-Beweise (Playwright/Chromium, optional — ohne beides
+sichtbar uebersprungen): Pixelprobe am Leistenrand (Hinweis nur in Richtung
+verdeckten Inhalts), aktiver Reiter im Ausschnitt (mit Gegenprobe ohne die
+Property), Skript unter `script-src 'self'` (der Inline-Skript-Block wird dabei
+nachweislich blockiert; Gegenprobe ohne Skript), Masthead ohne Seiten-Scroll bei
+320 px fuer jeden aktiven Tier. **Nicht geprueft:** Safari (WebKit) und Firefox —
+die Rueckfall-Logik ist in Chromium mit entfernter Property nachgestellt, nicht
+im echten Browser.
+
+---
+
 ## [0.14.1] — 2026-10-03
 
 ### Behoben — kein horizontaler Seiten-Scroll auf Handy-Breite (390 px)
