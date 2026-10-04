@@ -183,7 +183,7 @@ Heute: **eine Schicht aktiv** (Submodul-Live-Edit). Zwei weitere vorbereitet, YA
 |---|---|---|
 | **Submodul (Live-Edit)** | Schnelle Iteration, Multi-KI-Edit, claudeAI greift direkt zu | **AKTIV** |
 | **GitHub Packages (versioniert)** | Externe Konsumenten ohne Submodul-Setup, klare SemVer-Bindung | **VORBEREITET** (release.yml in Welle D YAGNI-deferred bis erster externer Konsument) |
-| **PyPI public (langfristig)** | Open-Source-Distribution | **VAGUE** (nur wenn Drittnutzer auftreten) |
+| **PyPI public (langfristig)** | oeffentliche Distribution (source-available, keine Open-Source-Lizenz) | **VAGUE** (nur wenn Drittnutzer auftreten) |
 
 **Wann GitHub-Packages aktivieren?** Wenn der erste externe Konsument (Foto-Homepage,
 Paper) startet. Dann release.yml + build-tokens.yml + claudeAI-pyproject-Dependency
