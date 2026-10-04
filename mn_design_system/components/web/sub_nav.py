@@ -232,6 +232,8 @@ def render_sub_nav_js() -> str:
     der Konsument legt diesen Text als eigene Datei ab (z. B. `mn-sub-nav.js`
     neben seinem CSS) und bindet sie im `<head>` ein:
     `<script src="/pfad/mn-sub-nav.js" defer></script>`. NIE als Inline-Skript.
+    Unter einer Nonce-CSP (`script-src 'nonce-…'`, ohne `'self'`) traegt das Tag
+    das nonce der Antwort: `<script src="…" nonce="…" defer></script>`.
     `defer` ist Empfehlung, keine Pflicht: steht das Skript im `<head>` ohne
     `defer` (oder am Ende des `<body>`), wartet es selbst auf das fertige Dokument.
 
@@ -239,6 +241,7 @@ def render_sub_nav_js() -> str:
     Seite und keine Vorfahren (kein `scrollIntoView`), und ohne Animation — das
     Skript ist damit `prefers-reduced-motion`-neutral. Eine Leiste ohne Ueberlauf
     bleibt unberuehrt. Nach dem Laden der Schriften wird einmal nachzentriert,
-    aber nur, wenn die Leiste in der Zwischenzeit nicht bewegt wurde.
+    aber nur, wenn die Leiste in der Zwischenzeit nicht bewegt wurde (dieser
+    Teil ist nicht getestet).
     """
     return _SUB_NAV_JS.strip() + "\n"

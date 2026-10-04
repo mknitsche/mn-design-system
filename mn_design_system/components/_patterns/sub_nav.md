@@ -74,9 +74,10 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
   rollt die Leiste (nur sie, nie die Seite) ihn mittig ins Bild, beide Nachbarn
   bleiben sichtbar. Die Property kennt nur Chromium (ab 133). Fuer Safari und
   Firefox liefert `render_sub_nav_js()` einen Rueckfall: ein kleines EXTERNES
-  Skript (`script-src 'self'`, kein Inline), das dieselbe Position ueber
-  `scrollLeft` der Leiste setzt. Einbindung: README, Abschnitt
-  "Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)".
+  Skript (`script-src 'self'`, kein Inline; unter einer Nonce-CSP traegt das
+  Tag das `nonce`-Attribut), das dieselbe Position ueber `scrollLeft` der Leiste
+  setzt. Einbindung: README, Abschnitt "Sub-Nav: aktiven Reiter zentrieren
+  (Skript einbinden)".
 - Keine Animation (weder Transition noch weiches Scrollen) —
   `prefers-reduced-motion` ist damit von selbst eingehalten.
 
