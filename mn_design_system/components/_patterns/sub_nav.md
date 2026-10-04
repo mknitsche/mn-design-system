@@ -62,8 +62,23 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
   die Tab-Zeile wird zu einer horizontal scrollbaren Leiste INNERHALB der
   Sub-Nav (`overflow-x: auto`, schmale unauffaellige Scrollbar), die Tabs
   behalten ihre Groesse und brechen nicht um (`flex: none`,
-  `white-space: nowrap`) — die Seite selbst scrollt nicht seitlich. Der aktive
-  Tab wird nicht automatisch in den sichtbaren Bereich gescrollt (reines CSS).
+  `white-space: nowrap`) — die Seite selbst scrollt nicht seitlich.
+- **Rand-Hinweis (0.14.2, reines CSS):** an einem Rand der Leiste liegt ein
+  Schatten (`web.color.separator`, `space.4` breit) genau dann, wenn dahinter
+  noch Reiter liegen — links erst nach dem Scrollen, rechts bis zum Ende. Zwei
+  mitscrollende Deckflaechen in `color.light.surface` (`background-attachment:
+  local`, `space.8` breit) verdecken ihn, wo nichts uebersteht; passen alle Tabs,
+  erscheint kein Hinweis. Kein Skript noetig.
+- **Aktiver Tab im Ausschnitt (0.14.2):** der aktive Tab ist
+  `scroll-initial-target: nearest` mit `scroll-snap-align: center` — beim Laden
+  rollt die Leiste (nur sie, nie die Seite) ihn mittig ins Bild, beide Nachbarn
+  bleiben sichtbar. Die Property kennt nur Chromium (ab 133). Fuer Safari und
+  Firefox liefert `render_sub_nav_js()` einen Rueckfall: ein kleines EXTERNES
+  Skript (`script-src 'self'`, kein Inline), das dieselbe Position ueber
+  `scrollLeft` der Leiste setzt. Einbindung: README, Abschnitt
+  "Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)".
+- Keine Animation (weder Transition noch weiches Scrollen) —
+  `prefers-reduced-motion` ist damit von selbst eingehalten.
 
 ### Barrierefreiheit (Spec §A6)
 

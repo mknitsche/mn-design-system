@@ -818,6 +818,7 @@ class TestSubNavScriptInBrowser:
     unter `Content-Security-Policy: script-src 'self'`."""
 
     SCRIPT = '<script src="/mn-sub-nav.js" defer></script>'
+    SCRIPT_NO_DEFER = '<script src="/mn-sub-nav.js"></script>'
     INLINE = "<script>window.__inlineRan = true</script>"
 
     def _serve(self, tmp_path, **kwargs):
@@ -834,6 +835,15 @@ class TestSubNavScriptInBrowser:
         assert not m["inlineRan"], "CSP wirkt nicht — der Beweis waere wertlos"
         assert _in_view(m) and _centred(m), m
         assert m["pageScrollX"] == 0 and m["pageScrollY"] == 0, m
+
+    def test_script_works_in_the_head_without_defer(
+        self, browser, tmp_path, csp_server
+    ):
+        """Stolperstein bei der Einbindung: ein Skript im <head> ohne `defer`
+        laeuft, bevor die Sub-Nav existiert — es muss selbst warten."""
+        self._serve(tmp_path, active_tab=5, head_extra=self.SCRIPT_NO_DEFER)
+        m = _measure_url(browser, f"{csp_server}/page.html", 390)
+        assert _in_view(m) and _centred(m), m
 
     @pytest.mark.parametrize("active_tab", [0, 7])
     def test_script_keeps_the_ends_in_view(
