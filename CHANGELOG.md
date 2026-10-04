@@ -51,13 +51,15 @@ nur das Zentrieren in Safari und Firefox; der Rand-Hinweis bleibt.
    Dokument.
 3. **CSP:** gebaut fuer `script-src 'self'`, ein `'unsafe-inline'` ist nicht
    noetig. Es darf **nicht** als Inline-Skript in die Seite gelegt werden — eine
-   strenge CSP wuerde es blockieren.
+   strenge CSP wuerde es blockieren. **Nonce-CSP** (`script-src 'nonce-…'`, ohne
+   `'self'`): das Tag traegt das nonce der jeweiligen Antwort,
+   `<script src="/static/mn-sub-nav.js" nonce="…" defer></script>`; ohne das
+   Attribut blockiert der Browser die Datei.
 
 Das Skript scrollt ausschliesslich `.mn-sub-nav__inner` (`scrollLeft`), nie die
 Seite und keine Vorfahren (kein `scrollIntoView`), ohne Animation
 (`prefers-reduced-motion`-neutral), und laesst eine Leiste ohne Ueberlauf
-unberuehrt. Nach dem Laden der Schriften zentriert es einmal nach, aber nur, wenn
-die Leiste inzwischen nicht bewegt wurde. Ausfuehrlich: `README.md`, Abschnitt
+unberuehrt. Ausfuehrlich: `README.md`, Abschnitt
 "Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)"; Verhalten:
 `components/_patterns/sub_nav.md`.
 

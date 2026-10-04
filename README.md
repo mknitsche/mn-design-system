@@ -177,6 +177,9 @@ Path("static/mn-sub-nav.css").write_text(render_sub_nav_css())
   script-src 'self'` gebaut — ein `'unsafe-inline'` ist nicht noetig und soll es
   nicht werden. Als `<script>…</script>`-Block in die Seite gelegt, wuerde eine
   strenge CSP es blockieren.
+- **Nonce-CSP** (`script-src 'nonce-…'`, ohne `'self'`): das Tag traegt das nonce
+  der jeweiligen Antwort — `<script src="/static/mn-sub-nav.js" nonce="…"
+  defer></script>`. Ohne das Attribut blockiert der Browser die Datei.
 - **Keine Abhaengigkeiten, keine Animation.** Es scrollt nur die Leiste
   (`.mn-sub-nav__inner`), nie die Seite, und setzt die Position sofort — also auch
   `prefers-reduced-motion`-neutral. Eine Leiste ohne Ueberlauf (Desktop, wenige
