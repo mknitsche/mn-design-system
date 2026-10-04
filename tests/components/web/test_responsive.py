@@ -1,8 +1,14 @@
-"""Responsive-Verhalten auf schmalen Viewports (0.14.1, Handy-Breite 390 px).
+"""Responsive-Verhalten auf schmalen Viewports (0.14.1 Handy-Breite 390 px, 0.14.2 Feinschliff).
 
-Drei Komponenten liefen auf dem Handy ueber den Bildschirm und erzeugten
+0.14.1: Drei Komponenten liefen auf dem Handy ueber den Bildschirm und erzeugten
 horizontalen Seiten-Scroll: die Kontext-Chips des Masthead, die Tab-Zeile der
 Sub-Nav und das Card-Grid mit fester Spaltenzahl.
+
+0.14.2: (a) die scrollbare Sub-Nav zeigt an ihren Raendern, dass es weitergeht
+(Rand-Hinweis, nur wo wirklich Inhalt ueberlaeuft), und der aktive Reiter steht
+beim Laden im Ausschnitt (CSS `scroll-initial-target`, dazu ein kleines externes
+Skript fuer Browser ohne diese Property); (b) die Tier-Pillen des Masthead
+verbreitern die Seite bei 320 px nicht mehr.
 
 Zwei Ebenen, weil jede allein luegt:
 
@@ -16,10 +22,14 @@ Zwei Ebenen, weil jede allein luegt:
 
 from __future__ import annotations
 
+import http.server
+import io
 import re
+import threading
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from mn_design_system.components._patterns.contracts import (
     CardGridInput,
@@ -93,6 +103,14 @@ def _below(token: str) -> str:
     return f"max-width: {px - 0.02:g}px"
 
 
+def _js() -> str:
+    """Skript-Renderer der Sub-Nav. Der Import steht hier, nicht oben: fehlt der
+    Renderer, soll NUR dieser Test rot werden, nicht das ganze Modul."""
+    from mn_design_system.components.web import sub_nav
+
+    return sub_nav.render_sub_nav_js()
+
+
 # --------------------------------------------------------------------------
 # Hilfsfunktion in der Foundation
 # --------------------------------------------------------------------------
@@ -124,9 +142,12 @@ class TestMastheadWrapsContextChips:
         body = _rule(render_masthead_css(), ".mn-masthead__context")
         assert "flex-wrap: wrap" in body
 
-    def test_pills_stay_one_row(self):
+    def test_pills_wrap_instead_of_overflowing(self):
+        """0.14.2: passen die Pillen nicht in eine Zeile (320 px), brechen sie um,
+        statt die Seite zu verbreitern. Wo sie passen, bleibt es EINE Zeile —
+        das beweist der Browser-Test (390 px), nicht diese Regel."""
         body = _rule(render_masthead_css(), ".mn-masthead__pills")
-        assert "flex-wrap: wrap" not in body
+        assert "flex-wrap: wrap" in body
 
     def test_desktop_layout_declarations_unchanged(self):
         css = render_masthead_css()
@@ -139,6 +160,13 @@ class TestMastheadWrapsContextChips:
             "padding-block: var(--space-2, 8px)",
         ):
             assert decl in tiers
+        pills = _rule(css, ".mn-masthead__pills")
+        for decl in (
+            "display: flex",
+            "align-items: center",
+            "gap: var(--space-1, 4px)",
+        ):
+            assert decl in pills
         context = _rule(css, ".mn-masthead__context")
         for decl in (
             "display: flex",
@@ -184,12 +212,106 @@ class TestSubNavScrollsInsideItsBar:
         assert inner and tab
         assert "overflow" not in inner and "scrollbar" not in inner
         assert "nowrap" not in tab and "flex:" not in tab
+        # 0.14.2: Rand-Hinweis und Scroll-Ziel gibt es nur auf dem Handy
+        assert "background" not in inner and "scroll-" not in inner
+        assert "scroll-" not in tab
+        assert not _rule(outside, ".mn-sub-nav__tab.is-active")
         assert "display: flex" in inner
         assert "display: inline-block" in tab
 
     def test_breakpoint_comes_from_token_not_a_literal(self):
         css = render_sub_nav_css()
         assert f"@media ({_below('web.layout.bp-tablet')})" in css
+
+
+class TestSubNavEdgeHint:
+    """0.14.2 (a): die Leiste zeigt, dass es weitergeht — nur wo Inhalt ueberlaeuft.
+
+    Klassische "Scroll-Schatten": zwei mitscrollende Deckflaechen (`local`) in
+    Flaechenfarbe verdecken zwei am Rand stehende Schatten (`scroll`); sie geben
+    den Schatten genau dort frei, wo hinter dem Rand noch Inhalt liegt. Reines CSS,
+    kein Skript. Die WIRKUNG beweisen die Browser-Tests (Pixelprobe am Rand).
+    """
+
+    def _narrow(self) -> str:
+        _, blocks = _split_media(render_sub_nav_css(), _below("web.layout.bp-tablet"))
+        return "".join(blocks)
+
+    def _bar(self) -> str:
+        return _rule(self._narrow(), ".mn-sub-nav__inner")
+
+    def _decl(self, name: str) -> str:
+        m = re.search(rf"{name}:\s*([^;]+);", self._bar())
+        assert m, f"{name} fehlt in {self._bar()!r}"
+        return m.group(1)
+
+    def test_two_cover_layers_and_two_shadow_layers(self):
+        layers = [x.strip() for x in self._decl("background-attachment").split(",")]
+        assert sorted(layers) == ["local", "local", "scroll", "scroll"]
+        assert self._decl("background-image").count("linear-gradient(") == 4
+
+    def test_covers_match_the_bar_surface(self):
+        """Die Deckflaechen muessen die Flaechenfarbe der Sub-Nav tragen, sonst
+        wuerden sie als Streifen sichtbar."""
+        assert "var(--color-light-surface" in self._decl("background-image")
+        assert "var(--color-light-surface" in self._decl("background-color")
+
+    def test_hint_values_come_from_tokens(self):
+        """Keine Hartwerte: nach Abzug der var()-Fallbacks bleibt keine Farbe
+        und keine Pixelzahl uebrig."""
+        for name in ("background-image", "background-size", "background-color"):
+            rest = re.sub(r"var\([^)]*\)", "", self._decl(name))
+            assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|\d+px", rest), (
+                name,
+                rest,
+            )
+
+    def test_no_motion_is_introduced(self):
+        """prefers-reduced-motion: der Hinweis ist statisch, es gibt keine
+        Animation und kein weiches Scrollen."""
+        narrow = self._narrow()
+        for word in ("transition", "animation", "scroll-behavior"):
+            assert word not in narrow, word
+
+
+class TestSubNavActiveTabAsInitialTarget:
+    """0.14.2 (b): der aktive Reiter steht beim Laden im Ausschnitt (CSS)."""
+
+    def _active(self) -> str:
+        _, blocks = _split_media(render_sub_nav_css(), _below("web.layout.bp-tablet"))
+        return _rule("".join(blocks), ".mn-sub-nav__tab.is-active")
+
+    def test_active_tab_is_the_initial_scroll_target(self):
+        assert "scroll-initial-target: nearest" in self._active()
+
+    def test_active_tab_is_centred(self):
+        """Ohne `scroll-snap-align` setzt der Browser den Reiter an den linken
+        Rand (gemessen) — zentriert zeigt er beide Nachbarn."""
+        assert "scroll-snap-align: center" in self._active()
+
+
+class TestSubNavScript:
+    """0.14.2 (b): Rueckfall fuer Browser ohne `scroll-initial-target` (Safari,
+    Firefox). Ein externes, CSP-taugliches Skript — nie ein Inline-Skript."""
+
+    def test_is_one_self_contained_function(self):
+        js = _js().strip()
+        assert js.startswith("(function") and js.endswith("})();"), js
+
+    def test_touches_only_the_bar(self):
+        js = _js()
+        assert ".mn-sub-nav__inner" in js and "scrollLeft" in js
+        for forbidden in (
+            "scrollIntoView",  # rollt auch Vorfahren: die Seite wuerde springen
+            "smooth",  # keine Animation (prefers-reduced-motion)
+            "window.scroll",
+            "location",
+            "innerHTML",
+            "eval(",
+            "document.write",
+            "<script",
+        ):
+            assert forbidden not in js, forbidden
 
 
 # --------------------------------------------------------------------------
@@ -303,24 +425,43 @@ _TABS = [
 ]
 
 
-def _page(columns: int) -> str:
+def _page(
+    columns: int,
+    *,
+    active_tab: int = 5,
+    active_tier: int = 0,
+    tabs: list[str] | None = None,
+    head_extra: str = "",
+    strip_css: tuple[str, ...] = (),
+) -> str:
     """Testseite wie der Konsument sie baut: Masthead (4 Pillen + 2 Chips),
-    Sub-Nav (8 Tabs), Card-Grid, dazu die Konsumenten-Grundregeln."""
+    Sub-Nav (8 Tabs), Card-Grid, dazu die Konsumenten-Grundregeln.
+
+    active_tab / active_tier waehlen den aktiven Reiter bzw. die aktive Pille;
+    head_extra haengt Markup in den <head> (z. B. das Sub-Nav-Skript);
+    strip_css entfernt Deklarationen aus dem Komponenten-CSS — damit simuliert
+    ein Test einen Browser, der sie nicht kennt. Fehlt die Deklaration, bricht
+    die Seite ab: eine Simulation, die nichts veraendert, ist keine."""
+    tabs = _TABS if tabs is None else tabs
     masthead = MastheadInput(
         emblem=MastheadEmblem(src=_EMBLEM, alt="Emblem", href="/start/"),
         wordmark="from the desk of mn",
         edition_date="Samstag · 3. Oktober 2026",
         tier_items=[
             MastheadTierItem(
-                label="Start", href="/start/", tier=WebTier.START, active=True
-            ),
-            MastheadTierItem(
-                label="Bibliothek", href="/bibliothek/", tier=WebTier.BIBLIOTHEK
-            ),
-            MastheadTierItem(label="Atelier", href="/atelier/", tier=WebTier.ATELIER),
-            MastheadTierItem(
-                label="Kabinett", href="/kabinett/", tier=WebTier.KABINETT
-            ),
+                label=label,
+                href=f"/{label.lower()}/",
+                tier=tier,
+                active=i == active_tier,
+            )
+            for i, (label, tier) in enumerate(
+                [
+                    ("Start", WebTier.START),
+                    ("Bibliothek", WebTier.BIBLIOTHEK),
+                    ("Atelier", WebTier.ATELIER),
+                    ("Kabinett", WebTier.KABINETT),
+                ]
+            )
         ],
         context_chip=MastheadChip(tier=WebTier.START, label="Start · GREEN"),
         user_chip_id="user-chip",
@@ -329,7 +470,8 @@ def _page(columns: int) -> str:
     sub_nav = SubNavInput(
         tier=WebTier.KABINETT,
         tabs=[
-            SubNavTab(label=t, href=f"#{t}", active=i == 5) for i, t in enumerate(_TABS)
+            SubNavTab(label=t, href=f"#{t}", active=i == active_tab)
+            for i, t in enumerate(tabs)
         ],
     )
     cards = [
@@ -342,6 +484,18 @@ def _page(columns: int) -> str:
         for i in range(8)
     ]
     grid = CardGridInput(cards=cards, columns=columns)
+    components_css = "\n".join(
+        [
+            render_foundation_css(),
+            render_masthead_css(),
+            render_sub_nav_css(),
+            render_content_card_css(),
+            render_card_grid_css(),
+        ]
+    )
+    for decl in strip_css:
+        assert decl in components_css, f"strip_css: {decl!r} nicht im CSS"
+        components_css = components_css.replace(decl, "")
     faces = "".join(
         f'@font-face{{font-family:"Geist";font-weight:{w};'
         f'src:url("{(_FONTS / "geist" / f"Geist-{n}.ttf").as_uri()}");}}'
@@ -357,12 +511,8 @@ html, body {{ margin: 0; padding: 0; }}
 body {{ font-family: "Geist", system-ui, sans-serif; font-size: 16px; }}
 main {{ max-width: var(--web-layout-content-width, 1024px); margin-inline: auto;
   padding: 24px var(--web-layout-page-inset, 44px); }}
-{render_foundation_css()}
-{render_masthead_css()}
-{render_sub_nav_css()}
-{render_content_card_css()}
-{render_card_grid_css()}
-</style></head><body>
+{components_css}
+</style>{head_extra}</head><body>
 {render_masthead_html(masthead)}
 {render_sub_nav_html(sub_nav)}
 <main>{render_card_grid_html(grid)}</main>
@@ -389,6 +539,17 @@ _MEASURE = """() => {
     barScrollWidth: bar.scrollWidth, barClientWidth: bar.clientWidth,
     barOverflowX: getComputedStyle(bar).overflowX,
     gridCols: lefts.size,
+    // 0.14.2: Masthead-Pillen, aktiver Reiter, Seiten-Scroll-Position
+    mastheadScrollWidth: document.querySelector('.mn-masthead').scrollWidth,
+    pillsScrollWidth: document.querySelector('.mn-masthead__pills').scrollWidth,
+    pillsClientWidth: document.querySelector('.mn-masthead__pills').clientWidth,
+    pillRightMax: Math.max(...[...document.querySelectorAll('.mn-masthead__pill')]
+      .map(e => e.getBoundingClientRect().right)),
+    barScrollLeft: bar.scrollLeft,
+    activeLeft: box('.mn-sub-nav__tab.is-active').left - bar.getBoundingClientRect().left,
+    activeRight: box('.mn-sub-nav__tab.is-active').right - bar.getBoundingClientRect().left,
+    pageScrollX: window.scrollX, pageScrollY: window.scrollY,
+    inlineRan: window.__inlineRan === true,
   };
 }"""
 
@@ -408,21 +569,49 @@ def browser():
         b.close()
 
 
-def _measure(browser, tmp_path, columns: int, width: int) -> dict:
+def _measure(browser, tmp_path, columns: int, width: int, **page_kwargs) -> dict:
     page_file = tmp_path / f"page-{columns}.html"
-    page_file.write_text(_page(columns), encoding="utf-8")
+    page_file.write_text(_page(columns, **page_kwargs), encoding="utf-8")
+    return _measure_url(browser, page_file.as_uri(), width)
+
+
+def _measure_url(browser, url: str, width: int) -> dict:
     ctx = browser.new_context(viewport={"width": width, "height": 900})
     try:
         page = ctx.new_page()
-        page.goto(page_file.as_uri())
+        page.goto(url)
         page.evaluate("document.fonts.ready")
         return page.evaluate(_MEASURE)
     finally:
         ctx.close()
 
 
+@pytest.fixture
+def csp_server(tmp_path):
+    """Liefert tmp_path ueber HTTP mit `Content-Security-Policy: script-src 'self'`
+    — so streng wie der Konsument (kein 'unsafe-inline')."""
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory=str(tmp_path), **kwargs)
+
+        def end_headers(self):
+            self.send_header("Content-Security-Policy", "script-src 'self'")
+            super().end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    yield f"http://127.0.0.1:{server.server_address[1]}"
+    server.shutdown()
+    server.server_close()
+
+
 class TestBrowserProof:
-    @pytest.mark.parametrize("width", [390, 360])
+    @pytest.mark.parametrize("width", [390, 360, 320])
     def test_no_horizontal_page_scroll_on_phone(self, browser, tmp_path, width):
         m = _measure(browser, tmp_path, 4, width)
         assert m["scrollWidth"] <= m["clientWidth"], m
@@ -475,3 +664,209 @@ class TestBrowserProof:
         assert m["scrollWidth"] <= m["clientWidth"], m
         assert not m["chipsBelowPills"], m
         assert m["tabRows"] == 1, m
+
+
+# --------------------------------------------------------------------------
+# 0.14.2 — Masthead-Pillen bei 320 px, Sub-Nav-Rand-Hinweis, aktiver Reiter
+# --------------------------------------------------------------------------
+
+_INITIAL_TARGET = "scroll-initial-target: nearest;"
+
+
+def _rgb(token: str) -> tuple[int, int, int]:
+    h = get(token).lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def _in_view(m: dict) -> bool:
+    return m["activeLeft"] >= 0 and m["activeRight"] <= m["barClientWidth"]
+
+
+def _centred(m: dict, tolerance: float = 2) -> bool:
+    centre = (m["activeLeft"] + m["activeRight"]) / 2
+    return abs(centre - m["barClientWidth"] / 2) <= tolerance
+
+
+class TestMastheadPillsFitOnSmallestPhones:
+    """320 px (iPhone SE, kleine Android): die vier Tier-Pillen duerfen die Seite
+    nicht verbreitern — gemessen vor dem Fix: Pillen-Zeile 9 px zu breit."""
+
+    @pytest.mark.parametrize("active_tier", [0, 1, 2, 3])
+    def test_no_overflow_for_every_active_tier(self, browser, tmp_path, active_tier):
+        m = _measure(browser, tmp_path, 4, 320, active_tier=active_tier)
+        assert m["scrollWidth"] <= m["clientWidth"], m
+        assert m["mastheadScrollWidth"] <= m["clientWidth"], m
+        assert m["pillsScrollWidth"] <= m["pillsClientWidth"], m
+        assert m["pillRightMax"] <= m["clientWidth"], m
+        assert m["chipRightMax"] <= m["clientWidth"], m
+
+    @pytest.mark.parametrize("width", [390, 360])
+    def test_pills_stay_one_row_where_they_fit(self, browser, tmp_path, width):
+        """Der Umbruch ist ein Sicherheitsnetz, kein neues Aussehen: wo die Pillen
+        passen (alle gaengigen Handys ab 350 px), bleiben sie eine Zeile."""
+        m = _measure(browser, tmp_path, 4, width)
+        assert m["pillRows"] == 1, m
+
+
+class TestSubNavEdgeHintInBrowser:
+    """0.14.2 (a): Pixelprobe am Rand der Leiste. Die Probe liegt in der oberen
+    Polsterung der Leiste (kein Reiter, kein Text) — dort steht NUR der Hintergrund,
+    also Flaechenfarbe (kein Hinweis) oder Schatten (Hinweis)."""
+
+    SURFACE = _rgb("color.light.surface")
+
+    def _edges(self, browser, tmp_path, scroll_to: str, tabs=None):
+        page_file = tmp_path / "hint.html"
+        page_file.write_text(_page(4, tabs=tabs), encoding="utf-8")
+        ctx = browser.new_context(viewport={"width": 390, "height": 900})
+        try:
+            page = ctx.new_page()
+            page.goto(page_file.as_uri())
+            page.evaluate("document.fonts.ready")
+            top, scrollable = page.evaluate(
+                """(to) => {
+                  const bar = document.querySelector('.mn-sub-nav__inner');
+                  const max = bar.scrollWidth - bar.clientWidth;
+                  bar.scrollLeft = {start: 0, middle: max / 2, end: max}[to];
+                  return [bar.getBoundingClientRect().top + 2, max > 0];
+                }""",
+                scroll_to,
+            )
+            png = page.screenshot(
+                clip={"x": 0, "y": top - 2, "width": 390, "height": 6}
+            )
+            im = Image.open(io.BytesIO(png)).convert("RGB")
+            return im.getpixel((0, 2)), im.getpixel((389, 2)), scrollable
+        finally:
+            ctx.close()
+
+    @pytest.mark.parametrize(
+        ("scroll_to", "hint_left", "hint_right"),
+        [
+            ("start", False, True),  # links ist nichts verdeckt, rechts geht es weiter
+            ("middle", True, True),
+            ("end", True, False),
+        ],
+    )
+    def test_hint_only_towards_hidden_content(
+        self, browser, tmp_path, scroll_to, hint_left, hint_right
+    ):
+        left, right, scrollable = self._edges(browser, tmp_path, scroll_to)
+        assert scrollable, "die Leiste muss hier ueberlaufen — sonst beweist das nichts"
+        for name, px, expected in (
+            ("links", left, hint_left),
+            ("rechts", right, hint_right),
+        ):
+            if expected:
+                assert px != self.SURFACE and sum(px) < sum(self.SURFACE), (name, px)
+            else:
+                assert px == self.SURFACE, (name, px)
+
+    def test_no_hint_when_everything_fits(self, browser, tmp_path):
+        left, right, scrollable = self._edges(
+            browser, tmp_path, "start", tabs=["Uebersicht", "Profil"]
+        )
+        assert not scrollable, "zwei Reiter muessen bei 390 px passen"
+        assert left == self.SURFACE and right == self.SURFACE, (left, right)
+
+
+class TestSubNavActiveTabInViewOnLoad:
+    """0.14.2 (b), nur CSS (Chromium kennt `scroll-initial-target`): der aktive
+    Reiter steht beim Laden im Ausschnitt, die Seite springt dabei nicht."""
+
+    @pytest.fixture(autouse=True)
+    def _needs_initial_target(self, browser):
+        ctx = browser.new_context()
+        try:
+            ok = ctx.new_page().evaluate(
+                "CSS.supports('scroll-initial-target', 'nearest')"
+            )
+        finally:
+            ctx.close()
+        if not ok:
+            pytest.skip(
+                "Chromium kennt scroll-initial-target nicht — Wirkung UNGEPRUEFT"
+            )
+
+    @pytest.mark.parametrize("width", [390, 320])
+    @pytest.mark.parametrize("active_tab", [0, 5, 7])
+    def test_active_tab_is_in_view(self, browser, tmp_path, width, active_tab):
+        m = _measure(browser, tmp_path, 4, width, active_tab=active_tab)
+        assert m["barScrollWidth"] > m["barClientWidth"], m
+        assert _in_view(m), m
+        assert m["pageScrollX"] == 0 and m["pageScrollY"] == 0, m
+
+    @pytest.mark.parametrize("width", [390, 320])
+    def test_a_middle_tab_is_centred(self, browser, tmp_path, width):
+        m = _measure(browser, tmp_path, 4, width, active_tab=5)
+        assert _centred(m), m
+
+    def test_without_the_property_the_active_tab_stays_out_of_view(
+        self, browser, tmp_path
+    ):
+        """Gegenprobe: dieselbe Seite ohne die Property. Ohne sie waere der Test
+        oben auch gruen, wenn der Reiter ohnehin sichtbar waere."""
+        m = _measure(
+            browser, tmp_path, 4, 390, active_tab=7, strip_css=(_INITIAL_TARGET,)
+        )
+        assert not _in_view(m), m
+
+
+class TestSubNavScriptInBrowser:
+    """0.14.2 (b), Rueckfall: Browser ohne `scroll-initial-target` (Safari, Firefox).
+    Simuliert durch Entfernen der Property; das Skript kommt als EXTERNE Datei
+    unter `Content-Security-Policy: script-src 'self'`."""
+
+    SCRIPT = '<script src="/mn-sub-nav.js" defer></script>'
+    INLINE = "<script>window.__inlineRan = true</script>"
+
+    def _serve(self, tmp_path, **kwargs):
+        (tmp_path / "page.html").write_text(
+            _page(4, strip_css=(_INITIAL_TARGET,), **kwargs), encoding="utf-8"
+        )
+        (tmp_path / "mn-sub-nav.js").write_text(_js(), encoding="utf-8")
+
+    def test_script_centres_the_active_tab_under_a_strict_csp(
+        self, browser, tmp_path, csp_server
+    ):
+        self._serve(tmp_path, active_tab=5, head_extra=self.SCRIPT + self.INLINE)
+        m = _measure_url(browser, f"{csp_server}/page.html", 390)
+        assert not m["inlineRan"], "CSP wirkt nicht — der Beweis waere wertlos"
+        assert _in_view(m) and _centred(m), m
+        assert m["pageScrollX"] == 0 and m["pageScrollY"] == 0, m
+
+    @pytest.mark.parametrize("active_tab", [0, 7])
+    def test_script_keeps_the_ends_in_view(
+        self, browser, tmp_path, csp_server, active_tab
+    ):
+        self._serve(tmp_path, active_tab=active_tab, head_extra=self.SCRIPT)
+        m = _measure_url(browser, f"{csp_server}/page.html", 390)
+        assert _in_view(m), m
+
+    def test_without_the_script_the_active_tab_is_out_of_view(
+        self, browser, tmp_path, csp_server
+    ):
+        """Gegenprobe zu den Tests oben: gleiche Seite, nur ohne <script>."""
+        self._serve(tmp_path, active_tab=7)
+        m = _measure_url(browser, f"{csp_server}/page.html", 390)
+        assert not _in_view(m), m
+
+    def test_script_moves_only_the_bar_never_the_page(self, browser, tmp_path):
+        page_file = tmp_path / "page.html"
+        page_file.write_text(
+            _page(4, active_tab=7, strip_css=(_INITIAL_TARGET,)), encoding="utf-8"
+        )
+        ctx = browser.new_context(viewport={"width": 390, "height": 600})
+        try:
+            page = ctx.new_page()
+            page.goto(page_file.as_uri())
+            page.evaluate("document.fonts.ready")
+            page.evaluate("window.scrollTo(0, 200)")
+            before = page.evaluate("[scrollX, scrollY]")
+            page.evaluate(_js())
+            after = page.evaluate("[scrollX, scrollY]")
+            m = page.evaluate(_MEASURE)
+        finally:
+            ctx.close()
+        assert before == after == [0, 200], (before, after)
+        assert _in_view(m), m
