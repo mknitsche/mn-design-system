@@ -30,8 +30,9 @@ Bereich unter `web.layout.bp-tablet` (Desktop pixelgleich), Werte aus den Tokens
 - **Masthead:** die Tier-Pillen (`.mn-masthead__pills`) duerfen umbrechen
   (`flex-wrap: wrap`). Auf 320 px war die Pillen-Zeile 9 px zu breit und
   verbreiterte die Seite. Gemessen (Chromium, Geist): die Zeile ist 313 px breit
-  und bleibt eine Zeile ab 350 px (alle gaengigen Handys); bei 320 px sind es zwei
-  Zeilen. Das Masthead bleibt breakpoint-frei.
+  und bleibt eine Zeile ab 345 px (alle gaengigen Handys); von 320 bis 344 px sind es
+  zwei Zeilen. Das Umbrechen gilt bei jeder Breite (nicht nur unter bp-tablet), wirkt
+  aber erst unter 345 px. Das Masthead bleibt breakpoint-frei.
 
 ### Hinzugefuegt — `render_sub_nav_js()` (optionales Skript fuer Safari und Firefox)
 
