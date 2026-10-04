@@ -21,6 +21,22 @@ Barrierefreiheit (Spec §A6):
 - Der aktive Tab traegt zusaetzlich `aria-current="page"` — die
   Aktiv-Information ist damit nicht rein visuell.
 
+Schmale Viewports (strikt unter `web.layout.bp-tablet`, 0.14.1/0.14.2):
+- Die Tab-Zeile ist eine horizontal scrollbare Leiste INNERHALB der Sub-Nav.
+- Rand-Hinweis (reines CSS, kein Skript): an einem Rand zeigt die Leiste einen
+  Schatten genau dann, wenn dahinter noch Reiter liegen. Technik: zwei
+  mitscrollende Deckflaechen (`background-attachment: local`) in Flaechenfarbe
+  verdecken zwei am Rand stehende Schatten (`scroll`); der Schatten erscheint
+  erst, wenn die Deckflaeche mit dem Inhalt weggescrollt ist.
+- Aktiver Reiter im Ausschnitt: `scroll-initial-target: nearest` am aktiven Tab
+  rollt die Leiste (nur sie, nie die Seite) beim ersten Layout dorthin;
+  `scroll-snap-align: center` zentriert ihn, so dass beide Nachbarn sichtbar
+  bleiben. Die Property kennt nur Chromium (ab 133) — fuer Safari und Firefox
+  liefert `render_sub_nav_js()` einen Rueckfall als EXTERNE Skript-Datei (siehe
+  dort); der Rand-Hinweis funktioniert in jedem Fall ohne Skript.
+- Keine Animation: weder Transition noch weiches Scrollen
+  (`prefers-reduced-motion` ist damit von selbst eingehalten).
+
 CSS-Strategie wie kpi_card / wetter_strip: Token-Werte via CSS Custom
 Properties, `render_sub_nav_css()` liefert Regeln fuer alle 4 Tiers.
 """
@@ -124,10 +140,28 @@ def render_sub_nav_css() -> str:
     overflow-x: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--web-color-separator, #b4bcc8) transparent;
+    background-color: var(--color-light-surface, #ffffff);
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(to right, var(--color-light-surface, #ffffff) 50%%, transparent),
+      linear-gradient(to left, var(--color-light-surface, #ffffff) 50%%, transparent),
+      linear-gradient(to right, var(--web-color-separator, #b4bcc8), transparent),
+      linear-gradient(to left, var(--web-color-separator, #b4bcc8), transparent);
+    background-position: left center, right center, left center, right center;
+    background-size:
+      var(--space-8, 32px) 100%%,
+      var(--space-8, 32px) 100%%,
+      var(--space-4, 16px) 100%%,
+      var(--space-4, 16px) 100%%;
+    background-attachment: local, local, scroll, scroll;
   }
   .mn-sub-nav__tab {
     flex: none;
     white-space: nowrap;
+  }
+  .mn-sub-nav__tab.is-active {
+    scroll-snap-align: center;
+    scroll-initial-target: nearest;
   }
 }
 """.strip()
@@ -150,3 +184,61 @@ def render_sub_nav_css() -> str:
             f"}}"
         )
     return "\n".join(rules)
+
+
+# Rueckfall fuer Browser ohne `scroll-initial-target` (Safari, Firefox): rollt die
+# Leiste so, dass der aktive Tab mittig steht — dieselbe Position, die
+# `scroll-initial-target` + `scroll-snap-align: center` im CSS erreicht.
+_SUB_NAV_JS = """
+(function () {
+  function centre(bar) {
+    var tab = bar.querySelector(".mn-sub-nav__tab.is-active");
+    if (!tab || bar.scrollWidth <= bar.clientWidth) return;
+    var b = bar.getBoundingClientRect();
+    var t = tab.getBoundingClientRect();
+    bar.scrollLeft += t.left + t.width / 2 - (b.left + b.width / 2);
+  }
+  function run() {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".mn-sub-nav__inner"),
+      function (bar) {
+        centre(bar);
+        var placed = bar.scrollLeft;
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () {
+            if (bar.scrollLeft === placed) centre(bar);
+          });
+        }
+      }
+    );
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+"""
+
+
+def render_sub_nav_js() -> str:
+    """Skript, das den aktiven Tab der scrollbaren Sub-Nav mittig ins Bild rollt.
+
+    Nur noetig fuer Browser ohne CSS `scroll-initial-target` (Safari, Firefox);
+    Chromium erledigt es allein per CSS (`render_sub_nav_css()`), und das Skript
+    ist dort wirkungsgleich. Der Rand-Hinweis braucht das Skript NICHT.
+
+    Einbindung (CSP `script-src 'self'`, kein 'unsafe-inline' noetig):
+    der Konsument legt diesen Text als eigene Datei ab (z. B. `mn-sub-nav.js`
+    neben seinem CSS) und bindet sie im `<head>` ein:
+    `<script src="/pfad/mn-sub-nav.js" defer></script>`. NIE als Inline-Skript.
+    `defer` ist Empfehlung, keine Pflicht: steht das Skript im `<head>` ohne
+    `defer` (oder am Ende des `<body>`), wartet es selbst auf das fertige Dokument.
+
+    Verhalten: scrollt ausschliesslich `.mn-sub-nav__inner` (`scrollLeft`), nie die
+    Seite und keine Vorfahren (kein `scrollIntoView`), und ohne Animation — das
+    Skript ist damit `prefers-reduced-motion`-neutral. Eine Leiste ohne Ueberlauf
+    bleibt unberuehrt. Nach dem Laden der Schriften wird einmal nachzentriert,
+    aber nur, wenn die Leiste in der Zwischenzeit nicht bewegt wurde.
+    """
+    return _SUB_NAV_JS.strip() + "\n"

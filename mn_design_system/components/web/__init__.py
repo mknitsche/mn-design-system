@@ -54,6 +54,7 @@ from mn_design_system.components.web.sparkline import render_sparkline_svg
 from mn_design_system.components.web.sub_nav import (
     render_sub_nav_css,
     render_sub_nav_html,
+    render_sub_nav_js,
 )
 from mn_design_system.components.web.tier_chip import (
     render_tier_chip_css,
@@ -84,6 +85,7 @@ __all__ = [
     "render_sparkline_svg",
     "render_sub_nav_css",
     "render_sub_nav_html",
+    "render_sub_nav_js",
     "render_tier_chip_css",
     "render_tier_chip_html",
     "render_wetter_strip_css",

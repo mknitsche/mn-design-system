@@ -149,6 +149,43 @@ flowables = build_kpi_card(KpiCardInput(
 ))
 ```
 
+## Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)
+
+Auf dem Handy ist die Sub-Nav eine scrollbare Leiste. Der Rand-Hinweis (Schatten
+dort, wo noch Reiter liegen) ist reines CSS und braucht kein Skript. Dass der
+**aktive Reiter beim Laden mittig im Bild steht**, erledigt in Chromium (ab 133)
+ebenfalls das CSS (`scroll-initial-target`). **Safari und Firefox** kennen diese
+Property nicht — dort rollt ein kleines Skript die Leiste. Ohne das Skript bleibt
+die Leiste dort am Anfang stehen (der Hinweis zeigt weiterhin, dass es weitergeht).
+
+```python
+from pathlib import Path
+
+from mn_design_system.components.web import render_sub_nav_css, render_sub_nav_js
+
+# beim Seitenbau, neben dem CSS: das Skript als EIGENE Datei ablegen
+Path("static/mn-sub-nav.js").write_text(render_sub_nav_js())
+Path("static/mn-sub-nav.css").write_text(render_sub_nav_css())
+```
+
+```html
+<!-- im <head>, einmal pro Seite, auf jeder Seite mit Sub-Nav -->
+<script src="/static/mn-sub-nav.js" defer></script>
+```
+
+- **Datei, nicht Inline.** Das Skript ist fuer `Content-Security-Policy:
+  script-src 'self'` gebaut — ein `'unsafe-inline'` ist nicht noetig und soll es
+  nicht werden. Als `<script>…</script>`-Block in die Seite gelegt, wuerde eine
+  strenge CSP es blockieren.
+- **Keine Abhaengigkeiten, keine Animation.** Es scrollt nur die Leiste
+  (`.mn-sub-nav__inner`), nie die Seite, und setzt die Position sofort — also auch
+  `prefers-reduced-motion`-neutral. Eine Leiste ohne Ueberlauf (Desktop, wenige
+  Reiter) bleibt unberuehrt.
+- **`defer` ist Empfehlung, keine Pflicht:** das Skript wartet im `<head>` selbst
+  auf das fertige Dokument.
+- Das Skript ist **optional**: wer es weglaesst, verliert nur das Zentrieren in
+  Safari und Firefox, nichts sonst.
+
 ## Versionierungs-Politik
 
 **SemVer pre-1.0** (Solo-Maintainer-Modus):

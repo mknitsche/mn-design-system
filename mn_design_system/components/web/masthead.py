@@ -181,6 +181,7 @@ def render_masthead_css() -> str:
 }
 .mn-masthead__pills {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1, 4px);
 }
