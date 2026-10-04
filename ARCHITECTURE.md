@@ -139,10 +139,13 @@ greift dann auf `mn_design_system/tokens.py` direkt zu, kein Pfad-Hack noetig.
 | **Wissenschaftliche Paper** | Geplant | TBD |
 | **Newsletter / private Texte** | Geplant | TBD |
 
-**Multi-KI-Edit-Faehigkeit**: Das Repo ist **public** (MIT-Lizenz, ohne Logos).
-Damit koennen Claude Design Browser, Codex Web, Cursor und andere Tools direkt
-im Token-Set arbeiten ohne IDE-Roundtrip. claudeAI bleibt privat (PII), die
-Design-Schicht ist offen — bewusste Trennung.
+**Multi-KI-Edit-Faehigkeit**: Das Repo ist **public** — oeffentlich lesbar, aber
+**source-available** unter PolyForm Strict 1.0.0, nicht Open Source (ohne Logos;
+siehe README, Abschnitt Rechte). Fuer KT-1s eigene Werkzeuge gilt die
+Veraenderungs-Schranke nicht: Claude Design Browser, Codex Web, Cursor und andere
+Tools arbeiten in seinem Namen direkt im Token-Set, ohne IDE-Roundtrip. claudeAI
+bleibt privat (PII), die Design-Schicht ist oeffentlich lesbar — bewusste
+Trennung.
 
 ---
 
@@ -200,7 +203,7 @@ nachziehen.
 3. **Hartkodierte Werte in Tests** — Tests muessen Tokens via `from
    mn_design_system.tokens import get` referenzieren, nicht Hex-Strings im Code.
 
-4. **Logos im Repo** — proprietaer, gehoeren nicht in den Public-MIT-Bereich.
+4. **Logos im Repo** — proprietaer, gehoeren nicht in den oeffentlichen Teil des Repos.
    Logo-Pfade sind im Konsumenten (claudeAI) gepflegt, nicht hier.
 
 5. **Build-Output committen ohne Konsistenz-Check** — `npm run build` muss
