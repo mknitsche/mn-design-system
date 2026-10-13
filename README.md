@@ -125,7 +125,8 @@ gewollt.
 - **Design-System (Tokens, Komponenten, Doku, Build-Skripte)**:
   PolyForm Strict 1.0.0 — siehe `LICENSE`
 - **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, JetBrains Mono,
-  Inter, Noto Sans, STIX) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
+  Inter, Noto Sans, STIX Two Text; Ausnahmen: STIX Two Math unter der STIX Fonts User
+  License auf OFL-Basis, Phosphor unter MIT) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
   schraenkt sie nicht ein. Der Lizenztext jeder Familie liegt neben den Schriftdateien
   (`mn_design_system/fonts/<familie>/OFL.txt`)
 - **Symbole**: MIT (Phosphor Icons, `mn_design_system/fonts/phosphor/LICENSE`)

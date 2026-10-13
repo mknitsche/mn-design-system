@@ -55,6 +55,9 @@ ein Schriftwechsel im Design-System zog dort nicht nach. Jetzt kommen sie als To
   nicht betroffen.
 - **Geist-Light als Grundschrift:** jetzt eine Familie — `<b>`/`<i>` nehmen die
   Geist-Standardschnitte statt still im Light-Schnitt zu bleiben.
+- **Chat-Baustein (Web):** Code und Werkzeug-Abzeichen nahmen `var(--font-family-mono, …)`
+  — das ist der PDF-Name „JetBrainsMono“, kein Web-Familienname; wer `tokens.css` laedt,
+  bekam damit keine Monospace-Schrift. Jetzt `var(--web-font-mono, …)`.
 - **Schnittnamen im Design-System selbst:** KPI-Karte und Wetter-Streifen setzen
   `font_family("sans"|"sans-bold")` statt der Literale „Geist“/„Geist-Bold“.
 - **Lizenzangaben:** JetBrains Mono steht unter der SIL OFL (laut Schriftdatei), nicht
@@ -75,7 +78,9 @@ ein Schriftwechsel im Design-System zog dort nicht nach. Jetzt kommen sie als To
 - `tokens.py` und `dist/css|json|latex/tokens.*` sind per `npm run build` erzeugt.
   Ein Test prueft, dass `dist/json/tokens.json` und `tokens.py` uebereinstimmen.
 
-**Fuer Konsumenten:** Token-Namen und Funktionen sind unveraendert und nur ergaenzt.
+**Fuer Konsumenten:** Token-Namen und Funktionen sind unveraendert und nur ergaenzt;
+geaendert hat sich der WERT von `--web-font-*` in `tokens.css` (jetzt mit
+Anfuehrungszeichen).
 Sichtbare Unterschiede: `<b>` in der Zitat-Kursive und in Geist-Light wirkt jetzt; die
 KPI-Karte nennt ihre Caption-Schrift „SourceSerif4-Italic“ (dieselbe Datei);
 `render_foundation_css()` hat eine Zeile mehr (`--web-text-display` mobil); `tokens.css`

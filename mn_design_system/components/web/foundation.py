@@ -71,9 +71,10 @@ def css_font_stack(art: str) -> str:
         css_font_stack("mono")
         # '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace'
 
-    Die Anfuehrungszeichen sind noetig: ``--web-font-*`` gibt die Familie ohne sie aus,
+    Die Anfuehrungszeichen sind noetig: die Python-Tokens tragen die Familie ohne sie,
     und ein Name mit Ziffer („Source Serif 4“) ist ungequotet kein gueltiger CSS-Bezeichner
-    (CSS Fonts, ``family-name``). Ein Konsument setzt diesen Wert statt eines eigenen
+    (CSS Fonts, ``family-name``). Es sind DOPPELTE Anfuehrungszeichen — in ein
+    ``style="…"``-Attribut nur ueber ein einfach gequotetes Attribut oder per CSS-Datei. Ein Konsument setzt diesen Wert statt eines eigenen
     Literals (``font-family: Georgia, serif`` und aehnlich).
 
     Raises:

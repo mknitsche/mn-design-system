@@ -96,7 +96,7 @@ StyleDictionary.registerTransform({
   name: "value/web-font-quote",
   type: "value",
   filter: (token) =>
-    token.path[0] === "web" && token.path[1] === "font" && token.path[2] !== "stack",
+    token.path.length === 3 && token.path[0] === "web" && token.path[1] === "font",
   transform: (token) => `"${token.value}"`,
 });
 
