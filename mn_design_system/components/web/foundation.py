@@ -23,6 +23,7 @@ from mn_design_system.tokens import get
 #: (der Browser schraegte kuenstlich an). Source Serif 4 wird von Google nur als Variable
 #: Font ausgeliefert: eine Datei deckt den Gewichtsbereich ab.
 WEB_SCHRIFTEN: tuple[tuple[str, str, str, str], ...] = (
+    ("Geist", "300", "normal", "Geist-Light.woff2"),
     ("Geist", "400", "normal", "Geist-Regular.woff2"),
     ("Geist", "500", "normal", "Geist-Medium.woff2"),
     ("Geist", "700", "normal", "Geist-Bold.woff2"),
@@ -41,7 +42,9 @@ def web_font_dir() -> Path:
 def render_font_face(url_prefix: str) -> str:
     """@font-face-Bloecke fuer alle Web-Schriften; ``url_prefix`` ist der Auslieferpfad
     des Konsumenten (z. B. ``"/assets/fonts/"``). ``font-display: swap`` verhindert FOIT."""
-    praefix = url_prefix if url_prefix.endswith("/") else url_prefix + "/"
+    praefix = (
+        url_prefix if not url_prefix or url_prefix.endswith("/") else url_prefix + "/"
+    )
     return "\n".join(
         "@font-face {\n"
         f'  font-family: "{familie}";\n'
