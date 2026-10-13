@@ -56,8 +56,8 @@ def _lizenzdatei(familie: Path) -> Path | None:
     return kandidaten[0] if kandidaten else None
 
 
-def _copyright_zeile(pfad: Path) -> str | None:
-    """name-ID 0 einer TTF/OTF (reines struct, keine Zusatzbibliothek)."""
+def _name_eintrag(pfad: Path, nid_gesucht: int) -> str | None:
+    """name-ID einer TTF/OTF (reines struct, keine Zusatzbibliothek)."""
     daten = pfad.read_bytes()
     anzahl = struct.unpack(">H", daten[4:6])[0]
     name_offset = None
@@ -76,7 +76,7 @@ def _copyright_zeile(pfad: Path) -> str | None:
         plattform, _enc, sprache, nid, laenge, so = struct.unpack(
             ">HHHHHH", daten[basis : basis + 12]
         )
-        if nid != 0 or plattform not in (1, 3):
+        if nid != nid_gesucht or plattform not in (1, 3):
             continue
         start = name_offset + str_offset + so
         roh = daten[start : start + laenge]
@@ -84,6 +84,10 @@ def _copyright_zeile(pfad: Path) -> str | None:
             roh.decode("utf-16-be") if plattform == 3 else roh.decode("mac_roman")
         )
     return gefunden.get((3, 0x409)) or gefunden.get((1, 0))
+
+
+def _copyright_zeile(pfad: Path) -> str | None:
+    return _name_eintrag(pfad, 0)
 
 
 def _copyright_zeilen(familie: Path) -> set[str]:
@@ -113,7 +117,10 @@ def test_jede_familie_hat_einen_lizenztext(name):
         assert "Permission is hereby granted, free of charge" in text
     else:
         assert "SIL OPEN FONT LICENSE Version 1.1" in text
-        assert "PERMISSION AND CONDITIONS" in text
+        # Wortlaut des Originals (openfontlicense.org und die Upstream-Repos): „&“. Bis
+        # 0.16.0 stand hier „AND“ — eine Abweichung vom Lizenztext, vom Test festgeschrieben.
+        assert "PERMISSION & CONDITIONS" in text
+        assert "PERMISSION AND CONDITIONS" not in text
 
 
 def test_neue_familien_tauchen_nicht_ohne_lizenz_auf():
@@ -122,14 +129,11 @@ def test_neue_familien_tauchen_nicht_ohne_lizenz_auf():
     assert ohne == []
 
 
-@pytest.mark.parametrize("name", sorted(_ERWARTET - {"web", "geist"}))
+@pytest.mark.parametrize("name", sorted(_ERWARTET - {"web"}))
 def test_lizenztext_traegt_die_copyright_zeile_der_schrift(name):
     """Jede Copyright-Zeile aus den Metadaten der Schriftdateien steht im Lizenztext —
-    nichts Erfundenes, nichts Abgeschriebenes.
-
-    Ausgenommen: ``geist`` (der Text liegt seit 0.15.0 bei und nennt die Zeile des
-    Upstream-Projekts, „Vercel, in collaboration with basement.studio“; die Schriftdateien
-    tragen „The Geist Project Authors“) und ``web`` (eigener Test unten)."""
+    nichts Erfundenes, nichts Abgeschriebenes. Seit 0.16.1 auch Geist (der Text trug bis
+    dahin die veraltete Upstream-Zeile „2023 Vercel“). ``web`` hat einen eigenen Test."""
     familie = FONT_DIR / name
     zeilen = _copyright_zeilen(familie)
     assert zeilen, f"{name}: keine Copyright-Zeile in den Schriftdateien lesbar"
@@ -171,3 +175,28 @@ def test_lizenzdateien_gehen_ins_wheel():
     # An den echten Dateien geprueft, nicht am Text der Musterliste (Critic 0.16.0).
     ohne_muster = [d for d in lizenzen if not any(fnmatch(d, m) for m in muster)]
     assert ohne_muster == []
+
+
+_OFL_URLS = ("scripts.sil.org/OFL", "openfontlicense.org")
+
+
+@pytest.mark.parametrize("name", sorted(_ERWARTET - {"web"} - set(_MIT)))
+def test_jede_schriftdatei_steht_laut_metadaten_unter_der_ofl(name):
+    """Waechter (0.16.1): die Lizenz einer Schrift steht in IHREN Metadaten (name-ID 13/14),
+    nicht in unserer Doku. Bis 0.16.0 lag STIX Two Math 2.02 bei, deren Metadaten auf die
+    STIX Fonts User License verweisen — README und CITATIONS behaupteten OFL, kein Test sah
+    es. Jede Datei einer OFL-Familie muss auf die OFL verweisen."""
+    dateien = [
+        f for f in (FONT_DIR / name).iterdir() if f.suffix.lower() in {".ttf", ".otf"}
+    ]
+    assert dateien, f"{name}: keine Schriftdatei (Untergrenze, LP-36)"
+    abweichend = []
+    for f in dateien:
+        url = _name_eintrag(f, 14) or ""
+        beschreibung = _name_eintrag(f, 13) or ""
+        ofl = any(u in url for u in _OFL_URLS) or (
+            not url and "Open Font License" in beschreibung
+        )
+        if not ofl:
+            abweichend.append(f"{f.name}: {url or beschreibung[:60]!r}")
+    assert abweichend == []
