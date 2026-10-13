@@ -90,7 +90,11 @@ def test_css_traegt_die_neuen_variablen():
     css = (_DIST / "css" / "tokens.css").read_text(encoding="utf-8")
     assert "--web-text-display: 40px" in css
     assert "--web-leading-display: 1.1" in css
-    assert "--web-font-mono: JetBrains Mono" in css
+    # Familiennamen mit Ziffer/Leerzeichen muessen in CSS gequotet sein ("Source Serif 4" ist
+    # ungequotet kein gueltiger Name; var()-Rueckfaelle griffen dann nie).
+    assert '--web-font-mono: "JetBrains Mono"' in css
+    assert '--web-font-serif-editorial: "Source Serif 4"' in css
+    assert '--web-font-sans: "Geist"' in css
     assert (
         "--web-font-stack-sans: system-ui, -apple-system, BlinkMacSystemFont, "
         "sans-serif" in css

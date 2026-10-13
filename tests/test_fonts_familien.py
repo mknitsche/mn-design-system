@@ -198,3 +198,16 @@ def test_unlesbare_schrift_wird_gemeldet_nicht_verschluckt(monkeypatch, caplog):
     assert angemeldet == []
     assert "Geist-Bold" in caplog.text
     assert "nicht lesbar" in caplog.text
+
+
+def test_light_als_grundschrift_verliert_auszeichnung_nicht():
+    """Review 0.16.0: font.family.sans-light ist ein Token, aber Geist-Light war keine
+    Familie — <b>/<i> blieben still im Light-Schnitt. Es gibt keinen Light-Kursiv- oder
+    Light-Fett-Schnitt im Paket; Fett und Kursiv nehmen die naechsten vorhandenen."""
+    s = _schnitte("Geist-Light")
+    assert s == {
+        "n": "Geist-Light",
+        "f": "Geist-Bold",
+        "k": "Geist-Italic",
+        "fk": "Geist-BoldItalic",
+    }

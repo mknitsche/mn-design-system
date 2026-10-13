@@ -9,6 +9,7 @@ import pytest
 from mn_design_system.components.web.foundation import (
     css_font_stack,
     render_foundation_css,
+    render_initiale_css,
 )
 from mn_design_system.tokens import get
 
@@ -49,11 +50,6 @@ def test_exported_from_web_package():
     from mn_design_system.components.web import render_foundation_css as exported
 
     assert exported is render_foundation_css
-
-
-from mn_design_system.components.web.foundation import (
-    render_initiale_css,
-)
 
 
 def test_initiale_dropcap_uses_initial_letter():

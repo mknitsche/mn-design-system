@@ -301,9 +301,9 @@
   --web-leading-h2: 1.22;
   --web-leading-h1: 1.18;
   --web-leading-display: 1.1; /** v0.16.0: Zeilenhoehe zu text.display — eng, weil Hero-Titel meist einzeilig sind */
-  --web-font-sans: Geist; /** Web-Sans — Fliesstext, UI, Navigation */
-  --web-font-serif-editorial: Source Serif 4; /** Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print). */
-  --web-font-mono: JetBrains Mono; /** v0.16.0: Web-Mono (Code, Transkripte, Zahlenkolonnen). Web-Pendant zu font.family.mono (print). Es wird KEINE Web-Datei mitgeliefert (WEB_SCHRIFTEN): die Schrift muss lokal installiert sein, sonst greift die Rueckfallkette web.font.stack.mono. */
+  --web-font-sans: "Geist"; /** Web-Sans — Fliesstext, UI, Navigation */
+  --web-font-serif-editorial: "Source Serif 4"; /** Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print). */
+  --web-font-mono: "JetBrains Mono"; /** v0.16.0: Web-Mono (Code, Transkripte, Zahlenkolonnen). Web-Pendant zu font.family.mono (print). Es wird KEINE Web-Datei mitgeliefert (WEB_SCHRIFTEN): die Schrift muss lokal installiert sein, sonst greift die Rueckfallkette web.font.stack.mono. */
   --web-font-stack-sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; /** Rueckfall hinter web.font.sans */
   --web-font-stack-serif-editorial: Georgia, serif; /** Rueckfall hinter web.font.serif-editorial */
   --web-font-stack-mono: ui-monospace, "SF Mono", Menlo, monospace; /** Rueckfall hinter web.font.mono */

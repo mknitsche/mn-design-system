@@ -10,6 +10,7 @@ Copyright-Zeile traegt, die in den Schriftdateien selbst steht (name-Tabelle, ID
 from __future__ import annotations
 
 import struct
+from fnmatch import fnmatch
 from pathlib import Path
 
 import pytest
@@ -160,5 +161,13 @@ def test_lizenzdateien_gehen_ins_wheel():
         (Path(__file__).parent.parent / "pyproject.toml").read_text(encoding="utf-8")
     )
     muster = pyproject["tool"]["setuptools"]["package-data"]["mn_design_system"]
-    assert "fonts/**/*.txt" in muster  # OFL.txt
-    assert "fonts/**/LICENSE*" in muster  # Phosphor (MIT)
+    paket = Path(__file__).parent.parent / "mn_design_system"
+    lizenzen = sorted(
+        p.relative_to(paket).as_posix()
+        for p in (paket / "fonts").glob("*/*")
+        if p.name == "OFL.txt" or p.name.startswith("LICENSE")
+    )
+    assert len(lizenzen) >= 9, "Untergrenze: die Lizenzdateien wurden gefunden (LP-36)"
+    # An den echten Dateien geprueft, nicht am Text der Musterliste (Critic 0.16.0).
+    ohne_muster = [d for d in lizenzen if not any(fnmatch(d, m) for m in muster)]
+    assert ohne_muster == []

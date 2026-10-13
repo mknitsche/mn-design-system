@@ -20,6 +20,9 @@ fuer sie ausdruecklich NICHT und schraenkt sie nicht ein.
 Insbesondere stehen die mitgelieferten Schriften unter der
 SIL Open Font License 1.1 und duerfen weiterhin unter deren Bedingungen genutzt
 und weitergegeben werden — unabhaengig von den Beschraenkungen, die LICENSE fuer
-das Design-System selbst setzt.
+das Design-System selbst setzt. Ausnahmen: die Mathe-Schrift STIX Two Math
+(Version 2.02) steht laut ihren Metadaten unter der STIX Fonts User License, die
+auf der OFL beruht; die Symbolschrift Phosphor steht unter der MIT-Lizenz. Jede
+Schriftfamilie liegt mit ihrem Lizenztext unter mn_design_system/fonts/<familie>/.
 
 Vollstaendige Aufstellung mit Designer, Lizenz und Quelle: CITATIONS.md

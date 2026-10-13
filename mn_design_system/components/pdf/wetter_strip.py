@@ -21,6 +21,7 @@ from mn_design_system.components._patterns.contracts import (
     WetterCategory,
     WetterStripInput,
 )
+from mn_design_system.helpers import font_family
 from mn_design_system.tokens import get as token_get
 
 # Phosphor-Codepoints fuer Wetter-Symbole (verifiziert via Phosphor.json).
@@ -64,7 +65,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "label": ParagraphStyle(
             "WetterStripLabel",
-            fontName="Geist-Bold",
+            fontName=font_family("sans-bold"),
             fontSize=9,
             leading=12,
             textColor=HexColor(color_h1),
@@ -73,7 +74,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "temp": ParagraphStyle(
             "WetterStripTemp",
-            fontName="Geist",
+            fontName=font_family("sans"),
             fontSize=10,
             leading=13,
             alignment=TA_CENTER,
@@ -81,7 +82,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "precip": ParagraphStyle(
             "WetterStripPrecip",
-            fontName="Geist",
+            fontName=font_family("sans"),
             fontSize=8.5,
             leading=11,
             textColor=HexColor(color_text_muted),
@@ -90,7 +91,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "summary": ParagraphStyle(
             "WetterStripSummary",
-            fontName="Geist",
+            fontName=font_family("sans"),
             fontSize=body_size,
             leading=body_lead,
             spaceBefore=2 * mm,
