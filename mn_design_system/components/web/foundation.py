@@ -12,7 +12,46 @@ etc. nutzen, automatisch responsiv. Eine Override-Stelle, kein Drift.
 
 from __future__ import annotations
 
+from pathlib import Path
+
+from mn_design_system.fonts import FONT_DIR
 from mn_design_system.tokens import get
+
+#: Die Web-Schriften des Design-Systems (v0.15.0): (Familie, Gewicht, Stil, Datei).
+#: Bis 0.14.2 lagen die woff2-Dateien und diese Liste beim Konsumenten — ein Schriftwechsel
+#: im Design-System zog im Web nicht nach, und Geist hatte dort keinen kursiven Schnitt
+#: (der Browser schraegte kuenstlich an). Source Serif 4 wird von Google nur als Variable
+#: Font ausgeliefert: eine Datei deckt den Gewichtsbereich ab.
+WEB_SCHRIFTEN: tuple[tuple[str, str, str, str], ...] = (
+    ("Geist", "400", "normal", "Geist-Regular.woff2"),
+    ("Geist", "500", "normal", "Geist-Medium.woff2"),
+    ("Geist", "700", "normal", "Geist-Bold.woff2"),
+    ("Geist", "400", "italic", "Geist-Italic.woff2"),
+    ("Geist", "500", "italic", "Geist-MediumItalic.woff2"),
+    ("Geist", "700", "italic", "Geist-BoldItalic.woff2"),
+    ("Source Serif 4", "400 600", "italic", "SourceSerif4-Italic.woff2"),
+)
+
+
+def web_font_dir() -> Path:
+    """Verzeichnis der woff2-Dateien im installierten Paket — der Konsument kopiert von hier."""
+    return FONT_DIR / "web"
+
+
+def render_font_face(url_prefix: str) -> str:
+    """@font-face-Bloecke fuer alle Web-Schriften; ``url_prefix`` ist der Auslieferpfad
+    des Konsumenten (z. B. ``"/assets/fonts/"``). ``font-display: swap`` verhindert FOIT."""
+    praefix = url_prefix if url_prefix.endswith("/") else url_prefix + "/"
+    return "\n".join(
+        "@font-face {\n"
+        f'  font-family: "{familie}";\n'
+        f"  font-weight: {gewicht};\n"
+        f"  font-style: {stil};\n"
+        "  font-display: swap;\n"
+        f'  src: url("{praefix}{datei}") format("woff2");\n'
+        "}"
+        for familie, gewicht, stil, datei in WEB_SCHRIFTEN
+    )
 
 
 def render_foundation_css() -> str:
