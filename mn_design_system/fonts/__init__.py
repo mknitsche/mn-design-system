@@ -8,7 +8,10 @@ Registriert alle TTF-Files unter mn_design_system/fonts/ beim ReportLab — und 
 v0.15.0 die SCHRIFTFAMILIEN dazu. ReportLab loest ``<b>``/``<i>`` in einem Paragraph
 ueber die Familien-Zuordnung auf; ohne sie setzt es still den Grundschnitt. Bis 0.14.2
 waren Fett und Kursiv deshalb in allen ReportLab-PDFs der Konsumenten unsichtbar.
-Idempotent: mehrfache Aufrufe sind harmlos (ReportLab ueberschreibt).
+Idempotent: mehrfache Aufrufe sind harmlos. ReportLab UEBERSCHREIBT einen schon
+geladenen Namen NICHT: die Ersatznamen „Helvetica"/„Helvetica-Oblique" wirken nur, wenn
+``register_all_fonts()`` vor der ersten ReportLab-Nutzung laeuft (sonst bleibt dort die
+eingebaute Type-1-Helvetica). Darum: einmal beim App-Start.
 """
 
 from __future__ import annotations
@@ -101,6 +104,13 @@ _FONT_MAP: dict[str, str] = {
 # Kommentar sagt es — nie ein stiller Grundschnitt.
 _FAMILIEN: dict[str, tuple[str, str, str, str]] = {
     "Geist": ("Geist", "Geist-Bold", "Geist-Italic", "Geist-BoldItalic"),
+    # Medium als Grundschrift (z. B. Status-Zeilen): Kursiv bleibt im Medium-Gewicht.
+    "Geist-Medium": (
+        "Geist-Medium",
+        "Geist-Bold",
+        "Geist-MediumItalic",
+        "Geist-BoldItalic",
+    ),
     "SourceSerif": (
         "SourceSerif",
         "SourceSerif-Bold",
@@ -123,7 +133,8 @@ _FAMILIEN: dict[str, tuple[str, str, str, str]] = {
         "STIXTwoText-Italic",
         "STIXTwoText-Bold",
     ),
-    # Nur aufrecht und fett im Paket; Code wird nicht kursiv gesetzt.
+    # Nur aufrecht und fett im Paket; Code wird nicht kursiv gesetzt (<i> bleibt aufrecht,
+    # <b><i> wird fett).
     "JetBrainsMono": (
         "JetBrainsMono",
         "JetBrainsMono-Bold",
@@ -181,4 +192,4 @@ def font_path(name: str) -> Path | None:
     return full if full.is_file() else None
 
 
-__all__ = ["register_all_fonts", "font_path", "FONT_DIR"]
+__all__ = ["FONT_DIR", "font_path", "register_all_fonts"]

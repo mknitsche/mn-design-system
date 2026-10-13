@@ -124,10 +124,13 @@ def test_web_schriften_liegen_im_paket_und_decken_die_font_face_ab():
     )
 
     css = render_font_face("/assets/fonts/")
-    for familie, gewicht, stil, datei in WEB_SCHRIFTEN:
+    for *_, datei in WEB_SCHRIFTEN:
         assert (web_font_dir() / datei).is_file(), datei
         assert f'url("/assets/fonts/{datei}")' in css
     assert css.count("@font-face") == len(WEB_SCHRIFTEN)
+    assert render_font_face("/assets/fonts") == css, (
+        "Schraegstrich am Ende wird ergaenzt"
+    )
 
 
 def test_web_geist_hat_echte_kursiv_schnitte():
@@ -137,3 +140,14 @@ def test_web_geist_hat_echte_kursiv_schnitte():
 
     geist_kursiv = {g for f, g, s, _ in WEB_SCHRIFTEN if f == "Geist" and s == "italic"}
     assert geist_kursiv == {"400", "500", "700"}
+
+
+def test_medium_als_grundschrift_wird_kursiv_im_medium_gewicht():
+    """xreview: wer Geist-Medium als Grundschrift setzt, bekam <i> still aufrecht."""
+    s = _schnitte("Geist-Medium")
+    assert s == {
+        "n": "Geist-Medium",
+        "f": "Geist-Bold",
+        "k": "Geist-MediumItalic",
+        "fk": "Geist-BoldItalic",
+    }

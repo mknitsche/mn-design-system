@@ -16,9 +16,10 @@ oder Doku.
 ReportLab loest `<b>`/`<i>` in einem Paragraph ueber die Familien-Zuordnung auf und
 setzte ohne sie still den Grundschnitt: Hervorhebungen waren in allen ReportLab-PDFs
 der Konsumenten unsichtbar (Deep-Research-Berichte, Dossiers, Briefing). Jetzt werden
-die Familien Geist, Source Serif, Source Sans, Inter, Noto Sans, STIX Two und
-JetBrains Mono angemeldet. Wo ein Schnitt fehlt, steht der naechstliegende vorhandene
-da (STIX Two: Fett fuer Fett-Kursiv; JetBrains Mono: Code bleibt aufrecht).
+die Familien Geist, Geist Medium, Source Serif, Source Sans, Inter, Noto Sans, STIX Two
+(auch unter STIXTwoText), JetBrains Mono sowie die Ersatznamen Helvetica und Arial
+angemeldet. Wo ein Schnitt fehlt, steht der naechstliegende vorhandene da (STIX Two:
+Fett fuer Fett-Kursiv; JetBrains Mono: Code bleibt aufrecht).
 
 - **Zitat-Token:** `font.family.italic-editorial` lieferte seit v0.5.0
   „SourceSerif4-Italic“, angemeldet war die Schrift nur als „SourceSerif-Italic“ —
@@ -38,12 +39,14 @@ da (STIX Two: Fett fuer Fett-Kursiv; JetBrains Mono: Code bleibt aufrecht).
     Source Serif Italic.
   - `font.family.italic-editorial` (Source Serif 4 Italic fuer Zitate, Captions,
     Initialen) bleibt unveraendert — das ist ein bewusster Kontrast, keine Ersatzloesung.
-- **Web-Schriften im Paket:** `fonts/web/*.woff2` plus `components.web.WEB_SCHRIFTEN`,
+- **Web-Schriften im Paket** (Geist 300/400/500/700 aufrecht, 400/500/700 kursiv, Source Serif 4 kursiv): `fonts/web/*.woff2` plus `components.web.WEB_SCHRIFTEN`,
   `render_font_face(url_prefix)` und `web_font_dir()`. Bis 0.14.2 lagen die woff2-Dateien
   und die Schnitt-Liste beim Konsumenten; ein Schriftwechsel im Design-System zog im
   Web nicht nach, und der Browser schraegte Geist kuenstlich an.
 
-**Fuer Konsumenten:** `register_all_fonts()` genuegt — die Familien kommen mit.
+**Fuer Konsumenten:** `register_all_fonts()` genuegt — die Familien kommen mit. Es muss
+vor der ersten ReportLab-Nutzung laufen: ReportLab ueberschreibt einen schon geladenen
+Namen nicht, sonst bleibt fuer „Helvetica" die eingebaute Type-1-Schrift.
 Web: `render_font_face("/assets/fonts/")` einbinden und die Dateien aus
 `web_font_dir()` ausliefern.
 

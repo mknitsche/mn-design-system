@@ -30,16 +30,16 @@ from mn_design_system.components.web.empty_state import (
     render_empty_state_css,
     render_empty_state_html,
 )
+from mn_design_system.components.web.footer import (
+    render_footer_css,
+    render_footer_html,
+)
 from mn_design_system.components.web.foundation import (
     WEB_SCHRIFTEN,
     render_font_face,
     render_foundation_css,
-    web_font_dir,
     render_initiale_css,
-)
-from mn_design_system.components.web.footer import (
-    render_footer_css,
-    render_footer_html,
+    web_font_dir,
 )
 from mn_design_system.components.web.kpi_card import (
     render_kpi_card_css,
@@ -69,18 +69,17 @@ from mn_design_system.components.web.wetter_strip import (
 )
 
 __all__ = [
+    "WEB_SCHRIFTEN",
     "render_card_grid_css",
     "render_card_grid_html",
     "render_content_card_css",
     "render_content_card_html",
     "render_empty_state_css",
     "render_empty_state_html",
-    "WEB_SCHRIFTEN",
     "render_font_face",
-    "render_foundation_css",
-    "web_font_dir",
     "render_footer_css",
     "render_footer_html",
+    "render_foundation_css",
     "render_initiale_css",
     "render_kpi_card_css",
     "render_kpi_card_html",
@@ -96,4 +95,5 @@ __all__ = [
     "render_tier_chip_html",
     "render_wetter_strip_css",
     "render_wetter_strip_html",
+    "web_font_dir",
 ]
