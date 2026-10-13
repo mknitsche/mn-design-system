@@ -142,7 +142,7 @@ def render_chat_stream_css() -> str:
   margin-bottom: var(--space-1, 4px);
 }
 .mn-chat-message__body code {
-  font-family: var(--font-family-mono, "JetBrains Mono"), ui-monospace, monospace;
+  font-family: var(--web-font-mono, "JetBrains Mono"), ui-monospace, monospace;
   font-size: 0.9em;
   background: var(--color-light-surface-subtle, #f6f6f6);
   padding: 0.1em 0.35em;
@@ -173,7 +173,7 @@ def render_chat_stream_css() -> str:
 .mn-chat-tool-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-family-mono, "JetBrains Mono"), ui-monospace, monospace;
+  font-family: var(--web-font-mono, "JetBrains Mono"), ui-monospace, monospace;
   font-size: var(--web-text-caption, 12px);
   color: var(--color-light-text-muted, #6b7280);
   background: var(--color-light-surface-subtle, #f6f6f6);
