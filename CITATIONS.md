@@ -30,11 +30,23 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **URL:** https://www.jetbrains.com/lp/mono/
 - **Verwendung:** Code, Mono-Kicker, ISBN-Block
 
-### STIX Two Math
-- **Maintainer:** STI Pub Companies (American Mathematical Society)
-- **Lizenz:** SIL Open Font License 1.1
+### STIX Two Text / STIX Two Math
+- **Maintainer:** The STIX Fonts Project (STI Pub Companies)
+- **Lizenz:** STIX Two Text (Version 2.13) unter SIL Open Font License 1.1. Die beigelegten Math-Dateien (`STIXTwoMath-Regular.ttf`, `STIX2Math.otf`, Version 2.02) verweisen in ihren Metadaten auf die STIX Fonts User License, die nach eigener Angabe auf der OFL beruht — Text und Herkunft in `mn_design_system/fonts/stix-two/OFL.txt`
 - **URL:** https://github.com/stipub/stixfonts
-- **Verwendung:** Mathematische Notation in Paper
+- **Verwendung:** Griechisch-/Mathe-Rueckfall (σ), mathematische Notation
+
+### Inter
+- **Designer:** Rasmus Andersson (The Inter Project Authors)
+- **Lizenz:** SIL Open Font License 1.1 (`mn_design_system/fonts/inter/OFL.txt`)
+- **URL:** https://github.com/rsms/inter
+- **Verwendung:** alternative Grotesk (Familie registriert, kein Standard-Slot)
+
+### Noto Sans / Noto Sans Symbols 2
+- **Herausgeber:** The Noto Project Authors (Google)
+- **Lizenz:** SIL Open Font License 1.1 (`mn_design_system/fonts/noto/OFL.txt`)
+- **URL:** https://github.com/notofonts
+- **Verwendung:** Glyphen-Rueckfall, Symbole
 
 ## Symbole
 
@@ -58,7 +70,10 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **pyphen** (LGPL/MPL/GPL) — deutsche Silbentrennung
 - **WCAG 2.2** (W3C Recommendation 2023) — Kontrast-Richtlinien
 
+## Schriftdateien im Paket
+
+Die Schriftdateien liegen im Paket unter `mn_design_system/fonts/<familie>/`, je Familie mit ihrem Lizenztext (`OFL.txt` bzw. `LICENSE` fuer Phosphor). Seit 0.16.0 prueft ein Test, dass keine Familie ohne Lizenztext ausgeliefert wird.
+
 ## Was nicht im Repo lebt
 
 - **Logo-Files** (Matthias-Nitsche-Fotografie + PKA-Brand) sind proprietär.
-- **TTF-Font-Dateien** sind aus Lizenzgründen nicht eingecheckt — `fonts/install.sh` lädt sie aus den offiziellen Quellen nach.

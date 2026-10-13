@@ -50,7 +50,7 @@ Details: **`ARCHITECTURE.md`** · Spec im claudeAI-Repo: `docs/superpowers/specs
 - Italic UI: **Geist Medium Italic** (kein Sans/Serif-Bruch in Tabellen/Status; bis 0.14.2 Geist Medium aufrecht)
 - Kursiv im Fliesstext (`<i>`): **Geist Italic** — Geist ist als Familie angemeldet, `<b>`/`<i>` greifen ohne Zutun
 - Mono: **JetBrains Mono** (OFL 1.1)
-- Math: **STIX Two Math** (OFL 1.1)
+- Math: **STIX Two Math** (STIX Fonts User License auf OFL-Basis, siehe `fonts/stix-two/OFL.txt`)
 - Symbole: **Phosphor Icons** (MIT)
 
 ### Schnitt- und Web-Tokens (seit 0.16.0)
@@ -271,12 +271,7 @@ Aktivierung pro Schicht: GitHub Action `release.yml` (Tag-Trigger) liefert Wheel
 
 ## Status
 
-| Tag | Datum | Inhalt |
-|---|---|---|
-| `v0.1.0` | 2026-04-29 | Repo + Tokens + Style Dictionary + Python-Package + 35 Fonts |
-| `v0.2.0` | 2026-04-29 | Pattern-First-Architektur + 3 PDF-Komponenten (Sparkline/KPI/Wetter-Strip) |
-| `v0.2.1` | 2026-04-29 | 12 neue Tokens (Status-bg/-tint, Viz-Familie, Grey-Erweiterung) + Audit-Script |
-| `v0.3.0` | 2026-04-29 | Doku-Architektur (ARCHITECTURE + erweitertes README + CHANGELOG) |
+Versionen und ihr Inhalt stehen im [CHANGELOG](CHANGELOG.md) — hier stand bis 0.16.0 eine Tabelle, die bei v0.3.0 stehen geblieben war.
 
 Phase H (Foto-Homepage) und Welle D.4-D.6 (GitHub-Packages-Distribution) sind
 **vorbereitet, aber YAGNI-deferred** bis erster externer Konsument startet.
