@@ -8,6 +8,45 @@ oder Doku.
 
 ---
 
+## [0.15.0] — 2026-10-13
+
+### Behoben — Fett und Kursiv sind in ReportLab-PDFs wieder sichtbar
+
+`register_all_fonts()` meldete jeden Schnitt einzeln an, aber keine **Familie**.
+ReportLab loest `<b>`/`<i>` in einem Paragraph ueber die Familien-Zuordnung auf und
+setzte ohne sie still den Grundschnitt: Hervorhebungen waren in allen ReportLab-PDFs
+der Konsumenten unsichtbar (Deep-Research-Berichte, Dossiers, Briefing). Jetzt werden
+die Familien Geist, Source Serif, Source Sans, Inter, Noto Sans, STIX Two und
+JetBrains Mono angemeldet. Wo ein Schnitt fehlt, steht der naechstliegende vorhandene
+da (STIX Two: Fett fuer Fett-Kursiv; JetBrains Mono: Code bleibt aufrecht).
+
+- **Zitat-Token:** `font.family.italic-editorial` lieferte seit v0.5.0
+  „SourceSerif4-Italic“, angemeldet war die Schrift nur als „SourceSerif-Italic“ —
+  wer den Token nahm, bekam einen `ValueError`. Der Token-Name ist jetzt zusaetzlich
+  angemeldet (der Token selbst bleibt: LaTeX braucht den Dateinamen).
+- **Toter Eintrag:** `STIXTwo(Text)-BoldItalic` zeigte auf eine nicht vorhandene
+  Datei und wurde still uebersprungen; entfernt.
+
+### Neu — Geist kursiv, Web-Schriften aus dem Design-System
+
+- **Geist Italic, Medium Italic, Bold Italic** (Geist 1.800, SIL OFL 1.1, Lizenztext
+  `fonts/geist/OFL.txt`). Geist hatte bei der Stack-Wahl (S238) keinen Kursiv-Schnitt;
+  daher die beiden Ersatzloesungen, die jetzt entfallen:
+  - `font.family.italic-ui`: **Geist-Medium → Geist-MediumItalic** (Status-Markierung
+    ist jetzt wirklich kursiv, weiterhin ohne Bruch zwischen Grotesk und Serife).
+  - Die Helvetica-/Arial-Ersatznamen fuer Kursiv zeigen auf **Geist Italic** statt auf
+    Source Serif Italic.
+  - `font.family.italic-editorial` (Source Serif 4 Italic fuer Zitate, Captions,
+    Initialen) bleibt unveraendert — das ist ein bewusster Kontrast, keine Ersatzloesung.
+- **Web-Schriften im Paket:** `fonts/web/*.woff2` plus `components.web.WEB_SCHRIFTEN`,
+  `render_font_face(url_prefix)` und `web_font_dir()`. Bis 0.14.2 lagen die woff2-Dateien
+  und die Schnitt-Liste beim Konsumenten; ein Schriftwechsel im Design-System zog im
+  Web nicht nach, und der Browser schraegte Geist kuenstlich an.
+
+**Fuer Konsumenten:** `register_all_fonts()` genuegt — die Familien kommen mit.
+Web: `render_font_face("/assets/fonts/")` einbinden und die Dateien aus
+`web_font_dir()` ausliefern.
+
 ## [0.14.2] — 2026-10-04
 
 ### Behoben — Sub-Nav auf dem Handy: weitere Reiter sichtbar, aktiver Reiter im Bild; Masthead bei 320 px

@@ -47,7 +47,8 @@ Details: **`ARCHITECTURE.md`** · Spec im claudeAI-Repo: `docs/superpowers/specs
 **Default Stack A** — KT-1's Wahl 2026-04-29:
 - Body: **Geist** (Vercel · OFL 1.1)
 - Italic Editorial: **Source Serif 4 Italic** (Adobe · OFL 1.1)
-- Italic UI: **Geist Medium** (kein Sans/Serif-Bruch in Tabellen/Status)
+- Italic UI: **Geist Medium Italic** (kein Sans/Serif-Bruch in Tabellen/Status; bis 0.14.2 Geist Medium aufrecht)
+- Kursiv im Fliesstext (`<i>`): **Geist Italic** — Geist ist als Familie angemeldet, `<b>`/`<i>` greifen ohne Zutun
 - Mono: **JetBrains Mono** (Apache 2.0)
 - Math: **STIX Two Math** (OFL 1.1)
 - Symbole: **Phosphor Icons** (MIT)

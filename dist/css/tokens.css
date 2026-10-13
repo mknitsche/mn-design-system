@@ -204,7 +204,7 @@
   --shadow-modal: 0 10px 40px rgba(0,0,0,0.12);
   --font-family-sans: Geist;
   --font-family-italic-editorial: SourceSerif4-Italic; /** Drop-Cap, Zitate, Captions */
-  --font-family-italic-ui: Geist-Medium; /** Status-Markierung in UI */
+  --font-family-italic-ui: Geist-MediumItalic; /** Status-Markierung in UI — v0.15.0 echter Kursiv-Schnitt (bis 0.14.2 Geist-Medium aufrecht, Geist hatte kein Kursiv) */
   --font-family-mono: JetBrainsMono;
   --font-family-math: STIXTwoMath;
   --font-family-icon: Phosphor; /** PUA E000-F8FF */

@@ -4,7 +4,10 @@ Public-API:
     from mn_design_system.fonts import register_all_fonts, FONT_DIR
     register_all_fonts()  # einmal beim App-Start
 
-Registriert alle TTF-Files unter mn_design_system/fonts/ beim ReportLab.
+Registriert alle TTF-Files unter mn_design_system/fonts/ beim ReportLab — und seit
+v0.15.0 die SCHRIFTFAMILIEN dazu. ReportLab loest ``<b>``/``<i>`` in einem Paragraph
+ueber die Familien-Zuordnung auf; ohne sie setzt es still den Grundschnitt. Bis 0.14.2
+waren Fett und Kursiv deshalb in allen ReportLab-PDFs der Konsumenten unsichtbar.
 Idempotent: mehrfache Aufrufe sind harmlos (ReportLab ueberschreibt).
 """
 
@@ -27,10 +30,18 @@ _FONT_MAP: dict[str, str] = {
     "Geist-Bold": "geist/Geist-Bold.ttf",
     "Geist-Medium": "geist/Geist-Medium.ttf",
     "Geist-Light": "geist/Geist-Light.ttf",
+    # v0.15.0: echte Kursiv-Schnitte (Geist 1.800, SIL OFL — Lizenz in geist/OFL.txt).
+    "Geist-Italic": "geist/Geist-Italic.ttf",
+    "Geist-MediumItalic": "geist/Geist-MediumItalic.ttf",
+    "Geist-BoldItalic": "geist/Geist-BoldItalic.ttf",
     "SourceSerif": "source-serif/SourceSerif4-Regular.ttf",
     "SourceSerif-Italic": "source-serif/SourceSerif4-Italic.ttf",
     "SourceSerif-Bold": "source-serif/SourceSerif4-Bold.ttf",
     "SourceSerif-BoldItalic": "source-serif/SourceSerif4-BoldItalic.ttf",
+    # Token-Name font.family.italic-editorial (v0.15.0): die Tokens tragen den Dateinamen
+    # (LaTeX/fontspec braucht ihn); ReportLab kannte nur den Kurznamen — wer den Token
+    # nahm, bekam seit v0.5.0 einen ValueError beim Rendern.
+    "SourceSerif4-Italic": "source-serif/SourceSerif4-Italic.ttf",
     "SourceSans": "source-sans/SourceSans3-Regular.ttf",
     "SourceSans-Bold": "source-sans/SourceSans3-Bold.ttf",
     "SourceSans-Italic": "source-sans/SourceSans3-Italic.ttf",
@@ -54,7 +65,6 @@ _FONT_MAP: dict[str, str] = {
     "STIXTwo": "stix-two/STIXTwoText-Regular.ttf",
     "STIXTwo-Italic": "stix-two/STIXTwoText-Italic.ttf",
     "STIXTwo-Bold": "stix-two/STIXTwoText-Bold.ttf",
-    "STIXTwo-BoldItalic": "stix-two/STIXTwoText-BoldItalic.ttf",
     # Aliase fuer helpers.font_with_fallback-Output (S249, macb-claude):
     # font_with_fallback wrappt Greek-Chars in <font name="STIXTwoText">...</font>,
     # daher muss der lange Name auch in pdfmetrics aufloesbar sein. Sonst
@@ -62,7 +72,8 @@ _FONT_MAP: dict[str, str] = {
     "STIXTwoText": "stix-two/STIXTwoText-Regular.ttf",
     "STIXTwoText-Italic": "stix-two/STIXTwoText-Italic.ttf",
     "STIXTwoText-Bold": "stix-two/STIXTwoText-Bold.ttf",
-    "STIXTwoText-BoldItalic": "stix-two/STIXTwoText-BoldItalic.ttf",
+    # Kein STIXTwoText-BoldItalic im Paket (bis 0.14.2 stand hier ein Eintrag auf eine
+    # fehlende Datei, still uebersprungen); die Familie nimmt dafuer den Fettschnitt.
     # S249 (macb-claude) Greek-Glyph-Fix — finale Loesung:
     # STIXTwoText-Greek.ttf teilt sich den PostScript-Namen 'STIXTwoText-Regular'
     # mit der Latin-TTF (verifiziert via fontTools NameID 6) → ReportLab-Cache-
@@ -72,15 +83,61 @@ _FONT_MAP: dict[str, str] = {
     # σ rendert sauber. Math-Schrift ist konventionell richtig fuer
     # Standardabweichungs-σ in Statistik (Italic-Shape).
     "STIXTwoMath": "stix-two/STIXTwoMath-Regular.ttf",
-    # Helvetica/Arial-Aliasse fuer ReportLab-Default-Compat (Geist substituiert)
+    # Helvetica/Arial-Aliasse fuer ReportLab-Default-Compat (Geist substituiert).
+    # v0.15.0: Kursiv bleibt in der Grotesk (bis 0.14.2 sprang es in Source Serif —
+    # damals gab es keinen kursiven Geist-Schnitt).
     "Helvetica": "geist/Geist-Regular.ttf",
     "Helvetica-Bold": "geist/Geist-Bold.ttf",
-    "Helvetica-Oblique": "source-serif/SourceSerif4-Italic.ttf",
-    "Helvetica-BoldOblique": "source-serif/SourceSerif4-BoldItalic.ttf",
+    "Helvetica-Oblique": "geist/Geist-Italic.ttf",
+    "Helvetica-BoldOblique": "geist/Geist-BoldItalic.ttf",
     "Arial": "geist/Geist-Regular.ttf",
     "Arial-Bold": "geist/Geist-Bold.ttf",
-    "Arial-Italic": "source-serif/SourceSerif4-Italic.ttf",
-    "Arial-BoldItalic": "source-serif/SourceSerif4-BoldItalic.ttf",
+    "Arial-Italic": "geist/Geist-Italic.ttf",
+    "Arial-BoldItalic": "geist/Geist-BoldItalic.ttf",
+}
+
+# Familien-Zuordnung fuer <b>/<i> (v0.15.0): (normal, fett, kursiv, fett-kursiv).
+# Fehlt einer Familie ein Schnitt, steht der naechstliegende VORHANDENE da und der
+# Kommentar sagt es — nie ein stiller Grundschnitt.
+_FAMILIEN: dict[str, tuple[str, str, str, str]] = {
+    "Geist": ("Geist", "Geist-Bold", "Geist-Italic", "Geist-BoldItalic"),
+    "SourceSerif": (
+        "SourceSerif",
+        "SourceSerif-Bold",
+        "SourceSerif-Italic",
+        "SourceSerif-BoldItalic",
+    ),
+    "SourceSans": (
+        "SourceSans",
+        "SourceSans-Bold",
+        "SourceSans-Italic",
+        "SourceSans-BoldItalic",
+    ),
+    "Inter": ("Inter", "Inter-Bold", "Inter-Italic", "Inter-BoldItalic"),
+    "NotoSans": ("NotoSans", "NotoSans-Bold", "NotoSans-Italic", "NotoSans-BoldItalic"),
+    # Kein Fett-Kursiv-Schnitt im Paket: Fett gewinnt.
+    "STIXTwo": ("STIXTwo", "STIXTwo-Bold", "STIXTwo-Italic", "STIXTwo-Bold"),
+    "STIXTwoText": (
+        "STIXTwoText",
+        "STIXTwoText-Bold",
+        "STIXTwoText-Italic",
+        "STIXTwoText-Bold",
+    ),
+    # Nur aufrecht und fett im Paket; Code wird nicht kursiv gesetzt.
+    "JetBrainsMono": (
+        "JetBrainsMono",
+        "JetBrainsMono-Bold",
+        "JetBrainsMono",
+        "JetBrainsMono-Bold",
+    ),
+    # Die Ersatznamen der ReportLab-Standardschrift bilden eine Familie wie Geist.
+    "Helvetica": (
+        "Helvetica",
+        "Helvetica-Bold",
+        "Helvetica-Oblique",
+        "Helvetica-BoldOblique",
+    ),
+    "Arial": ("Arial", "Arial-Bold", "Arial-Italic", "Arial-BoldItalic"),
 }
 
 
@@ -100,6 +157,14 @@ def register_all_fonts() -> list[str]:
             registered.append(name)
         except Exception:  # noqa: BLE001 — ReportLab kann diverse Fehler werfen
             pass
+    angemeldet = set(registered)
+    for familie, (normal, fett, kursiv, fettkursiv) in _FAMILIEN.items():
+        # Nur vollstaendig registrierte Familien: eine halbe Zuordnung wuerde beim
+        # Rendern auf einen unbekannten Namen zeigen.
+        if {normal, fett, kursiv, fettkursiv} <= angemeldet:
+            pdfmetrics.registerFontFamily(
+                familie, normal=normal, bold=fett, italic=kursiv, boldItalic=fettkursiv
+            )
     return registered
 
 

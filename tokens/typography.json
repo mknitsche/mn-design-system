@@ -8,7 +8,7 @@
     "family": {
       "sans":          { "value": "Geist" },
       "italic-editorial": { "value": "SourceSerif4-Italic", "comment": "Drop-Cap, Zitate, Captions" },
-      "italic-ui":     { "value": "Geist-Medium", "comment": "Status-Markierung in UI" },
+      "italic-ui":     { "value": "Geist-MediumItalic", "comment": "Status-Markierung in UI — v0.15.0 echter Kursiv-Schnitt (bis 0.14.2 Geist-Medium aufrecht, Geist hatte kein Kursiv)" },
       "mono":          { "value": "JetBrainsMono" },
       "math":          { "value": "STIXTwoMath" },
       "icon":          { "value": "Phosphor", "comment": "PUA E000-F8FF" },
