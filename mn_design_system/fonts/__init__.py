@@ -16,11 +16,14 @@ eingebaute Type-1-Helvetica). Darum: einmal beim App-Start.
 
 from __future__ import annotations
 
+import logging
 from importlib.resources import files
 from pathlib import Path
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+
+_LOG = logging.getLogger(__name__)
 
 # FONT_DIR liefert den absoluten Pfad zu den TTF-Files dieses Packages.
 # Funktioniert mit pip install -e und mit Wheel-Install.
@@ -45,6 +48,9 @@ _FONT_MAP: dict[str, str] = {
     # (LaTeX/fontspec braucht ihn); ReportLab kannte nur den Kurznamen — wer den Token
     # nahm, bekam seit v0.5.0 einen ValueError beim Rendern.
     "SourceSerif4-Italic": "source-serif/SourceSerif4-Italic.ttf",
+    # v0.16.0: Token font.family.italic-editorial-bold (der Schnitt, den <b> in der
+    # Zitat-Kursive ergibt) — derselbe Fett-Kursiv-Schnitt wie SourceSerif-BoldItalic.
+    "SourceSerif4-BoldItalic": "source-serif/SourceSerif4-BoldItalic.ttf",
     "SourceSans": "source-sans/SourceSans3-Regular.ttf",
     "SourceSans-Bold": "source-sans/SourceSans3-Bold.ttf",
     "SourceSans-Italic": "source-sans/SourceSans3-Italic.ttf",
@@ -117,6 +123,15 @@ _FAMILIEN: dict[str, tuple[str, str, str, str]] = {
         "SourceSerif-Italic",
         "SourceSerif-BoldItalic",
     ),
+    # Zitat-Kursive als GRUNDSCHRIFT (v0.16.0, font_family("italic-editorial")): der
+    # Grundschnitt ist schon kursiv, also ist Kursiv derselbe Schnitt und <b> ergibt
+    # Fett-Kursiv. Bis 0.15.0 war der Name keine Familie — <b> ging still verloren.
+    "SourceSerif4-Italic": (
+        "SourceSerif4-Italic",
+        "SourceSerif4-BoldItalic",
+        "SourceSerif4-Italic",
+        "SourceSerif4-BoldItalic",
+    ),
     "SourceSans": (
         "SourceSans",
         "SourceSans-Bold",
@@ -166,8 +181,10 @@ def register_all_fonts() -> list[str]:
         try:
             pdfmetrics.registerFont(TTFont(name, str(full_path)))
             registered.append(name)
-        except Exception:  # noqa: BLE001 — ReportLab kann diverse Fehler werfen
-            pass
+        except Exception as exc:  # noqa: BLE001 — ReportLab kann diverse Fehler werfen
+            # Nicht verschlucken (bis 0.15.0: ``pass``): ein unlesbarer Schnitt faellt
+            # sonst erst beim Rendern als „Font not registered“ auf.
+            _LOG.warning("Schrift %s (%s) nicht angemeldet: %s", name, full_path, exc)
     angemeldet = set(registered)
     for familie, (normal, fett, kursiv, fettkursiv) in _FAMILIEN.items():
         # Nur vollstaendig registrierte Familien: eine halbe Zuordnung wuerde beim

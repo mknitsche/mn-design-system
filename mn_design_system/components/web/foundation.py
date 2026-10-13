@@ -57,16 +57,47 @@ def render_font_face(url_prefix: str) -> str:
     )
 
 
+#: Die Schluessel von :func:`css_font_stack` — zugleich die Namen der Tokens
+#: ``web.font.<art>`` (Familie) und ``web.font.stack.<art>`` (Rueckfallkette).
+_CSS_FONT_ARTEN: tuple[str, ...] = ("sans", "serif-editorial", "mono")
+
+
+def css_font_stack(art: str) -> str:
+    """Vollstaendiger CSS-Wert fuer ``font-family`` (v0.16.0): die Web-Familie in
+    Anfuehrungszeichen, dahinter die Rueckfallkette — beides aus den Tokens.
+
+    ``art`` ist ``"sans"``, ``"serif-editorial"`` oder ``"mono"``. Beispiel::
+
+        css_font_stack("mono")
+        # '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace'
+
+    Die Anfuehrungszeichen sind noetig: ``--web-font-*`` gibt die Familie ohne sie aus,
+    und ein Name mit Ziffer („Source Serif 4“) ist ungequotet kein gueltiger CSS-Bezeichner
+    (CSS Fonts, ``family-name``). Ein Konsument setzt diesen Wert statt eines eigenen
+    Literals (``font-family: Georgia, serif`` und aehnlich).
+
+    Raises:
+        KeyError: ``art`` ist keine der drei Arten (kein stilles Fallback).
+    """
+    if art not in _CSS_FONT_ARTEN:
+        raise KeyError(
+            f"Unbekannte Schriftart {art!r} (erlaubt: {list(_CSS_FONT_ARTEN)})"
+        )
+    return f'"{get(f"web.font.{art}")}", {get(f"web.font.stack.{art}")}'
+
+
 def render_foundation_css() -> str:
     """Globale Responsive-Overrides der Web-Foundation-Tokens.
 
     - Tablet (<= bp-tablet): Seiten-Einzug 32px.
-    - Mobil (<= bp-mobile): Seiten-Einzug 16px, Display-Stufen h1/h2/h3 eine
-      Stufe kleiner. Die spaetere Regel (mobil) gewinnt im Kaskaden-Konflikt.
+    - Mobil (<= bp-mobile): Seiten-Einzug 16px, Display-Stufen display/h1/h2/h3 eine
+      Stufe kleiner. display wird zum Desktop-Wert von h1 (aus dem Token, kein Literal).
+      Die spaetere Regel (mobil) gewinnt im Kaskaden-Konflikt.
     - Lese-Anker (body/ui/caption/lead) bleiben statisch — sie wandern nie.
     """
     bp_mobile = get("web.layout.bp-mobile")
     bp_tablet = get("web.layout.bp-tablet")
+    display_mobil = get("web.text.h1")
     return f"""
 @media (max-width: {bp_tablet}) {{
   :root {{ --web-layout-page-inset: 32px; }}
@@ -74,6 +105,7 @@ def render_foundation_css() -> str:
 @media (max-width: {bp_mobile}) {{
   :root {{
     --web-layout-page-inset: 16px;
+    --web-text-display: {display_mobil};
     --web-text-h1: 27px;
     --web-text-h2: 24px;
     --web-text-h3: 21px;

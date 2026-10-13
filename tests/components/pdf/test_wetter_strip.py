@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
+from reportlab.platypus import Paragraph, Table
+
 from mn_design_system.components._patterns.contracts import (
     WetterCategory,
     WetterDay,
     WetterStripInput,
 )
 from mn_design_system.components.pdf.wetter_strip import build_wetter_strip
-from pydantic import ValidationError
-from reportlab.platypus import Paragraph, Table
 
 # ---------------------------------------------------------------------------
 # Fixtures

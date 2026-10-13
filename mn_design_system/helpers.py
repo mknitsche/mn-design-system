@@ -55,7 +55,7 @@ Unit = Literal["mm", "pt", "px", "raw"]
 # ----------------------------------------------------------------------------
 
 
-def _parse_value_to_mm(raw: str | int | float) -> float:
+def _parse_value_to_mm(raw: str | float) -> float:
     """Akzeptiert 'Npx', 'Nmm', 'Npt', oder Integer/Float (= dimensionslos units)."""
     if isinstance(raw, (int, float)):
         return float(raw)  # dimensionslos = mm
@@ -370,14 +370,14 @@ def token(key: str, default=None):
 
 
 __all__ = [
-    "space_token",
-    "size_token",
-    "leading_token",
+    "MM_TO_PT",
+    "MM_TO_PX",
+    "TOKENS",
     "color_token",
     "font_family",
     "font_with_fallback",
+    "leading_token",
+    "size_token",
+    "space_token",
     "token",
-    "TOKENS",
-    "MM_TO_PT",
-    "MM_TO_PX",
 ]

@@ -10,7 +10,8 @@
       "lead":    { "value": "19px", "comment": "Intro-Absatz" },
       "h3":      { "value": "23px", "comment": "Abschnitts-Ueberschrift" },
       "h2":      { "value": "28px", "comment": "Bereichs-Ueberschrift" },
-      "h1":      { "value": "33px", "comment": "Seitentitel" }
+      "h1":      { "value": "33px", "comment": "Seitentitel" },
+      "display": { "value": "40px", "comment": "v0.16.0: Hero-Titel (grosse Wortmarke / Namenszug). Mobil = Desktop-Wert von h1 (render_foundation_css)." }
     },
     "leading": {
       "caption": { "value": "1.4" },
@@ -19,11 +20,21 @@
       "lead":    { "value": "1.55" },
       "h3":      { "value": "1.3" },
       "h2":      { "value": "1.22" },
-      "h1":      { "value": "1.18" }
+      "h1":      { "value": "1.18" },
+      "display": { "value": "1.1", "comment": "v0.16.0: Zeilenhoehe zu text.display — eng, weil Hero-Titel meist einzeilig sind" }
     },
     "font": {
       "sans":            { "value": "Geist", "comment": "Web-Sans — Fliesstext, UI, Navigation" },
-      "serif-editorial": { "value": "Source Serif 4", "comment": "Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print)." }
+      "serif-editorial": { "value": "Source Serif 4", "comment": "Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print)." },
+      "mono":            { "value": "JetBrains Mono", "comment": "v0.16.0: Web-Mono (Code, Transkripte, Zahlenkolonnen). Web-Pendant zu font.family.mono (print). Es wird KEINE Web-Datei mitgeliefert (WEB_SCHRIFTEN): die Schrift muss lokal installiert sein, sonst greift die Rueckfallkette web.font.stack.mono." },
+      "stack": {
+        "_meta": {
+          "comment": "v0.16.0: Rueckfallketten hinter der Web-Familie. Heissen wie die Schluessel von css_font_stack(art): sans | serif-editorial | mono. Die vollstaendige font-family-Angabe baut css_font_stack() (components/web/foundation.py): Familie in Anfuehrungszeichen + diese Kette."
+        },
+        "sans":            { "value": "system-ui, -apple-system, BlinkMacSystemFont, sans-serif", "comment": "Rueckfall hinter web.font.sans" },
+        "serif-editorial": { "value": "Georgia, serif", "comment": "Rueckfall hinter web.font.serif-editorial" },
+        "mono":            { "value": "ui-monospace, \"SF Mono\", Menlo, monospace", "comment": "Rueckfall hinter web.font.mono" }
+      }
     },
     "stroke": {
       "line":        { "value": "1px", "comment": "Trennlinie auf hellem Grund — ganze Pixel, blurfrei" },

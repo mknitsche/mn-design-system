@@ -74,11 +74,11 @@ class TestMastheadContracts:
             masthead.wordmark = "changed"
 
 
-from mn_design_system.components.web.masthead import (  # noqa: E402
+from mn_design_system.components.web.masthead import (
     render_masthead_css,
     render_masthead_html,
 )
-from mn_design_system.tokens import get  # noqa: E402
+from mn_design_system.tokens import get
 
 
 class TestRenderMastheadHtml:

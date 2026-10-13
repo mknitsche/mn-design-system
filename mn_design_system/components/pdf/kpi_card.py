@@ -22,6 +22,7 @@ from mn_design_system.components._patterns.contracts import (
     SparklineInput,
 )
 from mn_design_system.components.pdf.sparkline import build_sparkline
+from mn_design_system.helpers import font_family
 from mn_design_system.tokens import get as token_get
 
 
@@ -56,7 +57,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "caption": ParagraphStyle(
             "KpiCardCaption",
-            fontName="SourceSerif-Italic",
+            fontName=font_family("italic-editorial"),
             fontSize=7,
             textColor=HexColor(color_text_muted),
             alignment=TA_LEFT,
@@ -96,7 +97,7 @@ def _format_change(change_pct: float | None) -> str:
 
 
 def build_kpi_card(
-    input: KpiCardInput,  # noqa: A002
+    input: KpiCardInput,
     *,
     sparkline_width: float = 28 * mm,
     sparkline_height: float = 8 * mm,

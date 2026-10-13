@@ -203,9 +203,14 @@
   --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
   --shadow-modal: 0 10px 40px rgba(0,0,0,0.12);
   --font-family-sans: Geist;
-  --font-family-italic-editorial: SourceSerif4-Italic; /** Drop-Cap, Zitate, Captions */
+  --font-family-sans-bold: Geist-Bold; /** v0.16.0: Schnitt-Token — Fettschnitt der Grotesk (Ueberschriften, Labels, Tabellenkoepfe) */
+  --font-family-sans-medium: Geist-Medium; /** v0.16.0: Schnitt-Token — mittleres Gewicht (Status-Zeilen, Hervorhebung ohne Fett) */
+  --font-family-sans-light: Geist-Light; /** v0.16.0: Schnitt-Token — leichtes Gewicht (grosse Zahlen, Display) */
+  --font-family-italic-editorial: SourceSerif4-Italic; /** Drop-Cap, Zitate, Captions. Als Grundschrift ist <b> seit v0.16.0 fett-kursiv (Familie in fonts/__init__.py). */
+  --font-family-italic-editorial-bold: SourceSerif4-BoldItalic; /** v0.16.0: Schnitt-Token — fett-kursiver Schnitt der Zitat-Schrift; der Schnitt, den <b> in italic-editorial ergibt */
   --font-family-italic-ui: Geist-MediumItalic; /** Status-Markierung in UI — v0.15.0 echter Kursiv-Schnitt (bis 0.14.2 Geist-Medium aufrecht, Geist hatte kein Kursiv) */
   --font-family-mono: JetBrainsMono;
+  --font-family-mono-bold: JetBrainsMono-Bold; /** v0.16.0: Schnitt-Token — Fettschnitt der Mono (Tabellenkoepfe, Code-Hervorhebung) */
   --font-family-math: STIXTwoMath;
   --font-family-icon: Phosphor; /** PUA E000-F8FF */
   --font-family-fallback-greek: STIXTwoMath; /** v0.5.4 in JSON gehoben (war nur in tokens.py): Greek-Letters Fallback-Font (sigma/alpha/beta...). S248-Sigma-Bug, S249 STIXTwoMath statt STIXTwoText-Greek wegen PS-Namen-Konflikt mit Latin-TTF (TTF-Asset-Bug von STIX). STIXTwoMath hat eindeutigen PS-Name + alle Greek + Math + Latin, sigma rendert kursiv (konventionell richtig fuer Standardabweichung). */
@@ -287,6 +292,7 @@
   --web-text-h3: 23px; /** Abschnitts-Ueberschrift */
   --web-text-h2: 28px; /** Bereichs-Ueberschrift */
   --web-text-h1: 33px; /** Seitentitel */
+  --web-text-display: 40px; /** v0.16.0: Hero-Titel (grosse Wortmarke / Namenszug). Mobil = Desktop-Wert von h1 (render_foundation_css). */
   --web-leading-caption: 1.4;
   --web-leading-ui: 1.35;
   --web-leading-body: 1.6;
@@ -294,8 +300,13 @@
   --web-leading-h3: 1.3;
   --web-leading-h2: 1.22;
   --web-leading-h1: 1.18;
+  --web-leading-display: 1.1; /** v0.16.0: Zeilenhoehe zu text.display — eng, weil Hero-Titel meist einzeilig sind */
   --web-font-sans: Geist; /** Web-Sans — Fliesstext, UI, Navigation */
   --web-font-serif-editorial: Source Serif 4; /** Editorialer Serif (Wortmarke, Initiale, Zitate). Web-Pendant zu font.family.italic-editorial (print). */
+  --web-font-mono: JetBrains Mono; /** v0.16.0: Web-Mono (Code, Transkripte, Zahlenkolonnen). Web-Pendant zu font.family.mono (print). Es wird KEINE Web-Datei mitgeliefert (WEB_SCHRIFTEN): die Schrift muss lokal installiert sein, sonst greift die Rueckfallkette web.font.stack.mono. */
+  --web-font-stack-sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; /** Rueckfall hinter web.font.sans */
+  --web-font-stack-serif-editorial: Georgia, serif; /** Rueckfall hinter web.font.serif-editorial */
+  --web-font-stack-mono: ui-monospace, "SF Mono", Menlo, monospace; /** Rueckfall hinter web.font.mono */
   --web-stroke-line: 1px; /** Trennlinie auf hellem Grund — ganze Pixel, blurfrei */
   --web-stroke-line-strong: 2px; /** Trennlinie auf dunklem Grund (Masthead) */
   --web-stroke-focus: 2px; /** Tastatur-Fokus-Ring */

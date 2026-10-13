@@ -100,7 +100,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
 
 
 def build_wetter_strip(
-    input: WetterStripInput,  # noqa: A002
+    input: WetterStripInput,
     *,
     total_width: float = 170 * mm,
     column_width: float = 40 * mm,

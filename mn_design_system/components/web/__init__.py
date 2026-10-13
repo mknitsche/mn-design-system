@@ -36,6 +36,7 @@ from mn_design_system.components.web.footer import (
 )
 from mn_design_system.components.web.foundation import (
     WEB_SCHRIFTEN,
+    css_font_stack,
     render_font_face,
     render_foundation_css,
     render_initiale_css,
@@ -70,6 +71,7 @@ from mn_design_system.components.web.wetter_strip import (
 
 __all__ = [
     "WEB_SCHRIFTEN",
+    "css_font_stack",
     "render_card_grid_css",
     "render_card_grid_html",
     "render_content_card_css",

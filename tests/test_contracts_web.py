@@ -19,6 +19,8 @@ ungueltiger Wert abgelehnt wird.
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
+
 from mn_design_system.components._patterns.contracts import (
     CardGridInput,
     ContentCardInput,
@@ -32,7 +34,6 @@ from mn_design_system.components._patterns.contracts import (
     TierChipInput,
     WebTier,
 )
-from pydantic import ValidationError
 
 # ---------------------------------------------------------------------------
 # WebTier (Enum)

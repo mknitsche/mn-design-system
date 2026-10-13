@@ -24,7 +24,7 @@ _DEFAULT_COLOR_TOKEN = "color.light.h2"
 _DEFAULT_COLOR_FALLBACK = "#4338ca"
 
 
-def build_sparkline(input: SparklineInput) -> Drawing:  # noqa: A002
+def build_sparkline(input: SparklineInput) -> Drawing:
     """Erzeugt Sparkline-Drawing aus SparklineInput.
 
     Args:

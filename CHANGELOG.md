@@ -8,6 +8,59 @@ oder Doku.
 
 ---
 
+## [0.16.0] — 2026-10-13
+
+### Neu — Schnitt-Tokens, Web-Schriftketten, Stufe display (claudeAI TODO-887)
+
+Die Verwender trugen Schnittnamen und Rueckfallketten als Literale in eigenen Tabellen;
+ein Schriftwechsel im Design-System zog dort nicht nach. Jetzt kommen sie als Tokens.
+
+- **Schnitt-Tokens (PDF):** `font.family.sans-bold` (Geist-Bold), `sans-medium`
+  (Geist-Medium), `sans-light` (Geist-Light), `mono-bold` (JetBrainsMono-Bold),
+  `italic-editorial-bold` (SourceSerif4-BoldItalic). Alle sind bei ReportLab angemeldet.
+- **Web-Tokens:** `web.font.mono` („JetBrains Mono“) und die Rueckfallketten
+  `web.font.stack.sans`, `web.font.stack.serif-editorial`, `web.font.stack.mono`. Es wird
+  KEINE Web-Datei fuer die Mono mitgeliefert: sie muss lokal installiert sein, sonst
+  greift die Kette.
+- **Stufe display:** `web.text.display` = 40px, `web.leading.display` = 1.1 (Hero-Titel).
+  `render_foundation_css()` setzt sie mobil eine Stufe zurueck, auf den Desktop-Wert von
+  `web.text.h1` (33px; aus dem Token, kein Literal).
+- **`css_font_stack(art)`** (`components.web`, auch exportiert): liefert den vollstaendigen
+  `font-family`-Wert — die Familie in Anfuehrungszeichen plus Rueckfallkette aus den
+  Tokens. `art` ist `"sans"`, `"serif-editorial"` oder `"mono"`; alles andere ist ein
+  `KeyError`. Die Anfuehrungszeichen sind noetig, weil `--web-font-*` die Familie ohne
+  sie ausgibt und „Source Serif 4“ ungequotet kein gueltiger CSS-Bezeichner ist.
+- **Lizenztexte je Schriftfamilie:** `OFL.txt` fuer Source Serif 4, Source Sans 3,
+  JetBrains Mono, Inter, Noto Sans, STIX Two und die Web-Schriften (`fonts/web/`),
+  `LICENSE` (MIT) fuer Phosphor. Die Copyright-Zeilen stammen aus den Metadaten der
+  Schriftdateien (name ID 0), nicht aus dem Gedaechtnis. Die SIL OFL 1.1 verlangt, dass
+  jede weitergegebene Kopie den Vermerk und den Text enthaelt; bis 0.15.0 lag nur bei
+  Geist einer bei. Ein Test prueft, dass jede Familie im Paket ihren Text hat und dass
+  die Copyright-Zeile darin steht.
+
+### Behoben
+
+- **Fett in der Zitat-Kursive:** `font_family("italic-editorial")` als GRUNDSCHRIFT eines
+  Paragraphs ergab bei `<b>` still den Grundschnitt (alle Fragmente „SourceSerif4-Italic“;
+  Probe 2026-10-13). „SourceSerif4-Italic“ ist jetzt eine Familie: `<b>` und `<b><i>`
+  ergeben `SourceSerif4-BoldItalic`. Belegt am `Paragraph.frags`, nicht an einer Tabelle.
+- **KPI-Karte (PDF):** die Caption-Schrift war das Literal „SourceSerif-Italic“, jetzt
+  `font_family("italic-editorial")` — und damit gilt dort dieselbe Familie (`<b>` wirkt).
+- **Schriften werden nicht mehr still verschluckt:** ein Schnitt, den ReportLab nicht
+  laden kann, steht jetzt als Warnung im Log (`mn_design_system.fonts`), statt per
+  `except: pass` spurlos zu fehlen.
+
+### Intern
+
+- Alle `ruff check`-Funde behoben (I001, RUF022, RUF100, PYI041, FLY002, S110);
+  `ruff format` inklusive der README-Codebloecke.
+- `tokens.py` und `dist/css|json|latex/tokens.*` sind per `npm run build` erzeugt.
+  Ein Test prueft, dass `dist/json/tokens.json` und `tokens.py` uebereinstimmen.
+
+**Fuer Konsumenten:** rein additiv — bestehende Token-Namen und Funktionen sind
+unveraendert. Neu zu verwenden: `css_font_stack("sans" | "serif-editorial" | "mono")`
+statt eigener `font-family`-Literale; die Schnitt-Tokens statt eigener Namenstabellen.
+
 ## [0.15.0] — 2026-10-13
 
 ### Behoben — Fett und Kursiv sind in ReportLab-PDFs wieder sichtbar

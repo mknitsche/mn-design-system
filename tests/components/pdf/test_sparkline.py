@@ -11,11 +11,12 @@ Prueft:
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
+from reportlab.graphics.shapes import Drawing, PolyLine
+
 from mn_design_system.components._patterns.contracts import SparklineInput
 from mn_design_system.components.pdf import build_sparkline
 from mn_design_system.components.pdf.sparkline import _compute_skala
-from pydantic import ValidationError
-from reportlab.graphics.shapes import Drawing, PolyLine
 
 # ---------------------------------------------------------------------------
 # Contract-Validation
