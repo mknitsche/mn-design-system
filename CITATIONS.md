@@ -46,7 +46,7 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **Herausgeber:** The Noto Project Authors (Google)
 - **Lizenz:** SIL Open Font License 1.1 (`mn_design_system/fonts/noto/OFL.txt`)
 - **URL:** https://github.com/notofonts
-- **Verwendung:** Glyphen-Rueckfall, Symbole
+- **Verwendung:** registriert, kein Standard-Slot (Familie fuer Fett/Kursiv angemeldet)
 
 ## Symbole
 

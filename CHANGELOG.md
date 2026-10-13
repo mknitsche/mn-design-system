@@ -28,8 +28,8 @@ ein Schriftwechsel im Design-System zog dort nicht nach. Jetzt kommen sie als To
 - **`css_font_stack(art)`** (`components.web`, auch exportiert): liefert den vollstaendigen
   `font-family`-Wert — die Familie in Anfuehrungszeichen plus Rueckfallkette aus den
   Tokens. `art` ist `"sans"`, `"serif-editorial"` oder `"mono"`; alles andere ist ein
-  `KeyError`. Die Anfuehrungszeichen sind noetig, weil `--web-font-*` die Familie ohne
-  sie ausgibt und „Source Serif 4“ ungequotet kein gueltiger CSS-Bezeichner ist.
+  `KeyError`. Die Anfuehrungszeichen sind noetig, weil „Source Serif 4“ ungequotet kein
+  gueltiger CSS-Familienname ist.
 - **Lizenztexte je Schriftfamilie:** `OFL.txt` fuer Source Serif 4, Source Sans 3,
   JetBrains Mono, Inter, Noto Sans, STIX Two und die Web-Schriften (`fonts/web/`),
   `LICENSE` (MIT) fuer Phosphor. Die Copyright-Zeilen stammen aus den Metadaten der
@@ -46,19 +46,40 @@ ein Schriftwechsel im Design-System zog dort nicht nach. Jetzt kommen sie als To
   ergeben `SourceSerif4-BoldItalic`. Belegt am `Paragraph.frags`, nicht an einer Tabelle.
 - **KPI-Karte (PDF):** die Caption-Schrift war das Literal „SourceSerif-Italic“, jetzt
   `font_family("italic-editorial")` — und damit gilt dort dieselbe Familie (`<b>` wirkt).
+- **`dist/css/tokens.css` quotet die Web-Schriftnamen:** `--web-font-serif-editorial`
+  stand dort als `Source Serif 4` ohne Anfuehrungszeichen. Wer `tokens.css` laedt, bekam
+  damit fuer Wortmarke und Initiale (`var(--web-font-serif-editorial, …)`) eine zur
+  Berechnungszeit ungueltige Deklaration — die Schrift fiel still auf die geerbte zurueck.
+  Ein Build-Transform quotet jetzt `web.font.*` (nicht die Rueckfallketten). Die
+  Python-Tokens bleiben ungequotet; claudeAI setzt die Variablen selbst gequotet und war
+  nicht betroffen.
+- **Geist-Light als Grundschrift:** jetzt eine Familie — `<b>`/`<i>` nehmen die
+  Geist-Standardschnitte statt still im Light-Schnitt zu bleiben.
+- **Schnittnamen im Design-System selbst:** KPI-Karte und Wetter-Streifen setzen
+  `font_family("sans"|"sans-bold")` statt der Literale „Geist“/„Geist-Bold“.
+- **Lizenzangaben:** JetBrains Mono steht unter der SIL OFL (laut Schriftdatei), nicht
+  unter Apache 2.0 wie in README/CITATIONS behauptet. STIX Two Math (Version 2.02)
+  verweist auf die STIX Fonts User License (auf OFL-Basis), nicht auf OFL 1.1; NOTICE
+  nennt die Ausnahmen jetzt (STIX Math, Phosphor MIT). CITATIONS ergaenzt Inter und Noto;
+  der Satz „TTF nicht eingecheckt“ war falsch. Die README-Statustabelle (stand bei
+  v0.3.0) verweist jetzt auf diesen CHANGELOG.
 - **Schriften werden nicht mehr still verschluckt:** ein Schnitt, den ReportLab nicht
   laden kann, steht jetzt als Warnung im Log (`mn_design_system.fonts`), statt per
   `except: pass` spurlos zu fehlen.
 
 ### Intern
 
-- Alle `ruff check`-Funde behoben (I001, RUF022, RUF100, PYI041, FLY002, S110);
+- Alle `ruff check`-Funde behoben (I001, RUF022, RUF100, PYI041, FLY002, S110), sauber
+  unter ruff 0.16 und dem in pre-commit gepinnten 0.15.8 (E402 durch Importe am Dateianfang);
   `ruff format` inklusive der README-Codebloecke.
 - `tokens.py` und `dist/css|json|latex/tokens.*` sind per `npm run build` erzeugt.
   Ein Test prueft, dass `dist/json/tokens.json` und `tokens.py` uebereinstimmen.
 
-**Fuer Konsumenten:** rein additiv — bestehende Token-Namen und Funktionen sind
-unveraendert. Neu zu verwenden: `css_font_stack("sans" | "serif-editorial" | "mono")`
+**Fuer Konsumenten:** Token-Namen und Funktionen sind unveraendert und nur ergaenzt.
+Sichtbare Unterschiede: `<b>` in der Zitat-Kursive und in Geist-Light wirkt jetzt; die
+KPI-Karte nennt ihre Caption-Schrift „SourceSerif4-Italic“ (dieselbe Datei);
+`render_foundation_css()` hat eine Zeile mehr (`--web-text-display` mobil); `tokens.css`
+quotet `--web-font-*`; eine nicht ladbare Schrift steht als Warnung im Log. Neu zu verwenden: `css_font_stack("sans" | "serif-editorial" | "mono")`
 statt eigener `font-family`-Literale; die Schnitt-Tokens statt eigener Namenstabellen.
 
 ## [0.15.0] — 2026-10-13

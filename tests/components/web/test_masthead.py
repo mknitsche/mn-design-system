@@ -12,6 +12,11 @@ from mn_design_system.components._patterns.contracts import (
     MastheadTierItem,
     WebTier,
 )
+from mn_design_system.components.web.masthead import (
+    render_masthead_css,
+    render_masthead_html,
+)
+from mn_design_system.tokens import get
 
 
 def _make_masthead_input(**overrides) -> MastheadInput:
@@ -72,13 +77,6 @@ class TestMastheadContracts:
         masthead = _make_masthead_input()
         with pytest.raises(ValidationError):
             masthead.wordmark = "changed"
-
-
-from mn_design_system.components.web.masthead import (
-    render_masthead_css,
-    render_masthead_html,
-)
-from mn_design_system.tokens import get
 
 
 class TestRenderMastheadHtml:

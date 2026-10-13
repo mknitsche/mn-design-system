@@ -86,6 +86,21 @@ StyleDictionary.registerFormat({
 });
 
 // ---------------------------------------------------------------------------
+// Custom Transform: Web-Schriftnamen in CSS quoten (v0.16.0)
+// ---------------------------------------------------------------------------
+// "Source Serif 4" ist ungequotet kein gueltiger CSS-Familienname (die 4 ist kein
+// Bezeichner) — eine Deklaration wie var(--web-font-serif-editorial, ...) wurde damit
+// zur Berechnungszeit ungueltig und fiel still auf die geerbte Schrift. Nur die
+// Familiennamen, nicht die Rueckfallketten web.font.stack.* (die sind schon CSS).
+StyleDictionary.registerTransform({
+  name: "value/web-font-quote",
+  type: "value",
+  filter: (token) =>
+    token.path[0] === "web" && token.path[1] === "font" && token.path[2] !== "stack",
+  transform: (token) => `"${token.value}"`,
+});
+
+// ---------------------------------------------------------------------------
 // Custom Filter: nur "echte" Tokens (kein _meta)
 // ---------------------------------------------------------------------------
 StyleDictionary.registerFilter({
@@ -101,7 +116,7 @@ const sd = new StyleDictionary({
   log: { verbosity: "default" },
   platforms: {
     css: {
-      transformGroup: "css",
+      transforms: [...StyleDictionary.hooks.transformGroups.css, "value/web-font-quote"],
       buildPath: "dist/css/",
       files: [
         {

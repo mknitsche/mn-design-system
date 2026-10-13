@@ -10,7 +10,7 @@ _TOKENS_CSS = Path(__file__).parent.parent / "dist" / "css" / "tokens.css"
 
 
 def test_web_text_scale_complete():
-    """Sieben-Stufen-Typo-Skala, Anker body=16px (Design §3)."""
+    """Acht-Stufen-Typo-Skala (seit 0.16.0 mit display), Anker body=16px (Design §3)."""
     assert get("web.text.caption") == "12px"
     assert get("web.text.ui") == "14px"
     assert get("web.text.body") == "16px"

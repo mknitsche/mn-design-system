@@ -34,7 +34,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
     return {
         "label": ParagraphStyle(
             "KpiCardLabel",
-            fontName="Geist-Bold",
+            fontName=font_family("sans-bold"),
             fontSize=9,
             textColor=HexColor(color_h1),
             alignment=TA_LEFT,
@@ -42,7 +42,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "value": ParagraphStyle(
             "KpiCardValue",
-            fontName="Geist-Bold",
+            fontName=font_family("sans-bold"),
             fontSize=10,
             textColor=HexColor(color_h1),
             alignment=TA_RIGHT,
@@ -50,7 +50,7 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         ),
         "change": ParagraphStyle(
             "KpiCardChange",
-            fontName="Geist",
+            fontName=font_family("sans"),
             fontSize=8,
             alignment=TA_RIGHT,
             spaceAfter=1 * mm,

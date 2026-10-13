@@ -110,6 +110,9 @@ _FONT_MAP: dict[str, str] = {
 # Kommentar sagt es — nie ein stiller Grundschnitt.
 _FAMILIEN: dict[str, tuple[str, str, str, str]] = {
     "Geist": ("Geist", "Geist-Bold", "Geist-Italic", "Geist-BoldItalic"),
+    # Light als Grundschrift (Token font.family.sans-light, v0.16.0): kein Light-Fett- oder
+    # Light-Kursiv-Schnitt im Paket, Fett und Kursiv nehmen die Geist-Standardschnitte.
+    "Geist-Light": ("Geist-Light", "Geist-Bold", "Geist-Italic", "Geist-BoldItalic"),
     # Medium als Grundschrift (z. B. Status-Zeilen): Kursiv bleibt im Medium-Gewicht.
     "Geist-Medium": (
         "Geist-Medium",
