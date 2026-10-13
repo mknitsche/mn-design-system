@@ -117,8 +117,9 @@ def test_jede_familie_hat_einen_lizenztext(name):
         assert "Permission is hereby granted, free of charge" in text
     else:
         assert "SIL OPEN FONT LICENSE Version 1.1" in text
-        # Wortlaut des Originals (openfontlicense.org und die Upstream-Repos): „&“. Bis
-        # 0.16.0 stand hier „AND“ — eine Abweichung vom Lizenztext, vom Test festgeschrieben.
+        # Wortlaut der SIL-Vorlage (openfontlicense.org; so auch STIX und Geist upstream —
+        # Inter upstream schreibt „AND“): „&“. Bis 0.16.0 stand hier „AND“, vom Test
+        # festgeschrieben.
         assert "PERMISSION & CONDITIONS" in text
         assert "PERMISSION AND CONDITIONS" not in text
 
@@ -185,7 +186,9 @@ def test_jede_schriftdatei_steht_laut_metadaten_unter_der_ofl(name):
     """Waechter (0.16.1): die Lizenz einer Schrift steht in IHREN Metadaten (name-ID 13/14),
     nicht in unserer Doku. Bis 0.16.0 lag STIX Two Math 2.02 bei, deren Metadaten auf die
     STIX Fonts User License verweisen — README und CITATIONS behaupteten OFL, kein Test sah
-    es. Jede Datei einer OFL-Familie muss auf die OFL verweisen."""
+    es. Jede Datei einer OFL-Familie muss in name-ID 14 (Lizenz-URL) auf die OFL verweisen.
+    Bewusst OHNE Ausweichen auf den Beschreibungstext (ID 13): die alte STIX-Math-Datei
+    schreibt dort „based on the SIL Open Font License“ und kaeme damit durch (Review 0.16.1)."""
     dateien = [
         f for f in (FONT_DIR / name).iterdir() if f.suffix.lower() in {".ttf", ".otf"}
     ]
@@ -193,10 +196,6 @@ def test_jede_schriftdatei_steht_laut_metadaten_unter_der_ofl(name):
     abweichend = []
     for f in dateien:
         url = _name_eintrag(f, 14) or ""
-        beschreibung = _name_eintrag(f, 13) or ""
-        ofl = any(u in url for u in _OFL_URLS) or (
-            not url and "Open Font License" in beschreibung
-        )
-        if not ofl:
-            abweichend.append(f"{f.name}: {url or beschreibung[:60]!r}")
+        if not any(u in url for u in _OFL_URLS):
+            abweichend.append(f"{f.name}: {url or 'keine Lizenz-URL'!r}")
     assert abweichend == []

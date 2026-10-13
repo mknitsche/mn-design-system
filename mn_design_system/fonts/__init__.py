@@ -87,8 +87,9 @@ _FONT_MAP: dict[str, str] = {
     # STIXTwoText-Greek.ttf teilt sich den PostScript-Namen 'STIXTwoText-Regular'
     # mit der Latin-TTF (verifiziert via fontTools NameID 6) → ReportLab-Cache-
     # Kollision: erste registrierte Variante (= Latin ohne Greek) gewinnt, σ
-    # wird als .notdef-BOX gerendert. STIXTwoMath hat eindeutigen PS-Name
-    # 'STIXTwoMath', ist 4138 Glyphen vollstaendig (Greek + Math + Latin),
+    # wird als .notdef-BOX gerendert. STIXTwoMath hat einen eindeutigen PS-Namen
+    # (seit 0.16.1, Version 2.13: 'STIXTwoMath-Regular', 4605 Codepoints; bis 0.16.0
+    # Version 2.02: 'STIXTwoMath', 4138) und ist vollstaendig (Greek + Math + Latin),
     # σ rendert sauber. Math-Schrift ist konventionell richtig fuer
     # Standardabweichungs-σ in Statistik (Italic-Shape).
     "STIXTwoMath": "stix-two/STIXTwoMath-Regular.ttf",
