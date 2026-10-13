@@ -7,9 +7,14 @@
 
     "family": {
       "sans":          { "value": "Geist" },
-      "italic-editorial": { "value": "SourceSerif4-Italic", "comment": "Drop-Cap, Zitate, Captions" },
+      "sans-bold":     { "value": "Geist-Bold", "comment": "v0.16.0: Schnitt-Token — Fettschnitt der Grotesk (Ueberschriften, Labels, Tabellenkoepfe)" },
+      "sans-medium":   { "value": "Geist-Medium", "comment": "v0.16.0: Schnitt-Token — mittleres Gewicht (Status-Zeilen, Hervorhebung ohne Fett)" },
+      "sans-light":    { "value": "Geist-Light", "comment": "v0.16.0: Schnitt-Token — leichtes Gewicht (grosse Zahlen, Display)" },
+      "italic-editorial": { "value": "SourceSerif4-Italic", "comment": "Drop-Cap, Zitate, Captions. Als Grundschrift ist <b> seit v0.16.0 fett-kursiv (Familie in fonts/__init__.py)." },
+      "italic-editorial-bold": { "value": "SourceSerif4-BoldItalic", "comment": "v0.16.0: Schnitt-Token — fett-kursiver Schnitt der Zitat-Schrift; der Schnitt, den <b> in italic-editorial ergibt" },
       "italic-ui":     { "value": "Geist-MediumItalic", "comment": "Status-Markierung in UI — v0.15.0 echter Kursiv-Schnitt (bis 0.14.2 Geist-Medium aufrecht, Geist hatte kein Kursiv)" },
       "mono":          { "value": "JetBrainsMono" },
+      "mono-bold":     { "value": "JetBrainsMono-Bold", "comment": "v0.16.0: Schnitt-Token — Fettschnitt der Mono (Tabellenkoepfe, Code-Hervorhebung)" },
       "math":          { "value": "STIXTwoMath" },
       "icon":          { "value": "Phosphor", "comment": "PUA E000-F8FF" },
       "fallback-greek": { "value": "STIXTwoMath", "comment": "v0.5.4 in JSON gehoben (war nur in tokens.py): Greek-Letters Fallback-Font (sigma/alpha/beta...). S248-Sigma-Bug, S249 STIXTwoMath statt STIXTwoText-Greek wegen PS-Namen-Konflikt mit Latin-TTF (TTF-Asset-Bug von STIX). STIXTwoMath hat eindeutigen PS-Name + alle Greek + Math + Latin, sigma rendert kursiv (konventionell richtig fuer Standardabweichung)." },

@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
+from reportlab.graphics.shapes import Drawing
+from reportlab.platypus import Paragraph, Spacer
+
 from mn_design_system.components._patterns.contracts import (
     KpiCardInput,
     KpiTrendDirection,
 )
 from mn_design_system.components.pdf.kpi_card import build_kpi_card
-from pydantic import ValidationError
-from reportlab.graphics.shapes import Drawing
-from reportlab.platypus import Paragraph, Spacer
 
 # ---------------------------------------------------------------------------
 # Contract-Validation
@@ -203,3 +204,26 @@ class TestBuildKpiCard:
         inp = KpiCardInput(label="X", value="100", caption=None)
         result = build_kpi_card(inp)
         assert result[4].text == ""
+
+
+# ---------------------------------------------------------------------------
+# v0.16.0: Caption-Schrift kommt aus dem Token, nicht aus einem Literal
+# ---------------------------------------------------------------------------
+
+
+class TestCaptionSchrift:
+    def test_caption_nutzt_den_zitat_token(self):
+        from mn_design_system.helpers import font_family
+
+        inp = KpiCardInput(label="X", value="100", caption="Stand: 04:50")
+        caption = build_kpi_card(inp)[-1]
+        assert isinstance(caption, Paragraph)
+        assert caption.style.fontName == font_family("italic-editorial")
+
+    def test_fett_in_der_caption_bleibt_fett_kursiv(self):
+        """Mit dem Token als Grundschrift gilt die Familie der Zitat-Kursive: <b> geht
+        nicht mehr still verloren."""
+        inp = KpiCardInput(label="X", value="100", caption="Stand <b>04:50</b>")
+        caption = build_kpi_card(inp)[-1]
+        namen = {frag.fontName for frag in caption.frags}
+        assert "SourceSerif4-BoldItalic" in namen

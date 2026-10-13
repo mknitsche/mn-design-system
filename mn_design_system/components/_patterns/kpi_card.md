@@ -37,7 +37,7 @@
 - `color.status.error` — Change negativ kraeftig (Rot)
 - `color.viz.muted` — Change neutral / Mikro-Bewegung (Grau, |Δ|<0.5%)
 - `color.indigo.50` — Card-Background (Tile-Look, vom Caller umgesetzt)
-- `font.body` (Geist), `font.bold` (Geist-Bold), `font.italic` (SourceSerif-Italic)
+- `font.family.sans` (Geist), `font.family.sans-bold` (Geist-Bold), `font.family.italic-editorial` (SourceSerif4-Italic — Caption; `<b>` darin ist fett-kursiv)
 
 ## Varianten
 

@@ -151,3 +151,50 @@ def test_medium_als_grundschrift_wird_kursiv_im_medium_gewicht():
         "k": "Geist-MediumItalic",
         "fk": "Geist-BoldItalic",
     }
+
+
+# --- v0.16.0: Fett in der Zitat-Kursive, unlesbare Schriften ----------------------------
+
+
+def test_fett_in_der_zitat_kursive_wirkt():
+    """Die Zitat-Kursive als GRUNDSCHRIFT: <b> ergibt den fett-kursiven Schnitt. Bis 0.15.0
+    war „SourceSerif4-Italic“ keine Familie, <b> ging still verloren (Probe 2026-10-13:
+    alle Fragmente „SourceSerif4-Italic“). Geprueft am Paragraph.frags, nicht an einer
+    Tabelle."""
+    from mn_design_system.helpers import font_family
+
+    grund = font_family("italic-editorial")
+    assert _schnitte(grund) == {
+        "n": "SourceSerif4-Italic",
+        "f": "SourceSerif4-BoldItalic",
+        "k": "SourceSerif4-Italic",
+        "fk": "SourceSerif4-BoldItalic",
+    }
+
+
+def test_fett_kursiv_token_ist_der_schnitt_den_fett_ergibt():
+    """Der Schnitt-Token und das, was <b> in der Zitat-Kursive tatsaechlich setzt, sind
+    ein und derselbe Name — keine zweite Wahrheit."""
+    from mn_design_system.helpers import font_family
+
+    assert _schnitte(font_family("italic-editorial"))["f"] == font_family(
+        "italic-editorial-bold"
+    )
+
+
+def test_unlesbare_schrift_wird_gemeldet_nicht_verschluckt(monkeypatch, caplog):
+    """Eine Schrift, die ReportLab nicht laden kann, fehlt in der Rueckgabe UND steht im
+    Log — bis 0.15.0 schluckte ein ``except: pass`` den Fehler ohne Spur."""
+    import logging
+
+    from mn_design_system import fonts
+
+    def kaputt(name, pfad):
+        raise ValueError(f"nicht lesbar: {name}")
+
+    monkeypatch.setattr(fonts, "TTFont", kaputt)
+    with caplog.at_level(logging.WARNING, logger="mn_design_system.fonts"):
+        angemeldet = fonts.register_all_fonts()
+    assert angemeldet == []
+    assert "Geist-Bold" in caplog.text
+    assert "nicht lesbar" in caplog.text

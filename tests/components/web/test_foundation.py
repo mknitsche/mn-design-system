@@ -2,7 +2,15 @@
 
 from __future__ import annotations
 
-from mn_design_system.components.web.foundation import render_foundation_css
+import re
+
+import pytest
+
+from mn_design_system.components.web.foundation import (
+    css_font_stack,
+    render_foundation_css,
+)
+from mn_design_system.tokens import get
 
 
 def test_mobile_breakpoint_present():
@@ -43,7 +51,7 @@ def test_exported_from_web_package():
     assert exported is render_foundation_css
 
 
-from mn_design_system.components.web.foundation import (  # noqa: E402
+from mn_design_system.components.web.foundation import (
     render_initiale_css,
 )
 
@@ -73,3 +81,77 @@ def test_initiale_exported_from_web_package():
     from mn_design_system.components.web import render_initiale_css as exported
 
     assert exported is render_initiale_css
+
+
+# --- v0.16.0: Stufe display + css_font_stack ---------------------------------------------
+
+
+def _mobil_block(css: str) -> str:
+    """Der Text hinter ``@media (max-width: <bp-mobile>)`` bis zum Ende."""
+    return css.split(f"@media (max-width: {get('web.layout.bp-mobile')})", 1)[1]
+
+
+def test_display_wird_mobil_zur_desktop_h1():
+    """display tritt mobil eine Stufe zurueck — auf den Desktop-Wert von h1 (Design §9).
+    Der Wert kommt aus dem Token, nicht aus einem Literal."""
+    mobil = _mobil_block(render_foundation_css())
+    wert = re.search(r"--web-text-display:\s*([^;]+);", mobil)
+    assert wert is not None, "keine Mobil-Stufe fuer display"
+    assert wert.group(1).strip() == get("web.text.h1")
+
+
+def test_display_wandert_nur_mobil():
+    """Weder Tablet noch Desktop ueberschreiben display."""
+    css = render_foundation_css()
+    vor_mobil = css.split(f"@media (max-width: {get('web.layout.bp-mobile')})", 1)[0]
+    assert "--web-text-display" not in vor_mobil
+
+
+def test_css_font_stack_sans():
+    assert css_font_stack("sans") == (
+        '"Geist", system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
+    )
+
+
+def test_css_font_stack_serif_editorial():
+    assert css_font_stack("serif-editorial") == '"Source Serif 4", Georgia, serif'
+
+
+def test_css_font_stack_mono():
+    assert css_font_stack("mono") == (
+        '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace'
+    )
+
+
+@pytest.mark.parametrize("art", ["sans", "serif-editorial", "mono"])
+def test_css_font_stack_folgt_den_tokens(art):
+    """Familie und Rueckfallkette kommen aus den Tokens, nicht aus dem Helfer."""
+    assert css_font_stack(art) == (
+        f'"{get(f"web.font.{art}")}", {get(f"web.font.stack.{art}")}'
+    )
+
+
+def test_css_font_stack_unbekannte_art_bricht_laut_ab():
+    with pytest.raises(KeyError, match="display"):
+        css_font_stack("display")
+
+
+def test_css_font_stack_exportiert():
+    from mn_design_system.components import web
+
+    assert web.css_font_stack is css_font_stack
+    assert "css_font_stack" in web.__all__
+
+
+def test_display_mobil_folgt_dem_h1_token_nicht_einem_literal(monkeypatch):
+    """Aendert sich web.text.h1, zieht die Mobil-Stufe von display mit."""
+    from mn_design_system.components.web import foundation
+
+    echtes_get = foundation.get
+    monkeypatch.setattr(
+        foundation,
+        "get",
+        lambda key, *a: "99px" if key == "web.text.h1" else echtes_get(key, *a),
+    )
+    mobil = _mobil_block(foundation.render_foundation_css())
+    assert "--web-text-display: 99px" in mobil

@@ -484,14 +484,9 @@ def _page(
         for i in range(8)
     ]
     grid = CardGridInput(cards=cards, columns=columns)
-    components_css = "\n".join(
-        [
-            render_foundation_css(),
-            render_masthead_css(),
-            render_sub_nav_css(),
-            render_content_card_css(),
-            render_card_grid_css(),
-        ]
+    components_css = (
+        f"{render_foundation_css()}\n{render_masthead_css()}\n"
+        f"{render_sub_nav_css()}\n{render_content_card_css()}\n{render_card_grid_css()}"
     )
     for decl in strip_css:
         assert decl in components_css, f"strip_css: {decl!r} nicht im CSS"

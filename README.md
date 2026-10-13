@@ -49,9 +49,32 @@ Details: **`ARCHITECTURE.md`** · Spec im claudeAI-Repo: `docs/superpowers/specs
 - Italic Editorial: **Source Serif 4 Italic** (Adobe · OFL 1.1)
 - Italic UI: **Geist Medium Italic** (kein Sans/Serif-Bruch in Tabellen/Status; bis 0.14.2 Geist Medium aufrecht)
 - Kursiv im Fliesstext (`<i>`): **Geist Italic** — Geist ist als Familie angemeldet, `<b>`/`<i>` greifen ohne Zutun
-- Mono: **JetBrains Mono** (Apache 2.0)
+- Mono: **JetBrains Mono** (OFL 1.1)
 - Math: **STIX Two Math** (OFL 1.1)
 - Symbole: **Phosphor Icons** (MIT)
+
+### Schnitt- und Web-Tokens (seit 0.16.0)
+
+Schnittnamen und Web-Rueckfallketten kommen aus dem Design-System, nicht aus Tabellen
+der Konsumenten:
+
+| Token | Wert | Verwendung |
+|---|---|---|
+| `font.family.sans-bold`, `sans-medium`, `sans-light` | Geist-Bold, Geist-Medium, Geist-Light | PDF: Schnitt direkt waehlen, z. B. `font_family("sans-bold")` |
+| `font.family.mono-bold` | JetBrainsMono-Bold | PDF: Fettschnitt der Mono |
+| `font.family.italic-editorial-bold` | SourceSerif4-BoldItalic | PDF: der Schnitt, den `<b>` in der Zitat-Kursive ergibt |
+| `web.text.display`, `web.leading.display` | 40px, 1.1 | Web: Hero-Titel; mobil der Desktop-Wert von `web.text.h1` (33px) |
+| `web.font.mono` | JetBrains Mono | Web-Mono; keine Web-Datei im Paket (lokal installiert oder Rueckfallkette) |
+| `web.font.stack.sans`, `serif-editorial`, `mono` | Rueckfallketten | Web: `css_font_stack(art)` setzt die Familie in Anfuehrungszeichen davor |
+
+```python
+from mn_design_system.components.web import css_font_stack
+
+css_font_stack("mono")  # '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace'
+```
+
+Setzt ein Paragraph `font_family("italic-editorial")` als Grundschrift, ergibt `<b>` den
+fett-kursiven Schnitt (`SourceSerif4-BoldItalic`).
 
 **Stack D** als Alternative (Source Sans 3) bleibt im Repo. Wechsel via `MN_PKA_STACK=D npm run build`.
 
@@ -101,10 +124,11 @@ gewollt.
 
 - **Design-System (Tokens, Komponenten, Doku, Build-Skripte)**:
   PolyForm Strict 1.0.0 — siehe `LICENSE`
-- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, STIX) und
-  Apache 2.0 (JetBrains Mono) — **behalten ihre eigenen, offenen Lizenzen**;
-  `LICENSE` schraenkt sie nicht ein
-- **Symbole**: MIT (Phosphor Icons)
+- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, JetBrains Mono,
+  Inter, Noto Sans, STIX) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
+  schraenkt sie nicht ein. Der Lizenztext jeder Familie liegt neben den Schriftdateien
+  (`mn_design_system/fonts/<familie>/OFL.txt`)
+- **Symbole**: MIT (Phosphor Icons, `mn_design_system/fonts/phosphor/LICENSE`)
 - **Logos** (mkn-fotografie / PKA): proprietaer, keine Markenrechte eingeraeumt
   — NICHT in diesem Repo, siehe `NOTICE`
 
@@ -131,7 +155,7 @@ Konsumieren:
 from mn_design_system.fonts import register_all_fonts
 from mn_design_system.tokens import get
 
-register_all_fonts()                  # ReportLab-Fonts registrieren
+register_all_fonts()  # ReportLab-Fonts registrieren
 text_color = get("color.light.text")  # "#1e1b4b"
 ```
 
@@ -141,13 +165,15 @@ Komplette Komponenten:
 from mn_design_system.components.pdf.kpi_card import build_kpi_card
 from mn_design_system.components._patterns.contracts import KpiCardInput
 
-flowables = build_kpi_card(KpiCardInput(
-    label="DAX",
-    value="18.234",
-    change_pct=1.23,
-    sparkline_values=[100, 101, 99, 102, 105],
-    caption="Stand 09:00",
-))
+flowables = build_kpi_card(
+    KpiCardInput(
+        label="DAX",
+        value="18.234",
+        change_pct=1.23,
+        sparkline_values=[100, 101, 99, 102, 105],
+        caption="Stand 09:00",
+    )
+)
 ```
 
 ## Sub-Nav: aktiven Reiter zentrieren (Skript einbinden)

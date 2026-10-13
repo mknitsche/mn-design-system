@@ -31,7 +31,8 @@ from .helpers import (
 )
 
 try:
-    from importlib.metadata import PackageNotFoundError, version as _pkg_version
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _pkg_version
 
     __version__ = _pkg_version("mn-design-system")
 except (ImportError, PackageNotFoundError):
@@ -39,15 +40,15 @@ except (ImportError, PackageNotFoundError):
     __version__ = "0.0.0+local"
 
 __all__ = [
-    "__version__",
-    "TOKENS",
     "MM_TO_PT",
     "MM_TO_PX",
-    "space_token",
-    "size_token",
-    "leading_token",
+    "TOKENS",
+    "__version__",
     "color_token",
     "font_family",
     "font_with_fallback",
+    "leading_token",
+    "size_token",
+    "space_token",
     "token",
 ]

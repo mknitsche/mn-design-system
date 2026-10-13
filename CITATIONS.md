@@ -26,7 +26,7 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 
 ### JetBrains Mono
 - **Designer:** JetBrains s.r.o.
-- **Lizenz:** Apache License 2.0
+- **Lizenz:** SIL Open Font License 1.1 (laut Schriftdatei, Version 2.211; Text in `mn_design_system/fonts/jetbrains-mono/OFL.txt`)
 - **URL:** https://www.jetbrains.com/lp/mono/
 - **Verwendung:** Code, Mono-Kicker, ISBN-Block
 

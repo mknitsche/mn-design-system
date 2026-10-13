@@ -17,13 +17,20 @@ Alle Funktionen akzeptieren ihr zugehoeriges Pydantic-Input-Modell aus
 
 ```python
 from mn_design_system.fonts import register_all_fonts
+
 register_all_fonts()  # einmal beim App-Start
 
 from mn_design_system.components._patterns.contracts import (
-    SparklineInput, KpiCardInput, WetterDay, WetterStripInput, WetterCategory,
+    SparklineInput,
+    KpiCardInput,
+    WetterDay,
+    WetterStripInput,
+    WetterCategory,
 )
 from mn_design_system.components.pdf import (
-    build_sparkline, build_wetter_strip, build_kpi_card,
+    build_sparkline,
+    build_wetter_strip,
+    build_kpi_card,
 )
 ```
 
@@ -34,24 +41,28 @@ from mn_design_system.components.pdf import (
 ```python
 from reportlab.lib.units import mm
 
-drawing = build_sparkline(SparklineInput(
-    values=[100, 102, 98, 105, 110, 108],
-    width=28 * mm,
-    height=8 * mm,
-))
+drawing = build_sparkline(
+    SparklineInput(
+        values=[100, 102, 98, 105, 110, 108],
+        width=28 * mm,
+        height=8 * mm,
+    )
+)
 story.append(drawing)
 ```
 
 ### KPI-Karte
 
 ```python
-flowables = build_kpi_card(KpiCardInput(
-    label="DAX",
-    value="22.450,12",
-    change_pct=1.25,
-    sparkline_values=[22000, 22100, 22300, 22450],
-    caption="Stand: Vortag-Schluss",
-))
+flowables = build_kpi_card(
+    KpiCardInput(
+        label="DAX",
+        value="22.450,12",
+        change_pct=1.25,
+        sparkline_values=[22000, 22100, 22300, 22450],
+        caption="Stand: Vortag-Schluss",
+    )
+)
 # flowables ist list[Flowable] — z.B. in Tabellen-Cell packen
 ```
 
@@ -59,17 +70,35 @@ flowables = build_kpi_card(KpiCardInput(
 
 ```python
 days = [
-    WetterDay(header_label="Heute", category=WetterCategory.SONNIG,
-              temp_min_c=12, temp_max_c=22, precip_pct=10),
-    WetterDay(header_label="Mi", category=WetterCategory.HEITER,
-              temp_min_c=10, temp_max_c=19, precip_pct=30),
-    WetterDay(header_label="Do", category=WetterCategory.REGEN,
-              temp_min_c=8, temp_max_c=14, precip_pct=80),
+    WetterDay(
+        header_label="Heute",
+        category=WetterCategory.SONNIG,
+        temp_min_c=12,
+        temp_max_c=22,
+        precip_pct=10,
+    ),
+    WetterDay(
+        header_label="Mi",
+        category=WetterCategory.HEITER,
+        temp_min_c=10,
+        temp_max_c=19,
+        precip_pct=30,
+    ),
+    WetterDay(
+        header_label="Do",
+        category=WetterCategory.REGEN,
+        temp_min_c=8,
+        temp_max_c=14,
+        precip_pct=80,
+    ),
 ]
-flowables = build_wetter_strip(WetterStripInput(
-    days=days, location="Nuernberg",
-    summary_text="Wechselhaft mit Aprilwetter-Charakter."
-))
+flowables = build_wetter_strip(
+    WetterStripInput(
+        days=days,
+        location="Nuernberg",
+        summary_text="Wechselhaft mit Aprilwetter-Charakter.",
+    )
+)
 story.extend(flowables)
 ```
 
