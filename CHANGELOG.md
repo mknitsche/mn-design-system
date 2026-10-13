@@ -17,18 +17,21 @@ oder Doku.
   jeden, der die Schrift bezieht) — README und CITATIONS behaupteten bis 0.16.0 OFL. 2.13
   steht unter der SIL OFL 1.1, bringt 4.605 statt 4.138 Glyphen, und der Rueckfall fuer
   Griechisch/Mathe (`font_with_fallback`, Token `font.family.math`/`fallback-greek`) setzt
-  σ, α, β, ≤, ∑ unveraendert (PDF-Probe). Die PostScript-Namen bleiben eindeutig
-  (`STIXTwoMath-Regular`), die S249-Kollision mit STIX Two Text kehrt nicht zurueck.
+  σ, α, β, ≤, ∑ korrekt (PDF-Probe; nicht pixelgleich — die Laufweiten weichen um
+  Subpixel ab). Der PostScript-Name aendert sich von `STIXTwoMath` zu
+  `STIXTwoMath-Regular` und ist weiter eindeutig, die S249-Kollision mit STIX Two Text
+  kehrt nicht zurueck.
 - **Datei:** `STIXTwoMath-Regular.ttf` (gleicher Name, neue Fassung); die OpenType-Fassung
   heisst jetzt wie upstream `STIXTwoMath-Regular.otf` statt `STIX2Math.otf` (kein Code
   und kein Verwender nennt den alten Namen).
-- **Lizenztexte wortgleich mit dem Original:** „PERMISSION & CONDITIONS“ statt „AND“ in
-  allen `OFL.txt` (0.16.0 hatte die Abweichung von der Geist-Vorlage uebernommen, ein Test
+- **Lizenzrumpf wortgleich mit der SIL-Vorlage:** „PERMISSION & CONDITIONS“ statt „AND“ in
+  allen `OFL.txt` (die Kopfzeilen tragen bewusst die Copyright-Zeilen der Schriftdateien) (0.16.0 hatte die Abweichung von der Geist-Vorlage uebernommen, ein Test
   schrieb sie fest); `stix-two/OFL.txt` ist der Text des Upstream-Projekts; `geist/OFL.txt`
   traegt die Zeile der Schriftdateien („Copyright 2024 The Geist Project Authors“) statt der
   veralteten Upstream-Zeile („2023 Vercel“) — der Copyright-Test schliesst Geist nicht mehr aus.
-- **Waechter:** jede Schriftdatei einer OFL-Familie muss laut IHREN Metadaten (name-ID
-  13/14) auf die OFL verweisen — der Test faellt mit der alten STIX-Math-Datei.
+- **Waechter:** jede Schriftdatei einer OFL-Familie muss laut IHRER Lizenz-URL (name-ID 14)
+  auf die OFL verweisen — der Test faellt mit der alten STIX-Math-Datei, auch wenn deren
+  Beschreibungstext „based on the SIL Open Font License“ sagt.
 
 ## [0.16.0] — 2026-10-13
 
