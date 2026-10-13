@@ -32,7 +32,7 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 
 ### STIX Two Text / STIX Two Math
 - **Maintainer:** The STIX Fonts Project (STI Pub Companies)
-- **Lizenz:** STIX Two Text (Version 2.13) unter SIL Open Font License 1.1. Die beigelegten Math-Dateien (`STIXTwoMath-Regular.ttf`, `STIX2Math.otf`, Version 2.02) verweisen in ihren Metadaten auf die STIX Fonts User License, die nach eigener Angabe auf der OFL beruht — Text und Herkunft in `mn_design_system/fonts/stix-two/OFL.txt`
+- **Lizenz:** SIL Open Font License 1.1 — STIX Two Text und STIX Two Math, beide Version 2.13 (Release `v2.13b171`; Math seit 0.16.1, vorher Version 2.02 unter der STIX Fonts User License). Text des Upstream-Projekts in `mn_design_system/fonts/stix-two/OFL.txt`
 - **URL:** https://github.com/stipub/stixfonts
 - **Verwendung:** Griechisch-/Mathe-Rueckfall (σ), mathematische Notation
 

@@ -8,6 +8,28 @@ oder Doku.
 
 ---
 
+## [0.16.1] — 2026-10-13
+
+### Geaendert — STIX Two Math 2.13 unter der OFL (KT-1-Entscheid 2026-10-13)
+
+- **STIX Two Math auf Version 2.13** (`v2.13b171`, stipub/stixfonts): bis 0.16.0 lag Version
+  2.02 bei, deren Metadaten auf die STIX Fonts User License verweisen (Bedingungen fuer
+  jeden, der die Schrift bezieht) — README und CITATIONS behaupteten bis 0.16.0 OFL. 2.13
+  steht unter der SIL OFL 1.1, bringt 4.605 statt 4.138 Glyphen, und der Rueckfall fuer
+  Griechisch/Mathe (`font_with_fallback`, Token `font.family.math`/`fallback-greek`) setzt
+  σ, α, β, ≤, ∑ unveraendert (PDF-Probe). Die PostScript-Namen bleiben eindeutig
+  (`STIXTwoMath-Regular`), die S249-Kollision mit STIX Two Text kehrt nicht zurueck.
+- **Datei:** `STIXTwoMath-Regular.ttf` (gleicher Name, neue Fassung); die OpenType-Fassung
+  heisst jetzt wie upstream `STIXTwoMath-Regular.otf` statt `STIX2Math.otf` (kein Code
+  und kein Verwender nennt den alten Namen).
+- **Lizenztexte wortgleich mit dem Original:** „PERMISSION & CONDITIONS“ statt „AND“ in
+  allen `OFL.txt` (0.16.0 hatte die Abweichung von der Geist-Vorlage uebernommen, ein Test
+  schrieb sie fest); `stix-two/OFL.txt` ist der Text des Upstream-Projekts; `geist/OFL.txt`
+  traegt die Zeile der Schriftdateien („Copyright 2024 The Geist Project Authors“) statt der
+  veralteten Upstream-Zeile („2023 Vercel“) — der Copyright-Test schliesst Geist nicht mehr aus.
+- **Waechter:** jede Schriftdatei einer OFL-Familie muss laut IHREN Metadaten (name-ID
+  13/14) auf die OFL verweisen — der Test faellt mit der alten STIX-Math-Datei.
+
 ## [0.16.0] — 2026-10-13
 
 ### Neu — Schnitt-Tokens, Web-Schriftketten, Stufe display (claudeAI TODO-887)

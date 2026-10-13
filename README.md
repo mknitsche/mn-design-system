@@ -50,7 +50,7 @@ Details: **`ARCHITECTURE.md`** · Spec im claudeAI-Repo: `docs/superpowers/specs
 - Italic UI: **Geist Medium Italic** (kein Sans/Serif-Bruch in Tabellen/Status; bis 0.14.2 Geist Medium aufrecht)
 - Kursiv im Fliesstext (`<i>`): **Geist Italic** — Geist ist als Familie angemeldet, `<b>`/`<i>` greifen ohne Zutun
 - Mono: **JetBrains Mono** (OFL 1.1)
-- Math: **STIX Two Math** (STIX Fonts User License auf OFL-Basis, siehe `fonts/stix-two/OFL.txt`)
+- Math: **STIX Two Math** 2.13 (OFL 1.1)
 - Symbole: **Phosphor Icons** (MIT)
 
 ### Schnitt- und Web-Tokens (seit 0.16.0)
@@ -125,8 +125,7 @@ gewollt.
 - **Design-System (Tokens, Komponenten, Doku, Build-Skripte)**:
   PolyForm Strict 1.0.0 — siehe `LICENSE`
 - **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, JetBrains Mono,
-  Inter, Noto Sans, STIX Two Text; Ausnahmen: STIX Two Math unter der STIX Fonts User
-  License auf OFL-Basis, Phosphor unter MIT) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
+  Inter, Noto Sans, STIX Two Text und STIX Two Math; Ausnahme: Phosphor unter MIT) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
   schraenkt sie nicht ein. Der Lizenztext jeder Familie liegt neben den Schriftdateien
   (`mn_design_system/fonts/<familie>/OFL.txt`)
 - **Symbole**: MIT (Phosphor Icons, `mn_design_system/fonts/phosphor/LICENSE`)

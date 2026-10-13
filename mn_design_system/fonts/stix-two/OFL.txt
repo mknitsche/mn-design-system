@@ -1,16 +1,6 @@
-Copyright 2001-2021 The STIX Fonts Project Authors (https://github.com/stipub/stixfonts)
-  (STIXTwoText-Bold.ttf, STIXTwoText-Greek.ttf, STIXTwoText-Italic.ttf, STIXTwoText-Regular.ttf)
+Copyright 2001-2021 The STIX Fonts Project Authors (https://github.com/stipub/stixfonts), with Reserved Font Name "TM Math". STIX Fonts™ is a trademark of The Institute of Electrical and Electronics Engineers, Inc.
 
-Copyright (c) 2001-2016 by the STI Pub Companies, consisting of the American Chemical Society, the American Institute of Physics, the American Mathematical Society, the American Physical Society, Elsevier, Inc., and The Institute of Electrical and Electronic Engineers, Inc.  Portions copyright (c) 1998-2003 by MicroPress, Inc.  Portions copyright (c) 1990 by Elsevier, Inc.  All rights reserved.  Portions copyright (c) Copyright 2010, 2012, 2014 Adobe Systems Incorporated.
-  (STIX2Math.otf, STIXTwoMath-Regular.ttf)
-
-The STIXTwoText fonts (Version 2.13) are licensed under the SIL Open Font License,
-Version 1.1 (license URL in the font metadata: https://scripts.sil.org/OFL).
-The embedded license notice of STIXTwoMath-Regular.ttf and STIX2Math.otf
-(Version 2.02) refers to the STIX Fonts User License
-(http://www.stixfonts.org/user_license.html), which that notice describes as
-based on the SIL Open Font License.
-
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL
 
@@ -27,7 +17,7 @@ with others.
 
 The OFL allows the licensed fonts to be used, studied, modified and
 redistributed freely as long as they are not sold by themselves. The
-fonts, including any derivative works, can be bundled, embedded,
+fonts, including any derivative works, can be bundled, embedded, 
 redistributed and/or sold with any software provided that any reserved
 names are not used by derivative works. The fonts and derivatives,
 however, cannot be released under any other type of license. The
@@ -53,7 +43,7 @@ new environment.
 "Author" refers to any designer, engineer, programmer, technical
 writer or other person who contributed to the Font Software.
 
-PERMISSION AND CONDITIONS
+PERMISSION & CONDITIONS
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of the Font Software, to use, study, copy, merge, embed, modify,
 redistribute, and sell modified and unmodified copies of the Font
