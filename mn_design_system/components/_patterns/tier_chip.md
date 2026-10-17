@@ -21,11 +21,11 @@ in der Tier-Border-Farbe. Kein Icon, keine Interaktivitaet im Primitiv selbst.
 
 | Feld | Typ | Constraint |
 |---|---|---|
-| `tier` | `WebTier` | Enum (bibliothek, atelier, kabinett, start, observatorium, magazin) |
+| `tier` | `WebTier` | Enum (bibliothek, atelier, kabinett, start, observatorium, archiv) |
 | `label` | `str` | min_length=1, sichtbarer Text |
 | `bordered` | `bool` | Default True — L2-Status-Chip mit Border; False = L3-Background-only |
 
-`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium`, `magazin` — mappt
+`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium`, `archiv` — mappt
 1:1 auf die `color.tier.<tier>.*`-Token-Familie.
 
 ## Verwendete Tokens
@@ -56,7 +56,7 @@ Tier-abhaengige Komponente. Der `tier`-Wert waehlt die `color.tier.<tier>.*`-Fam
 | `kabinett` | Rot — Kabinett/privat |
 | `start` | Alias auf `bibliothek` (eigene Identitaet ohne Token-Migration spaeter moeglich) |
 | `observatorium` | Alias auf `atelier` (AMBER-Bereich, seit 0.17.0; eigene Nuance spaeter ohne Konsumenten-Aenderung) |
-| `magazin` | Gedaempftes Grau (seit 0.18.0; eigene Nuance aus der Grau-Skala: `bg` grey.50, `border` grey.200, `text` grey.700) — Magazin/Lesesaal, bewusst farbneutral |
+| `archiv` | Gedaempftes Grau (seit 0.19.0; eigene Nuance aus der Grau-Skala: `bg` grey.50, `border` grey.200, `text` grey.700) — Archiv, bewusst farbneutral |
 
 Die Tier-Modifier-Klasse am Wurzel-Element (`mn-tier-chip--{tier}`) traegt die
 Farbvarianz; kein Inline-Hex.

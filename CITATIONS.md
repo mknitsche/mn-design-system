@@ -17,13 +17,6 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **URL:** https://github.com/adobe-fonts/source-serif
 - **Verwendung:** Editorial Italic, Drop-Caps, Bibel-Zitate
 
-### Source Sans 3
-- **Designer:** Paul D. Hunt (Adobe)
-- **Erstveröffentlichung:** 2012, Version 3 in 2021
-- **Lizenz:** SIL Open Font License 1.1
-- **URL:** https://github.com/adobe-fonts/source-sans
-- **Verwendung:** Stack D Alternative
-
 ### JetBrains Mono
 - **Designer:** JetBrains s.r.o.
 - **Lizenz:** SIL Open Font License 1.1 (laut Schriftdatei, Version 2.211; Text in `mn_design_system/fonts/jetbrains-mono/OFL.txt`)
@@ -36,17 +29,11 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **URL:** https://github.com/stipub/stixfonts
 - **Verwendung:** Griechisch-/Mathe-Rueckfall (σ), mathematische Notation
 
-### Inter
-- **Designer:** Rasmus Andersson (The Inter Project Authors)
-- **Lizenz:** SIL Open Font License 1.1 (`mn_design_system/fonts/inter/OFL.txt`)
-- **URL:** https://github.com/rsms/inter
-- **Verwendung:** alternative Grotesk (Familie registriert, kein Standard-Slot)
-
-### Noto Sans / Noto Sans Symbols 2
+### Noto Sans Symbols 2
 - **Herausgeber:** The Noto Project Authors (Google)
 - **Lizenz:** SIL Open Font License 1.1 (`mn_design_system/fonts/noto/OFL.txt`)
-- **URL:** https://github.com/notofonts
-- **Verwendung:** registriert, kein Standard-Slot (Familie fuer Fett/Kursiv angemeldet)
+- **URL:** https://github.com/notofonts/symbols
+- **Verwendung:** Symbole (registriert als `NotoSansSymbols2`, kein Standard-Slot)
 
 ## Symbole
 

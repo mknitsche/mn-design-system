@@ -1,6 +1,6 @@
 # MN PKA Design-System — Architektur
 
-> **Stand:** 2026-10-17 (v0.19.0). Beschreibt den Ist-Zustand; die Versions-Historie
+> **Stand:** 2026-10-17 (v0.19.1). Beschreibt den Ist-Zustand; die Versions-Historie
 > steht im [CHANGELOG](CHANGELOG.md), die Komponenten-Specs unter
 > `mn_design_system/components/_patterns/`.
 >
@@ -22,7 +22,7 @@ SCHICHT 3 — Komponenten
         ↑ rendert auf Basis von
 SCHICHT 2 — Typografie + Symbole
   Schriften unter mn_design_system/fonts/ (Geist, Source Serif 4, JetBrains Mono,
-  STIX Two, Phosphor; weitere Familien im Paket: Inter, Noto, Source Sans 3),
+  STIX Two, Phosphor; dazu Noto Sans Symbols 2 fuer Symbole),
   Web-Schriftdateien (woff2) unter fonts/web/
         ↑ verweist auf Schluessel aus
 SCHICHT 1 — Tokens (SSoT)
@@ -65,12 +65,11 @@ Quellen unter `tokens/` (Style Dictionary v4 baut daraus eine flache Lookup-Tabe
 | `spacing.json` | `space.*` (Abstands-Skala) |
 | `radii.json` | `radius.*` |
 | `strokes.json` | `stroke.*` (Linienstaerken) und `shadow.*` |
-| `stack.json` | Schrift-Stack-Wahl: aktiv Stack A, Stack D (Source Sans 3) waehlbar |
+| `stack.json` | Schrift-Stack: Stack A (Geist + Source Serif 4 Italic) |
 | `web.json` | Web-Schicht: `web.text`, `web.leading`, `web.font`, `web.stroke`, `web.color`, `web.layout`, `web.touch-target` |
 | `families/indigo.json` | Familien-Definition der Indigo-Skala |
 
-Tier-Tokens vorhanden fuer: bibliothek, atelier, kabinett, start, observatorium, archiv
-sowie `magazin` (nur Uebergang, siehe § 4).
+Tier-Tokens vorhanden fuer: bibliothek, atelier, kabinett, start, observatorium, archiv.
 
 ---
 
@@ -78,9 +77,8 @@ sowie `magazin` (nur Uebergang, siehe § 4).
 
 `WebTier` (in `_patterns/contracts.py`) benennt die Bereiche von mkn-desk.com und mappt
 auf `color.tier.<tier>.*`: **bibliothek, atelier, kabinett, start, observatorium, archiv**.
-`archiv` loest seit 0.19.0 `magazin` ab (gleiche Farbwerte, eigene Referenz). `magazin`
-bleibt in 0.19.0 als veraltet markiert stehen; **0.19.1 entfernt es** samt Tokens und
-Fallbacks.
+`archiv` hat in 0.19.0 den Tier `magazin` abgeloest (gleiche Farbwerte, eigene Referenz auf die
+Grau-Skala); 0.19.1 hat `magazin` samt Tokens und Fallbacks entfernt.
 
 ---
 

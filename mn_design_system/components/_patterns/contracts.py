@@ -210,17 +210,13 @@ class WetterStripInput(BaseModel):
 
 
 class WebTier(str, Enum):
-    """Die Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*.
-
-    MAGAZIN ist veraltet (heisst seit 0.19.0 ARCHIV) und entfaellt in 0.19.1.
-    """
+    """Die Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
 
     BIBLIOTHEK = "bibliothek"
     ATELIER = "atelier"
     KABINETT = "kabinett"
     START = "start"
     OBSERVATORIUM = "observatorium"
-    MAGAZIN = "magazin"
     ARCHIV = "archiv"
 
 

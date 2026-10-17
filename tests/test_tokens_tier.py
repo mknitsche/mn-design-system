@@ -1,13 +1,14 @@
 """color.tier.* Token-Familie (UX-Welle v0.2, Gemini-Gate Punkt 1 + 3).
 
-7 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/magazin/archiv) x
+6 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/archiv) x
 {bg, bg-soft, border, text}.
 - bg-soft: Sub-Nav-Hover, abgeleitet aus bg (55% ueber Weiss) — vollwertiger
   Token (cross-media-faehig, kein color-mix im Konsumenten).
 - start: referenzielles Alias auf bibliothek (Style-Dictionary-Reference).
 - observatorium: referenzielles Alias auf atelier (AMBER-Bereich, 0.17.0).
-- magazin: eigene, gedaempfte Grau-Nuance (0.18.0) — bg/border/text referenzieren die
-  Grau-Skala, bg-soft und hover-on-dark sind abgeleitet.
+- archiv: eigene, gedaempfte Grau-Nuance (0.19.0; ersetzt seit 0.19.1 den frueheren Tier
+  magazin) — bg/border/text referenzieren die Grau-Skala, bg-soft und hover-on-dark
+  sind abgeleitet.
 """
 
 from __future__ import annotations
@@ -22,7 +23,6 @@ _TIERS = [
     "kabinett",
     "start",
     "observatorium",
-    "magazin",
     "archiv",
 ]
 _SLOTS = ["bg", "bg-soft", "border", "text"]
@@ -67,7 +67,7 @@ def test_bg_soft_werte():
 
 def test_bg_soft_heller_als_bg():
     """bg-soft ist zarter (heller) als bg — Hover < Aktiv."""
-    for tier in ["bibliothek", "atelier", "kabinett", "magazin"]:
+    for tier in ["bibliothek", "atelier", "kabinett", "archiv"]:
         bg = get(f"color.tier.{tier}.bg")
         bg_soft = get(f"color.tier.{tier}.bg-soft")
         bg_sum = sum(int(bg[i : i + 2], 16) for i in (1, 3, 5))
@@ -94,59 +94,43 @@ def _kontrast(a: str, b: str) -> float:
     return (hell + 0.05) / (dunkel + 0.05)
 
 
-def test_magazin_ist_eine_graue_nuance_aus_der_grau_skala():
-    """0.18.0: magazin ist KEIN Alias auf einen farbigen Tier, sondern bezieht bg,
-    border und text aus der Grau-Skala (Lead-Entscheid: gedaempfte Grau-Nuance)."""
-    assert get("color.tier.magazin.bg") == get("color.grey.50")
-    assert get("color.tier.magazin.border") == get("color.grey.200")
-    assert get("color.tier.magazin.text") == get("color.grey.700")
-
-
-def test_magazin_ist_nicht_gleich_einem_anderen_tier():
+def test_archiv_ist_nicht_gleich_einem_anderen_tier():
     """Eigene Identitaet: kein Slot ist ein Duplikat der uebrigen Tiers."""
     for slot in ["bg", "border", "text"]:
-        wert = get(f"color.tier.magazin.{slot}")
-        assert wert is not None, f"Token fehlt: color.tier.magazin.{slot}"
+        wert = get(f"color.tier.archiv.{slot}")
+        assert wert is not None, f"Token fehlt: color.tier.archiv.{slot}"
         for tier in ["bibliothek", "atelier", "kabinett", "start", "observatorium"]:
-            assert wert != get(f"color.tier.{tier}.{slot}"), f"magazin.{slot} == {tier}"
+            assert wert != get(f"color.tier.{tier}.{slot}"), f"archiv.{slot} == {tier}"
 
 
-def test_magazin_bg_soft_ist_bg_zu_55_prozent_ueber_weiss():
+def test_archiv_bg_soft_ist_bg_zu_55_prozent_ueber_weiss():
     """Dieselbe Ableitung wie bei den anderen Tiers (Kopf der Datei)."""
-    bg = get("color.tier.magazin.bg")
+    bg = get("color.tier.archiv.bg")
     erwartet = "#" + "".join(
         f"{round(int(bg[i : i + 2], 16) * 0.55 + 255 * 0.45):02x}" for i in (1, 3, 5)
     )
-    assert get("color.tier.magazin.bg-soft") == erwartet == "#fafafa"
+    assert get("color.tier.archiv.bg-soft") == erwartet == "#fafafa"
 
 
-def test_magazin_hover_on_dark_ist_border_halbtransparent():
+def test_archiv_hover_on_dark_ist_border_halbtransparent():
     """Wie bei den anderen Tiers: Tier-Glow = border mit Deckkraft 0,5."""
-    border = get("color.tier.magazin.border")
+    border = get("color.tier.archiv.border")
     r, g, b = (int(border[i : i + 2], 16) for i in (1, 3, 5))
-    assert get("color.tier.magazin.hover-on-dark") == f"rgba({r},{g},{b},0.5)"
+    assert get("color.tier.archiv.hover-on-dark") == f"rgba({r},{g},{b},0.5)"
 
 
-def test_magazin_text_hat_lesbaren_kontrast():
+def test_archiv_text_hat_lesbaren_kontrast():
     """WCAG 1.4.3: Text >= 4,5:1 auf bg (Aktiv-Pille, Chip) UND auf bg-soft
     (Sub-Nav-Hover) UND auf Weiss (Sub-Nav-Leiste)."""
-    text = get("color.tier.magazin.text")
-    assert _kontrast(text, get("color.tier.magazin.bg")) >= 4.5
-    assert _kontrast(text, get("color.tier.magazin.bg-soft")) >= 4.5
+    text = get("color.tier.archiv.text")
+    assert _kontrast(text, get("color.tier.archiv.bg")) >= 4.5
+    assert _kontrast(text, get("color.tier.archiv.bg-soft")) >= 4.5
     assert _kontrast(text, get("color.light.surface")) >= 4.5
 
 
-def test_archiv_hat_in_allen_slots_die_werte_von_magazin():
-    """0.19.0: archiv loest magazin ab (Expand-Contract) — gleiche Grau-Nuance,
-    in jedem Slot (auch hover-on-dark), damit der Namenswechsel keine Farbe bewegt."""
-    for slot in [*_SLOTS, "hover-on-dark"]:
-        assert get(f"color.tier.archiv.{slot}") == get(f"color.tier.magazin.{slot}")
-        assert get(f"color.tier.archiv.{slot}") is not None
-
-
 def test_archiv_bezieht_bg_border_text_aus_der_grau_skala():
-    """Eigene Referenz auf die Grau-Skala, nicht auf magazin: faellt magazin in 0.19.1
-    weg, darf kein Archiv-Token ins Leere zeigen."""
+    """archiv ist KEIN Alias auf einen farbigen Tier, sondern bezieht bg, border und text
+    aus der Grau-Skala (gedaempfte Grau-Nuance)."""
     assert get("color.tier.archiv.bg") == get("color.grey.50")
     assert get("color.tier.archiv.border") == get("color.grey.200")
     assert get("color.tier.archiv.text") == get("color.grey.700")

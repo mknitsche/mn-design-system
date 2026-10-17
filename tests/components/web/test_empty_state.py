@@ -58,7 +58,6 @@ def test_css_tier_modifier_uses_border_token():
         "kabinett",
         "start",
         "observatorium",
-        "magazin",
         "archiv",
     ):
         assert f"var(--color-tier-{tier}-border" in css

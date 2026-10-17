@@ -5,7 +5,7 @@ Content-Card, Empty-State). Ein neuer Tier ohne Eintrag dort bekaeme keine Hover
 Aktiv-Farbe — und kein Test fiele auf, solange die Tests ihre Tier-Liste von Hand
 tippen. Dieser Test leitet die Liste aus dem Enum ab und prueft die Wirkung (die Regel
 steht im CSS, mit dem ECHTEN Token-Wert als ``var()``-Rueckfall), nicht die Schreibweise
-einer Liste (0.18.0, Tier ``magazin``).
+einer Liste (0.18.0, als der siebte Tier dazukam).
 """
 
 from __future__ import annotations
@@ -25,8 +25,7 @@ _TIERS = [t.value for t in WebTier]
 
 def test_untergrenze_alle_tiers_sind_da():
     """LP-36: eine leere Enum-Ableitung wuerde jeden Test unten trivial bestehen."""
-    assert len(_TIERS) >= 7
-    assert "magazin" in _TIERS
+    assert len(_TIERS) >= 6
     assert "archiv" in _TIERS
 
 
