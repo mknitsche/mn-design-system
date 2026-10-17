@@ -54,15 +54,20 @@ class TestZahlDeKurz:
             (1000.0, 0, "1.000"),  # ohne Dezimalstellen gibt es nichts zu kuerzen
             (100.0, 0, "100"),
             (0.0, 1, "0"),
-            (-5.0, 1, "-5"),
+            (-5.0, 1, "\u22125"),
+            (-72.5, 1, "\u221272,5"),
         ],
     )
     def test_ohne_ueberfluessige_nullen(self, wert, stellen, soll):
         assert zahl_de_kurz(wert, stellen) == soll
 
     def test_minus_null_wird_null(self):
-        """-0,04 auf eine Stelle ist „0", nicht „-0"."""
+        """-0,04 auf eine Stelle ist „0", nicht „-0" und nicht „−0"."""
         assert zahl_de_kurz(-0.04, 1) == "0"
+
+    def test_negativ_mit_echtem_minuszeichen_nicht_bindestrich(self):
+        text = zahl_de_kurz(-5.0, 1)
+        assert text.startswith(MINUS) and "-" not in text
 
 
 class TestRundetAufNull:

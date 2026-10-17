@@ -86,6 +86,12 @@ def _diagramme() -> dict[str, VerlaufChartInput]:
         for i, d in enumerate(tage)
     ]
     fenster = {"von": date(2026, 7, 19), "bis": date(2026, 10, 17)}
+    tag_wert = [6 + 6 * math.sin(i / 3) for i in range(91)]  # 0..12 km
+    tag_km = [VerlaufPunkt(t=d, wert=round(w, 1)) for d, w in zip(tage, tag_wert)]
+    summe_km = [
+        VerlaufPunkt(t=tage[i], wert=round(sum(tag_wert[i - 6 : i + 1]), 1))
+        for i in range(6, 91)
+    ]
     return {
         "gewicht": VerlaufChartInput(
             titel="Gewicht",
@@ -106,6 +112,43 @@ def _diagramme() -> dict[str, VerlaufChartInput]:
             reihen=[VerlaufReihe(label="Uhr", punkte=puls)],
             dezimalstellen=0,
             hoehe=220,
+            **fenster,
+        ),
+        # 0.17.1: die ERSTE Reihe hat im Fenster keinen Punkt (ihre Messungen liegen
+        # ein Jahr zurueck), das Zielband haengt aber an der ersten Reihe — wird es noch
+        # gezeichnet? (Critic-Hinweis 0.17.0: ungeprueft)
+        "erste-leer": VerlaufChartInput(
+            titel="Gewicht",
+            einheit="kg",
+            reihen=[
+                VerlaufReihe(
+                    label="Waage",
+                    punkte=[
+                        VerlaufPunkt(t=date(2025, 9, 1) + timedelta(days=i), wert=80.0)
+                        for i in range(5)
+                    ],
+                ),
+                VerlaufReihe(label="7-Tage-Mittel", punkte=gleitend, art="gleitend"),
+            ],
+            zielband_min=78.0,
+            zielband_max=81.0,
+            dezimalstellen=1,
+            **fenster,
+        ),
+        # 0.17.1: Tageswerte links (0..12 km), 7-Tage-Summe rechts (30..80 km)
+        "zwei-achsen": VerlaufChartInput(
+            titel="Laufen",
+            einheit="km",
+            reihen=[
+                VerlaufReihe(label="Tag", punkte=tag_km),
+                VerlaufReihe(
+                    label="7-Tage-Summe",
+                    punkte=summe_km,
+                    art="gleitend",
+                    achse="rechts",
+                ),
+            ],
+            dezimalstellen=0,
             **fenster,
         ),
         "leer": VerlaufChartInput(
@@ -466,6 +509,96 @@ class TestBausteine:
 # ---------------------------------------------------------------------------
 # Loader: deutsche Zahlen und Daten, Groessenanpassung, Theme-Wahl
 # ---------------------------------------------------------------------------
+
+
+class TestZweiteWerteachse:
+    """Reihen mit ``achse="rechts"`` haben eine eigene Skala (0.17.1): Tageswerte bis 12
+    und 7-Tage-Summen bis 80 teilen sich KEINE Achse."""
+
+    def test_zwei_achsen_und_die_summe_zeigt_auf_die_zweite(self, seite):
+        achsen, index = seite.chart_js(
+            "zwei-achsen",
+            "(c) => { const o = c.getOption();"
+            " return [o.yAxis.length, o.series.map(s => s.yAxisIndex || 0)]; }",
+        )
+        assert achsen == 2
+        assert index == [0, 1]
+
+    def test_gewicht_hat_weiter_eine_achse(self, seite):
+        assert seite.chart_js("gewicht", "(c) => c.getOption().yAxis.length") == 1
+
+    def test_beide_achsen_deutsch_formatiert(self, seite):
+        text = seite.chart_js(
+            "zwei-achsen",
+            """(c) => {
+              const y = c.getOption().yAxis;
+              return [y[0].axisLabel.formatter(1234.5), y[1].axisLabel.formatter(1234.5),
+                      y[1].axisLabel.formatter(80)];
+            }""",
+        )
+        assert text == ["1.235", "1.235", "80"]  # dezimalstellen=0: kein Komma, Punkt
+
+    def test_jede_reihe_nutzt_ihre_eigene_skala(self, seite):
+        """Teilten sie eine Achse (0..80), laege die Tageslinie (bis 12) nur im unteren
+        Sechstel. Mit eigener Skala reicht sie in das obere Drittel der Flaeche, und die
+        Summe (30..80) ist ueberhaupt zu sehen."""
+        breite = seite.js(
+            "document.querySelector('[data-verlauf-chart=zwei-achsen] canvas').width"
+        )
+        oben = (0, 32, breite, 32 + 60)  # oberes Drittel der Plotflaeche (32..204)
+        assert (
+            seite.pixel("zwei-achsen", _rgb("color.diagram.indigo.base"), region=oben)
+            > 15
+        )
+        assert seite.pixel("zwei-achsen", _rgb("color.diagram.teal.base")) > 100
+
+    def test_beschriftung_der_rechten_achse_steht_im_rechten_rand(self, seite):
+        """Der Plot endet 48 px vor dem rechten Rand; in diesem Streifen stehen Zahlen
+        und Einheit der rechten Achse (ohne Platz wuerden sie abgeschnitten)."""
+        breite = seite.js(
+            "document.querySelector('[data-verlauf-chart=zwei-achsen] canvas').width"
+        )
+        plot_rechts = seite.chart_js(
+            "zwei-achsen",
+            "(c) => { const r = c.getModel().getComponent('grid', 0)"
+            ".coordinateSystem.getRect(); return r.x + r.width; }",
+        )
+        assert plot_rechts <= breite - 44, (plot_rechts, breite)
+        rand = (round(plot_rechts) + 2, 0, breite, 230)
+        assert seite.pixel("zwei-achsen", region=rand) > 60
+
+    def test_linke_achse_links_rechte_rechts(self, seite):
+        ist = seite.chart_js(
+            "zwei-achsen",
+            "(c) => { const o = c.getOption();"
+            " return [o.yAxis[0].position || 'left', o.yAxis[1].position]; }",
+        )
+        assert ist == ["left", "right"]
+
+
+class TestErsteReiheOhnePunkte:
+    """Das Zielband und die Marken haengen an der ERSTEN Reihe. Hat sie im Fenster keinen
+    Punkt, die zweite aber schon, muss das Band trotzdem stehen (0.17.1)."""
+
+    def test_zielband_wird_gezeichnet(self, seite):
+        zielband = _rgb("color.status.success-bg")
+        assert seite.pixel("erste-leer", zielband, toleranz=0) > 5000
+
+    def test_zweite_reihe_wird_gezeichnet(self, seite):
+        assert seite.pixel("erste-leer", _rgb("color.diagram.teal.base")) > 100
+
+    def test_kein_hinweis_leeres_fenster(self, seite):
+        """Es gibt Werte im Fenster (die zweite Reihe): kein „keine Werte"-Text, dafuer
+        die Zoom-Leiste."""
+        hat_graphic = seite.chart_js(
+            "erste-leer",
+            "(c) => !!(c.getOption().graphic && c.getOption().graphic.length)",
+        )
+        assert hat_graphic is False
+        hat_zoom = seite.chart_js(
+            "erste-leer", "(c) => c.getOption().dataZoom.length >= 1"
+        )
+        assert hat_zoom is True
 
 
 class TestLoader:

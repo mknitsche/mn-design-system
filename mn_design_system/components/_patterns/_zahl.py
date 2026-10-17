@@ -27,12 +27,16 @@ def zahl_de_kurz(wert: float, dezimalstellen: int) -> str:
     """Wie :func:`zahl_de`, aber ohne ueberfluessige Nullen hinter dem Komma.
 
     ``70.0`` wird „70", ``72.5`` bleibt „72,5". Die Nullen VOR dem Komma bleiben
-    („100", „1.000"); ohne Dezimalstellen gibt es nichts zu kuerzen.
+    („100", „1.000"); ohne Dezimalstellen gibt es nichts zu kuerzen. Ein negativer Wert
+    traegt das Minuszeichen U+2212 („−5"), nicht den Bindestrich — in „−5–5" waere ein
+    Bindestrich vom Bis-Strich kaum zu unterscheiden; was auf null rundet, ist „0".
     """
     text = zahl_de(wert, dezimalstellen)
     if "," in text:
         text = text.rstrip("0").rstrip(",")
-    return "0" if text == "-0" else text
+    if text == "-0":
+        return "0"
+    return text.replace("-", MINUS, 1)
 
 
 def _gerundet(wert: float, dezimalstellen: int) -> Decimal:

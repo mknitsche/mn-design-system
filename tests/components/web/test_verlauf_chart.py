@@ -49,11 +49,25 @@ def _p(tag: int, wert: float, monat: int = 10) -> VerlaufPunkt:
 
 
 def _reihe(
-    label: str = "Gewicht", *, art: str = "messung", punkte=None
+    label: str = "Gewicht", *, art: str = "messung", punkte=None, achse: str = "links"
 ) -> VerlaufReihe:
     if punkte is None:
         punkte = [_p(3, 80.0), _p(9, 79.4), _p(16, 79.0)]
-    return VerlaufReihe(label=label, punkte=punkte, art=art)
+    return VerlaufReihe(label=label, punkte=punkte, art=art, achse=achse)
+
+
+def _tage_und_summe(**overrides) -> VerlaufChartInput:
+    """Tageswerte links (0..12 km), 7-Tage-Summe rechts (30..80 km): zwei Skalen."""
+    tag = _reihe("Tag", punkte=[_p(3, 4.0), _p(9, 12.0), _p(16, 8.0)])
+    summe = _reihe(
+        "7-Tage-Summe",
+        art="gleitend",
+        achse="rechts",
+        punkte=[_p(3, 30.0), _p(9, 80.0), _p(16, 55.0)],
+    )
+    return _chart(
+        **{"titel": "Laufen", "einheit": "km", "reihen": [tag, summe], **overrides}
+    )
 
 
 def _chart(**overrides) -> VerlaufChartInput:
@@ -198,6 +212,81 @@ class TestOption:
             _chart(reihen=[reihe], zielband_min=80.0, zielband_max=80.0)
         )["yAxis"]
         assert y["min"] < 80.0 < y["max"]
+
+    # ---- 0.17.1: zweite Werteachse -------------------------------------
+
+    def test_ohne_rechte_reihe_bleibt_die_werteachse_ein_objekt(self):
+        """Bestehende Aufrufe: ``yAxis`` ist weiter EIN Objekt, kein ``yAxisIndex``,
+        rechter Rand wie zuvor."""
+        c = _chart(reihen=[_reihe("A"), _reihe("B")])
+        option = verlauf_chart_option(c)
+        assert isinstance(option["yAxis"], dict)
+        assert all("yAxisIndex" not in s for s in option["series"])
+        assert option["grid"]["right"] == 12
+
+    def test_rechte_reihe_bekommt_eine_zweite_werteachse(self):
+        option = verlauf_chart_option(_tage_und_summe())
+        assert isinstance(option["yAxis"], list)
+        assert len(option["yAxis"]) == 2
+        links, rechts = option["yAxis"]
+        assert links["type"] == "value" and rechts["type"] == "value"
+        assert rechts["position"] == "right"
+        assert rechts["scale"] is True
+
+    def test_nur_die_rechte_reihe_zeigt_auf_die_zweite_achse(self):
+        tag, summe = verlauf_chart_option(_tage_und_summe())["series"]
+        assert "yAxisIndex" not in tag
+        assert summe["yAxisIndex"] == 1
+
+    def test_linke_achse_bleibt_die_alte_achse(self):
+        """Die linke Achse sieht aus wie die einer Eingabe ohne rechte Reihe."""
+        ohne = verlauf_chart_option(
+            _chart(
+                titel="Laufen",
+                einheit="km",
+                reihen=[_reihe("Tag", punkte=[_p(3, 4.0), _p(9, 12.0), _p(16, 8.0)])],
+            )
+        )
+        mit = verlauf_chart_option(_tage_und_summe())
+        assert mit["yAxis"][0] == ohne["yAxis"]
+
+    def test_rechte_achse_traegt_die_einheit_und_hat_kein_gitter(self):
+        """Ein zweites Gitter lege sich schief ueber das erste."""
+        rechts = verlauf_chart_option(_tage_und_summe())["yAxis"][1]
+        assert rechts["name"] == "km"
+        assert rechts["nameTextStyle"] == {"align": "right"}
+        assert rechts["splitLine"] == {"show": False}
+
+    def test_rechte_achse_ohne_einheit_hat_keinen_namen(self):
+        assert (
+            "name" not in verlauf_chart_option(_tage_und_summe(einheit=""))["yAxis"][1]
+        )
+
+    def test_rechter_rand_macht_platz_fuer_die_beschriftung(self):
+        grid = verlauf_chart_option(_tage_und_summe())["grid"]
+        assert grid["left"] == 48 and grid["right"] == 48
+
+    def test_zielband_haengt_an_der_linken_achse_und_ignoriert_die_rechte_skala(self):
+        """Die Summen (bis 80) duerfen die linke Achse nicht aufblasen: die Grenzen
+        kommen aus den linken Werten (4..12) und dem Band (5..9)."""
+        option = verlauf_chart_option(
+            _tage_und_summe(zielband_min=5.0, zielband_max=9.0)
+        )
+        links = option["yAxis"][0]
+        assert links["max"] < 20, links
+        tag, summe = option["series"]
+        assert tag["markArea"]["data"] == [[{"yAxis": 5.0}, {"yAxis": 9.0}]]
+        assert "markArea" not in summe
+        assert "min" not in option["yAxis"][1] and "max" not in option["yAxis"][1]
+
+    def test_option_bleibt_reines_json_ohne_farbe(self):
+        text = json.dumps(
+            verlauf_chart_option(_tage_und_summe(zielband_min=5.0, zielband_max=9.0))
+        )
+        assert "#" not in text and "function" not in text
+        assert not re.search(
+            r'"(color|fill|stroke|background\w*)"', text, re.IGNORECASE
+        )
 
     def test_markierungen_nur_mit_markierungen(self):
         ohne = verlauf_chart_option(_chart())["series"][0]
@@ -375,8 +464,45 @@ class TestHtml:
     def test_caption_nennt_zielband_mit_einheit(self):
         c = _chart(zielband_min=78.0, zielband_max=80.5)
         caption = render_verlauf_chart_html(c, kennung="g").split("<figcaption>")[1]
-        assert "Zielband" in caption
-        assert "78,0" in caption and "80,5" in caption and "kg" in caption
+        assert "Zielband 78–80,5 kg" in caption
+
+    @pytest.mark.parametrize(
+        ("lo", "hi", "stellen", "einheit", "soll"),
+        [
+            (70.0, 74.0, 1, "kg", "Zielband 70–74 kg"),  # keine „70,0–74,0"
+            (70.0, 74.5, 1, "kg", "Zielband 70–74,5 kg"),
+            (72.25, 74.0, 2, "kg", "Zielband 72,25–74 kg"),
+            (72.0, 74.0, 3, "kg", "Zielband 72–74 kg"),
+            (70.0, 74.0, 0, "kg", "Zielband 70–74 kg"),
+            (1000.0, 1500.0, 0, "kcal", "Zielband 1.000–1.500 kcal"),
+            (100.0, 200.0, 1, "", "Zielband 100–200"),
+            (-5.0, 5.0, 1, "°C", "Zielband \u22125–5 °C"),
+            (0.0, 0.0, 1, "", "Zielband 0–0"),
+        ],
+    )
+    def test_caption_zielband_ohne_ueberfluessige_nullen(
+        self, lo, hi, stellen, einheit, soll
+    ):
+        c = _chart(
+            einheit=einheit,
+            zielband_min=lo,
+            zielband_max=hi,
+            dezimalstellen=stellen,
+        )
+        html = render_verlauf_chart_html(c, kennung="g")
+        caption = html.split("<figcaption>")[1].split("</figcaption>")[0]
+        assert caption.endswith(soll), caption
+
+    def test_caption_nennt_die_rechte_achse(self):
+        html = render_verlauf_chart_html(_tage_und_summe(), kennung="g")
+        caption = html.split("<figcaption>")[1].split("</figcaption>")[0]
+        assert caption == "Tag · 7-Tage-Summe (gestrichelt, rechte Achse)"
+
+    def test_caption_rechte_messreihe_ohne_gestrichelt(self):
+        c = _chart(reihen=[_reihe("A"), _reihe("B", achse="rechts")])
+        html = render_verlauf_chart_html(c, kennung="g")
+        caption = html.split("<figcaption>")[1].split("</figcaption>")[0]
+        assert caption == "A · B (rechte Achse)"
 
     def test_caption_ohne_zielband_kein_zielband_satz(self):
         caption = render_verlauf_chart_html(_chart(), kennung="g").split(
@@ -489,6 +615,13 @@ class TestJs:
         koerper = js.split("(function () {", 1)[1]
         erste = next(z.strip() for z in koerper.splitlines() if z.strip())
         assert erste == "if (!window.echarts) return;"
+
+    def test_loader_formatiert_jede_werteachse(self):
+        """Mit zweiter Achse ist ``yAxis`` eine Liste: der Loader setzt das deutsche
+        Zahlenformat auf jede Achse, nicht nur auf ein Objekt."""
+        js = render_verlauf_chart_js()
+        assert "Array.isArray(option.yAxis)" in js
+        assert "achsen.forEach" in js
 
     def test_dunkel_nur_bei_gesetztem_schema(self):
         assert "dataset.schema === 'dunkel'" in render_verlauf_chart_js()

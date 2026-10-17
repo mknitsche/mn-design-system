@@ -487,6 +487,9 @@ class VerlaufReihe(BaseModel):
     label: Name in Legende und Tooltip (1..40 Zeichen).
     punkte: Messpunkte; darf leer sein (die Achse steht auch ohne Daten).
     art: "messung" = durchgezogene Linie, "gleitend" = gestrichelte Glaettung.
+    achse: "links" (Default) oder "rechts" (0.17.1) — liegt eine Reihe rechts, bekommt
+       das Diagramm eine zweite Werteachse mit eigener Skala (z.B. 7-Tage-Summen neben
+       Tageswerten). Beide Achsen tragen dieselbe Einheit (`VerlaufChartInput.einheit`).
     """
 
     model_config = {"extra": "forbid", "frozen": True}
@@ -494,6 +497,7 @@ class VerlaufReihe(BaseModel):
     label: str = Field(min_length=1, max_length=40)
     punkte: list[VerlaufPunkt]
     art: Literal["messung", "gleitend"] = "messung"
+    achse: Literal["links", "rechts"] = "links"
 
 
 class VerlaufMarkierung(BaseModel):
@@ -515,6 +519,8 @@ class VerlaufChartInput(BaseModel):
 
     titel / einheit: Ueberschrift (1..80) und Einheit der Werteachse (0..16).
     reihen: 1..4 Linien; Punkte ausserhalb von `von`..`bis` werden nicht gezeichnet.
+       Die erste Reihe liegt auf der linken Achse (sie traegt Zielband, Marken und
+       die Beschreibung); weitere duerfen `achse="rechts"` haben (0.17.1).
     von / bis: sichtbares Zeitfenster (ganze Tage, `bis` einschliesslich); die
        Zeitachse steht auch ohne Punkte. Es gilt von < bis.
     zielband_min / zielband_max: optionales Band; beide oder keins, min <= max.
@@ -544,6 +550,11 @@ class VerlaufChartInput(BaseModel):
     def _fenster_und_zielband(self) -> VerlaufChartInput:
         if self.von >= self.bis:
             raise ValueError("von muss vor bis liegen")
+        if self.reihen[0].achse != "links":
+            raise ValueError(
+                "die erste Reihe liegt auf der linken Achse (sie traegt Zielband, "
+                "Marken und Beschreibung)"
+            )
         if (self.zielband_min is None) != (self.zielband_max is None):
             raise ValueError("Zielband braucht Minimum und Maximum (beide oder keins)")
         if self.zielband_min is not None and self.zielband_min > self.zielband_max:

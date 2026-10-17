@@ -536,6 +536,19 @@ class TestVerlaufReihe:
         with pytest.raises(ValidationError):
             VerlaufReihe(label="X", punkte=[], art="trend")
 
+    def test_achse_default_links(self):
+        """0.17.1: ohne Angabe liegt die Reihe links (wie bis 0.17.0)."""
+        assert VerlaufReihe(label="X", punkte=[]).achse == "links"
+
+    @pytest.mark.parametrize("achse", ["links", "rechts"])
+    def test_achse_gueltig(self, achse):
+        assert VerlaufReihe(label="X", punkte=[], achse=achse).achse == achse
+
+    @pytest.mark.parametrize("achse", ["oben", "rechts ", "Links", "", None])
+    def test_achse_ungueltig(self, achse):
+        with pytest.raises(ValidationError):
+            VerlaufReihe(label="X", punkte=[], achse=achse)
+
     def test_label_grenzen(self):
         VerlaufReihe(label="a", punkte=[])
         VerlaufReihe(label="a" * 40, punkte=[])
@@ -592,6 +605,23 @@ class TestVerlaufChartInput:
     def test_reihen_leer_abgelehnt(self):
         with pytest.raises(ValidationError):
             _chart(reihen=[])
+
+    def test_erste_reihe_liegt_links(self):
+        """Die erste Reihe traegt Zielband, Marken und Beschreibung — beides haengt
+        an der linken Achse; liegt sie rechts, stuende das Band auf der falschen Skala."""
+        rechts = VerlaufReihe(label="Summe", punkte=[], achse="rechts")
+        with pytest.raises(ValidationError, match="erste Reihe"):
+            _chart(reihen=[rechts, _reihe("Tag")])
+
+    def test_weitere_reihen_duerfen_rechts_liegen(self):
+        rechts = VerlaufReihe(label="Summe", punkte=[], achse="rechts")
+        c = _chart(reihen=[_reihe("Tag"), rechts])
+        assert [r.achse for r in c.reihen] == ["links", "rechts"]
+
+    def test_eine_einzige_reihe_rechts_ist_abgelehnt(self):
+        rechts = VerlaufReihe(label="Summe", punkte=[], achse="rechts")
+        with pytest.raises(ValidationError, match="erste Reihe"):
+            _chart(reihen=[rechts])
 
     def test_reihen_grenzen(self):
         _chart(reihen=[_reihe(f"R{i}") for i in range(4)])
