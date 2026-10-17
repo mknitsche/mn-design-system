@@ -8,6 +8,99 @@ oder Doku.
 
 ---
 
+## [0.17.1] — 2026-10-17
+
+### Neu — Tier magazin, KPI-Polaritaet, Zeitraum-Leiste, zweite Werteachse (claudeAI TODO-885 Welle C)
+
+Alles additiv: ein Aufruf aus 0.17.0 liefert dieselbe Ausgabe — mit EINER gewollten
+Ausnahme, der Zielband-Bildunterschrift des Verlauf-Charts (siehe unten).
+
+- **Tier `magazin`** (gedaempfte Grau-Nuance): `WebTier.MAGAZIN`, Tokens
+  `color.tier.magazin.{bg,bg-soft,border,text,hover-on-dark}`. `bg`, `border` und `text`
+  referenzieren die Grau-Skala (`grey.50` = `#f5f5f5`, `grey.200` = `#e5e7eb`,
+  `grey.700` = `#374151`), `bg-soft` ist `bg` zu 55 % ueber Weiss (`#fafafa`, wie bei den
+  anderen Tiers gebildet), `hover-on-dark` der halbtransparente Rand
+  (`rgba(229,231,235,0.5)`). Text-Kontrast 9,45:1 auf `bg`, 9,88:1 auf `bg-soft`, 10,31:1 auf
+  Weiss (Test: >= 4,5:1). Eingetragen in Masthead, Tier-Chip, Sub-Nav, Content-Card und
+  Empty-State; ein aus dem Enum abgeleiteter Test prueft die Wirkung je Komponente, damit
+  ein kuenftiger Tier nicht wieder in einer der fuenf Listen fehlt.
+- **KpiCard: Polaritaet und deutsches absolutes Delta.** `KpiCardInput` bekommt
+  `richtung: "hoeher" | "niedriger" | "neutral" = "hoeher"`, `delta_wert: float | None`,
+  `delta_einheit: str = ""`, `dezimalstellen: int = 1` (0..6). Neu am Vertrag:
+  `KpiWertung` (`GUT`/`SCHLECHT`/`NEUTRAL`), `wertung()` und `delta_text()`;
+  `trend_direction()` liest bei gesetztem `delta_wert` das Delta. Die Farbe folgt der
+  Wertung (Bewegung x Polaritaet): bei `"niedriger"` ist ein Rueckgang gruen, bei
+  `"neutral"` bleibt alles gedaempft; der Pfeil zeigt immer die Bewegung. Web: neben
+  `is-up`/`is-down`/`is-neutral` traegt das Delta bei `richtung != "hoeher"` eine
+  Wertungsklasse `is-gut`/`is-schlecht`/`is-ungewertet`, die im CSS danach steht. Das
+  absolute Delta steht deutsch: „+1,2 kg" / „−1,2 kg" (Dezimalkomma, Tausenderpunkt ab
+  1.000, Minuszeichen U+2212, geschuetztes Leerzeichen U+00A0 vor der Einheit); rundet es
+  auf null, steht „unverändert" (Bewegung neutral). Web und PDF teilen den Vertrag, der
+  PDF-Renderer ist nachgezogen.
+- **Komponente `zeitraum_leiste`** (Web): Segment-Leiste aus Links fuer `?tage=30|90|365`.
+  `ZeitraumLeisteInput` (`optionen` 2..6, `aria_label` = „Zeitraum"), `ZeitraumOption`
+  (`label`, `href`, `active`); `render_zeitraum_leiste_html()` / `render_zeitraum_leiste_css()`.
+  Die gewaehlte Option traegt `aria-current="page"` — der aktive Zustand haengt allein an
+  diesem Attribut. Jede Option ist mindestens 44 x 44 px, der Fokusring liegt innen. Kein
+  Skript, nichts inline. Vorbild war die Repo-CSS `.verlauf-fenster` des Konsumenten, die
+  damit entfallen kann.
+- **Tokens `web.touch-target` (`44px`) und `web.scroll-max-h` (`22rem`)** fuer das
+  Touch-Ziel und die Hoehe eines scrollenden Tabellen-Bereichs.
+- **Verlauf-Chart: zweite Werteachse.** `VerlaufReihe.achse: "links" | "rechts" = "links"`:
+  liegt eine Reihe rechts, ist `yAxis` der Option eine Liste aus linker und rechter Achse und
+  jene Reihe zeigt mit `yAxisIndex: 1` auf die rechte (z. B. 7-Tage-Summen neben
+  Tageswerten). Ohne rechte Reihe bleibt `yAxis` EIN Objekt — die Option ist bytegleich zu
+  0.17.0 (8 Faelle gegen `git archive` von 0.17.0 verglichen).
+- **Verlauf-Chart: Zielband-Bildunterschrift ohne ueberfluessige Nullen:** „Zielband 70–74 kg"
+  statt „70,0–74,0 kg", „72,5–74", „1.000–1.500 kcal"; ein negativer Wert traegt das
+  Minuszeichen U+2212. **Das ist die einzige sichtbare Aenderung fuer bestehende Aufrufer.**
+- **Verlauf-Chart: Browser-Test** fuer den Fall, dass die erste Reihe im Fenster keinen Punkt
+  hat, das Zielband aber an ihr haengt (Critic-Hinweis 0.17.0, bis jetzt ungeprueft):
+  ECharts zeichnet das Band trotzdem; kein Code geaendert.
+
+### Entscheidungen im Bau (Abweichungen vom Auftrag, begruendet)
+
+- **`change_pct` und `delta_wert` zugleich sind ein `ValidationError`.** Der Auftrag nennt
+  beide als optional, regelt den gemeinsamen Fall aber nicht; die Karte zeigt genau EIN Delta,
+  und eine still verworfene Zahl ist der schlechtere Ausgang. Ebenso `delta_einheit` ohne
+  `delta_wert`. `delta_wert` lehnt NaN/Infinity ab.
+- **Rundung des Deltas kaufmaennisch** (halb aufwaerts, aus der kuerzesten Dezimaldarstellung):
+  0,25 -> „0,3", 0,35 -> „0,4" (als Gleitkommazahl 0,3499…). Der Rundungsmodus von `format`
+  wuerde 2,5 zu „2" machen. Die bestehende Zahl-Schreibweise des Verlauf-Charts (`zahl_de`)
+  bleibt unveraendert (Aufrufer duerfen sich nicht aendern) — im Delta rundet also etwas
+  anders als in der Beschreibung des Charts, nur auf exakten Halbwerten.
+- **Prozentwert bleibt im bisherigen Format** (Web „+1.25%" mit Punkt, PDF „+1,25%"): „exakt
+  gleich" fuer alte Aufrufer. Nur das neue absolute Delta ist durchgehend deutsch gesetzt.
+- **„unverändert"** zeigt der Web-Renderer mit ■ (wie jede neutrale Bewegung), der PDF-Renderer
+  ohne Pfeil: die PDF-Schrift (Geist) hat kein ■.
+- **Zeitraum-Leiste: kein Aussenabstand** (die Repo-CSS hatte `margin: 0 0 var(--space-4)`); den
+  setzt der Konsument. Hover-Grund `color.light.surface-subtle` statt `grey.100`, Rahmen
+  `web.color.separator` — DS-Tokens statt der Konsumenten-Aliase. Zusaetzlich `min-width`
+  (ein kurzes Label wie „7" waere sonst schmaler als ein Finger). Hoechstens eine Option aktiv;
+  keine aktive ist erlaubt (`?tage=7` steht in keiner Option). Kontraste: ruhend 4,83:1,
+  Hover 14,79:1, aktiv 5,62:1 (Test: >= 4,5:1).
+- **Verlauf-Chart, zweite Achse:** beide Achsen tragen dieselbe Einheit (`einheit`) — fuer
+  7-Tage-Summen neben Tageswerten reicht das; eine eigene Einheit der rechten Achse waere ein
+  weiteres Feld und bleibt aus, bis ein Verwender sie braucht. Die **erste Reihe muss links
+  liegen** (`ValidationError` sonst): an ihr haengen Zielband, Marken und die Beschreibung, und
+  das Band stuende bei einer rechten ersten Reihe auf der falschen Skala. Die linke Achse und
+  ihre festen Grenzen richten sich nur nach den linken Reihen; der rechte Rand wird 48 px breit
+  (sonst wuerde die Beschriftung abgeschnitten); die Textlegende nennt „(rechte Achse)".
+- **Loader:** setzt das deutsche Zahlenformat auf jede Werteachse (`yAxis` kann eine Liste
+  sein); fuer eine einzelne Achse ist das Verhalten unveraendert.
+- **Intern:** die deutsche Zahlenschreibweise zog aus `_patterns/_verlauf.py` nach
+  `_patterns/_zahl.py` (unveraendert), dort kommen `zahl_de_kurz`, `rundet_auf_null` und
+  `delta_de` dazu.
+
+### Tests
+
+`tests/test_zahl.py` (Format), `tests/test_kpi_card_vertrag.py` (Vertrag), `tests/components/web/test_kpi_card.py`
+und `tests/components/pdf/test_kpi_card.py` (alte Aufrufe bytegleich, Wertung), `tests/components/web/test_zeitraum_leiste.py`,
+`tests/components/web/test_tier_vollstaendigkeit.py`, `tests/components/web/test_kpi_zeitraum_browser.py`
+(Farbe des Deltas, Touch-Ziel, Zustaende, Fokus, Navigation ohne JavaScript — im Browser) sowie
+Ergaenzungen in `test_verlauf_chart*.py`, `test_tokens_tier.py`, `test_contracts_web.py`,
+`test_web_foundation_tokens.py`. Waechter-Tests sind per Mutation geprueft.
+
 ## [0.17.0] — 2026-10-17
 
 ### Neu — Tier observatorium, Komponente verlauf_chart (claudeAI TODO-885 § 4.10a)
