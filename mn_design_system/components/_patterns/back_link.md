@@ -18,7 +18,7 @@ Briefing, Sektion Politik                   <- h1 der Seite
 
 | Feld | Typ | Constraint |
 |---|---|---|
-| `href` | `str` | min_length=1, Ziel = die Elternseite |
+| `href` | `str` | interner Pfad: gestrippt, genau ein fuehrendes `/`, kein `//`, kein Backslash, keine Steuerzeichen (sonst ValueError) |
 | `label` | `str` | min_length=1, wörtlich die H1 der Elternseite |
 
 `render_back_link_html(input, *, inline_css=False)` und `render_back_link_css()`.

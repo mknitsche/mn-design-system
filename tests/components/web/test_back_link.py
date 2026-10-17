@@ -21,6 +21,34 @@ class TestBackLinkInput:
         with pytest.raises(pydantic.ValidationError):
             BackLinkInput(href="/bibliothek/briefing/", label="")
 
+    @pytest.mark.parametrize(
+        "href",
+        [
+            "javascript:alert(1)",
+            "  JaVaScRiPt:x",
+            "data:text/html,x",
+            "//evil.example/",
+            "https://x",
+            "/\\evil.example/",
+            "/a\nb",
+            "/a\tb",
+            "relativ/ohne/slash",
+            "   ",
+        ],
+    )
+    def test_nur_interne_pfade_sind_erlaubt(self, href):
+        with pytest.raises(pydantic.ValidationError):
+            BackLinkInput(href=href, label="X")
+
+    @pytest.mark.parametrize(
+        "href", ["/archiv/", "/observatorium/berichte/", "/bibliothek/briefing/#a"]
+    )
+    def test_interne_pfade_sind_erlaubt(self, href):
+        assert BackLinkInput(href=href, label="X").href == href
+
+    def test_href_wird_gestrippt(self):
+        assert BackLinkInput(href="  /archiv/ ", label="X").href == "/archiv/"
+
     def test_frozen_und_extra_verboten(self):
         eingabe = BackLinkInput(href="/x/", label="X")
         with pytest.raises(pydantic.ValidationError):
