@@ -327,4 +327,6 @@
   --web-layout-page-inset: 44px; /** Seiten-Einzug Desktop; responsiv 32px Tablet / 16px Mobil via render_foundation_css() */
   --web-layout-bp-mobile: 640px; /** Breakpoint: < 640 = mobil */
   --web-layout-bp-tablet: 1024px; /** Breakpoint: 640-1024 = Tablet; >= 1024 = Desktop */
+  --web-touch-target: 44px; /** v0.17.1: kleinste Kantenlaenge eines Bedienelements fuer Finger (WCAG 2.5.5, Apple HIG 44pt) — Zeitraum-Leiste, Auf-/Zuklapp-Schalter */
+  --web-scroll-max-h: 22rem; /** v0.17.1: Hoehe, ab der ein Tabellen-Bereich in sich scrollt statt die Seite zu dehnen (Messwert-Tabellen) */
 }

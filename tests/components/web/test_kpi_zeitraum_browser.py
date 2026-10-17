@@ -4,7 +4,7 @@
 Hier entscheidet der Browser, was daraus WIRD: welche Farbe das Delta einer Karte mit
 umgekehrter Polaritaet wirklich hat (die Wertungsklasse ueberschreibt die Bewegungsklasse
 nur ueber die Reihenfolge im CSS), wie gross das Touch-Ziel der Leiste ist, welcher
-Zustand aktiv aussieht.
+Zustand aktiv aussieht und ob die Leiste ohne Skript navigiert.
 
 Nur mit Playwright + Chromium; sonst sichtbar uebersprungen (UNGEPRUEFT), nie still gruen.
 """
@@ -16,10 +16,18 @@ from pathlib import Path
 import pytest
 
 import mn_design_system
-from mn_design_system.components._patterns.contracts import KpiCardInput
+from mn_design_system.components._patterns.contracts import (
+    KpiCardInput,
+    ZeitraumLeisteInput,
+    ZeitraumOption,
+)
 from mn_design_system.components.web.kpi_card import (
     render_kpi_card_css,
     render_kpi_card_html,
+)
+from mn_design_system.components.web.zeitraum_leiste import (
+    render_zeitraum_leiste_css,
+    render_zeitraum_leiste_html,
 )
 from mn_design_system.tokens import get
 
@@ -29,6 +37,21 @@ _REPO = Path(mn_design_system.__file__).parents[1]
 def _rgb(token: str) -> str:
     h = get(token)
     return f"rgb({int(h[1:3], 16)}, {int(h[3:5], 16)}, {int(h[5:7], 16)})"
+
+
+def _leiste(labels=("30 Tage", "90 Tage", "1 Jahr"), aktiv=1) -> ZeitraumLeisteInput:
+    return ZeitraumLeisteInput(
+        optionen=[
+            ZeitraumOption(label=label, href=f"?tage={i}", active=i == aktiv)
+            for i, label in enumerate(labels)
+        ]
+    )
+
+
+def _leiste_seite(**kw) -> str:
+    return _seite(
+        render_zeitraum_leiste_html(_leiste(**kw)), render_zeitraum_leiste_css()
+    )
 
 
 @pytest.fixture(scope="module")
@@ -117,3 +140,105 @@ class TestKpiDeltaFarbe:
             ctx.close()
         assert ist == self.SUCCESS
         assert text == "▼ \u22121,2\u00a0kg"
+
+
+_OPTION = ".mn-zeitraum-leiste__option"
+
+
+def _stil(page, nr: int, eigenschaft: str) -> str:
+    return page.evaluate(
+        "([sel, nr, e]) => getComputedStyle(document.querySelectorAll(sel)[nr])[e]",
+        [_OPTION, nr, eigenschaft],
+    )
+
+
+class TestZeitraumLeisteImBrowser:
+    @pytest.mark.parametrize("breite", [320, 1000])
+    def test_jede_option_ist_mindestens_44_px_gross(self, browser, tmp_path, breite):
+        """Auch das kurze Label: „1 J" waere ohne min-width schmaler als ein Finger."""
+        ctx, page = _geladen(
+            browser,
+            tmp_path,
+            _leiste_seite(labels=("7", "30 Tage", "1 J")),
+            breite=breite,
+        )
+        try:
+            boxen = page.evaluate(
+                "(sel) => [...document.querySelectorAll(sel)].map("
+                "e => { const r = e.getBoundingClientRect();"
+                " return [r.width, r.height]; })",
+                _OPTION,
+            )
+        finally:
+            ctx.close()
+        assert len(boxen) == 3
+        for breit, hoch in boxen:
+            assert breit >= 44 and hoch >= 44, boxen
+
+    def test_auf_dem_kleinsten_telefon_kein_seitlicher_ueberlauf(
+        self, browser, tmp_path
+    ):
+        ctx, page = _geladen(browser, tmp_path, _leiste_seite(), breite=320)
+        try:
+            masse = page.evaluate(
+                "() => [document.documentElement.scrollWidth,"
+                " document.documentElement.clientWidth,"
+                " document.querySelector('.mn-zeitraum-leiste').scrollWidth,"
+                " document.querySelector('.mn-zeitraum-leiste').clientWidth]"
+            )
+        finally:
+            ctx.close()
+        assert masse[0] <= masse[1], masse  # Seite
+        assert masse[2] <= masse[3], masse  # nichts in der Leiste abgeschnitten
+
+    def test_aktiv_ruhend_und_hover(self, browser, tmp_path):
+        ctx, page = _geladen(browser, tmp_path, _leiste_seite(aktiv=1))
+        try:
+            # ruhend: gedaempft auf Weiss
+            assert _stil(page, 0, "color") == _rgb("color.light.text-muted")
+            assert _stil(page, 0, "backgroundColor") == "rgba(0, 0, 0, 0)"
+            # aktiv: Akzent auf Indigo-50
+            assert _stil(page, 1, "color") == _rgb("color.light.accent")
+            assert _stil(page, 1, "backgroundColor") == _rgb("color.indigo.50")
+            # Hover auf einer ruhenden Option
+            page.hover(f"{_OPTION} >> nth=0")
+            assert _stil(page, 0, "color") == _rgb("color.light.text")
+            assert _stil(page, 0, "backgroundColor") == _rgb(
+                "color.light.surface-subtle"
+            )
+            # Hover auf der aktiven bleibt aktiv (Reihenfolge im CSS)
+            page.hover(f"{_OPTION} >> nth=1")
+            assert _stil(page, 1, "color") == _rgb("color.light.accent")
+            assert _stil(page, 1, "backgroundColor") == _rgb("color.indigo.50")
+        finally:
+            ctx.close()
+
+    def test_tastaturfokus_zeigt_den_ring_innen(self, browser, tmp_path):
+        ctx, page = _geladen(browser, tmp_path, _leiste_seite())
+        try:
+            page.keyboard.press("Tab")
+            ring = page.evaluate(
+                "() => { const e = document.activeElement;"
+                " const s = getComputedStyle(e);"
+                " return [e.className, s.outlineStyle, s.outlineWidth,"
+                " s.outlineColor, s.outlineOffset]; }"
+            )
+        finally:
+            ctx.close()
+        assert ring[0] == "mn-zeitraum-leiste__option"
+        assert ring[1:4] == ["solid", "2px", _rgb("web.color.focus-ring")]
+        assert ring[4] == "-2px"  # nach innen: overflow:hidden schnitte ihn sonst ab
+
+    def test_navigiert_ohne_skript(self, browser, tmp_path):
+        """Die Leiste besteht aus Links: mit abgeschaltetem JavaScript wechselt ein
+        Klick die Adresse."""
+        datei = tmp_path / "seite.html"
+        datei.write_text(_leiste_seite(), encoding="utf-8")
+        ctx = browser.new_context(java_script_enabled=False)
+        try:
+            page = ctx.new_page()
+            page.goto(datei.as_uri())
+            page.click(f"{_OPTION} >> nth=2")
+            assert page.url.endswith("seite.html?tage=2")
+        finally:
+            ctx.close()
