@@ -1,7 +1,7 @@
 {
   "font": {
     "_meta": {
-      "value": "Stack A (gewaehlt S238): Geist + Source Serif 4 Italic. Stack D als Alternative.",
+      "value": "Stack A (gewaehlt S238): Geist + Source Serif 4 Italic. Stack D (Source Sans 3) entfiel in 0.19.1.",
       "spec_ref": "docs/superpowers/specs/2026-04-29-mn-design-system-v2-design.md §5.3-5.5"
     },
 

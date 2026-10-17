@@ -147,12 +147,7 @@
   --color-tier-observatorium-border: #fde68a;
   --color-tier-observatorium-text: #92400e;
   --color-tier-observatorium-hover-on-dark: rgba(253,230,138,0.5);
-  --color-tier-magazin-bg: #f5f5f5; /** 0.17.1: Magazin — gedaempfte Grau-Nuance (Lead-Entscheid TODO-885 Welle C); bg/border/text referenzieren die Grau-Skala */
-  --color-tier-magazin-bg-soft: #fafafa; /** bg 55% ueber Weiss — Sub-Nav-Hover */
-  --color-tier-magazin-border: #e5e7eb;
-  --color-tier-magazin-text: #374151; /** Kontrast auf bg >= 4,5:1 (WCAG 1.4.3), per Test belegt */
-  --color-tier-magazin-hover-on-dark: rgba(229,231,235,0.5); /** Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent) */
-  --color-tier-archiv-bg: #f5f5f5; /** 0.19.0: Archiv loest Magazin ab (TODO-885 Ordnung 2) — gleiche Grau-Nuance, eigene Referenz auf die Grau-Skala; magazin entfaellt in 0.19.1 */
+  --color-tier-archiv-bg: #f5f5f5; /** Archiv — gedaempfte Grau-Nuance (TODO-885 Ordnung 2; 0.19.0 neu, ersetzt seit 0.19.1 den Tier magazin); bg/border/text referenzieren die Grau-Skala */
   --color-tier-archiv-bg-soft: #fafafa; /** bg 55% ueber Weiss — Sub-Nav-Hover */
   --color-tier-archiv-border: #e5e7eb;
   --color-tier-archiv-text: #374151; /** Kontrast auf bg >= 4,5:1 (WCAG 1.4.3), per Test belegt */
@@ -201,11 +196,9 @@
   --space-kachel-gap-row: 3mm; /** Zeilen-Abstand im Kachel-Grid */
   --space-kachel-width: 38mm; /** Kachel-Breite — 4 Kacheln pro Zeile bei 170mm A4-Content-Width */
   --space-kachel-height: 32mm; /** Kachel-Hoehe — bewahrt Wert-Sparkline-Verhaeltnis */
-  --stack-active: A; /** ENV-Override moeglich: MN_PKA_STACK=D */
+  --stack-active: A;
   --stack-available-a: Geist + Source Serif 4 Italic; /** Vercel + Adobe Mix, charakterstark, Logo-affin */
-  --stack-available-d: Source Sans 3 nativ; /** Adobe-DNA, kohaerent, +10% Skalierung */
   --stack-size-factor-a: 1.0;
-  --stack-size-factor-d: 1.10; /** x-Hoehen-Normalisierung Source Sans 3 */
   --stroke-hairline: 0.4pt; /** Tabellen-Trenner, Footer-Line */
   --stroke-thin: 0.5pt; /** Section-Trenner. v0.6.2 / S256: auch MA50-Linie in Sparkline-Kachel. */
   --stroke-default: 1pt;

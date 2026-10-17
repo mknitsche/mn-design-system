@@ -27,11 +27,9 @@ _MIT = {"phosphor"}
 #: „alle gefundenen Familien“ ist bei leerer Entdeckung trivial gruen.
 _ERWARTET = {
     "geist",
-    "inter",
     "jetbrains-mono",
     "noto",
     "phosphor",
-    "source-sans",
     "source-serif",
     "stix-two",
     "web",
@@ -100,9 +98,9 @@ def _copyright_zeilen(familie: Path) -> set[str]:
 
 
 def test_untergrenze_der_familien():
-    """Das Paket bringt mindestens diese neun Familien mit — sonst prueft der Rest nichts."""
+    """Das Paket bringt mindestens diese sieben Familien mit — sonst prueft der Rest nichts."""
     namen = {d.name for d in _familien()}
-    assert len(namen) >= 9
+    assert len(namen) >= 7
     assert _ERWARTET <= namen
 
 
@@ -118,8 +116,8 @@ def test_jede_familie_hat_einen_lizenztext(name):
     else:
         assert "SIL OPEN FONT LICENSE Version 1.1" in text
         # Wortlaut der SIL-Vorlage (openfontlicense.org; so auch STIX und Geist upstream —
-        # Inter upstream schreibt „AND“): „&“. Bis 0.16.0 stand hier „AND“, vom Test
-        # festgeschrieben.
+        # die Inter-Datei, bis 0.19.0 im Paket, schrieb „AND“): „&“. Bis 0.16.0 stand hier
+        # „AND“, vom Test festgeschrieben.
         assert "PERMISSION & CONDITIONS" in text
         assert "PERMISSION AND CONDITIONS" not in text
 
@@ -172,7 +170,7 @@ def test_lizenzdateien_gehen_ins_wheel():
         for p in (paket / "fonts").glob("*/*")
         if p.name == "OFL.txt" or p.name.startswith("LICENSE")
     )
-    assert len(lizenzen) >= 9, "Untergrenze: die Lizenzdateien wurden gefunden (LP-36)"
+    assert len(lizenzen) >= 7, "Untergrenze: die Lizenzdateien wurden gefunden (LP-36)"
     # An den echten Dateien geprueft, nicht am Text der Musterliste (Critic 0.16.0).
     ohne_muster = [d for d in lizenzen if not any(fnmatch(d, m) for m in muster)]
     assert ohne_muster == []

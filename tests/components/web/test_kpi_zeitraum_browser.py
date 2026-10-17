@@ -278,9 +278,7 @@ class TestTierChipFallback:
     """Ohne Token-CSS griff fuer JEDEN Tier der gruene Fallback (Bibliothek). Der Fallback ist
     jetzt der Token-Wert des eigenen Tiers."""
 
-    @pytest.mark.parametrize(
-        "tier", ["atelier", "kabinett", "observatorium", "magazin", "archiv"]
-    )
+    @pytest.mark.parametrize("tier", ["atelier", "kabinett", "observatorium", "archiv"])
     def test_fallback_ohne_tokens_ist_die_eigene_tierfarbe(
         self, browser, tmp_path, tier
     ):

@@ -51,10 +51,6 @@ _FONT_MAP: dict[str, str] = {
     # v0.16.0: Token font.family.italic-editorial-bold (der Schnitt, den <b> in der
     # Zitat-Kursive ergibt) — derselbe Fett-Kursiv-Schnitt wie SourceSerif-BoldItalic.
     "SourceSerif4-BoldItalic": "source-serif/SourceSerif4-BoldItalic.ttf",
-    "SourceSans": "source-sans/SourceSans3-Regular.ttf",
-    "SourceSans-Bold": "source-sans/SourceSans3-Bold.ttf",
-    "SourceSans-Italic": "source-sans/SourceSans3-Italic.ttf",
-    "SourceSans-BoldItalic": "source-sans/SourceSans3-BoldItalic.ttf",
     "JetBrainsMono": "jetbrains-mono/JetBrainsMono-Regular.ttf",
     "JetBrainsMono-Bold": "jetbrains-mono/JetBrainsMono-Bold.ttf",
     "Phosphor": "phosphor/Phosphor.ttf",
@@ -62,14 +58,6 @@ _FONT_MAP: dict[str, str] = {
     "Phosphor-Bold": "phosphor/Phosphor-Bold.ttf",
     "Phosphor-Fill": "phosphor/Phosphor-Fill.ttf",
     "Phosphor-Duotone": "phosphor/Phosphor-Duotone.ttf",
-    "Inter": "inter/Inter-Regular.ttf",
-    "Inter-Bold": "inter/Inter-Bold.ttf",
-    "Inter-Italic": "inter/Inter-Italic.ttf",
-    "Inter-BoldItalic": "inter/Inter-BoldItalic.ttf",
-    "NotoSans": "noto/NotoSans-Regular.ttf",
-    "NotoSans-Bold": "noto/NotoSans-Bold.ttf",
-    "NotoSans-Italic": "noto/NotoSans-Italic.ttf",
-    "NotoSans-BoldItalic": "noto/NotoSans-BoldItalic.ttf",
     "NotoSansSymbols2": "noto/NotoSansSymbols2-Regular.ttf",
     "STIXTwo": "stix-two/STIXTwoText-Regular.ttf",
     "STIXTwo-Italic": "stix-two/STIXTwoText-Italic.ttf",
@@ -136,14 +124,6 @@ _FAMILIEN: dict[str, tuple[str, str, str, str]] = {
         "SourceSerif4-Italic",
         "SourceSerif4-BoldItalic",
     ),
-    "SourceSans": (
-        "SourceSans",
-        "SourceSans-Bold",
-        "SourceSans-Italic",
-        "SourceSans-BoldItalic",
-    ),
-    "Inter": ("Inter", "Inter-Bold", "Inter-Italic", "Inter-BoldItalic"),
-    "NotoSans": ("NotoSans", "NotoSans-Bold", "NotoSans-Italic", "NotoSans-BoldItalic"),
     # Kein Fett-Kursiv-Schnitt im Paket: Fett gewinnt.
     "STIXTwo": ("STIXTwo", "STIXTwo-Bold", "STIXTwo-Italic", "STIXTwo-Bold"),
     "STIXTwoText": (

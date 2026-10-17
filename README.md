@@ -76,7 +76,8 @@ css_font_stack("mono")  # '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, mon
 Setzt ein Paragraph `font_family("italic-editorial")` als Grundschrift, ergibt `<b>` den
 fett-kursiven Schnitt (`SourceSerif4-BoldItalic`).
 
-**Stack D** als Alternative (Source Sans 3) bleibt im Repo. Wechsel via `MN_PKA_STACK=D npm run build`.
+Es gibt genau einen Stack (A). Der Alternativ-Stack D (Source Sans 3) und die ungenutzten Familien
+Inter und Noto Sans entfielen in 0.19.1; die Dateien liegen in der Git-Historie (Tag `v0.19.0`).
 
 ## Token-Validierung (CI)
 
@@ -124,8 +125,8 @@ gewollt.
 
 - **Design-System (Tokens, Komponenten, Doku, Build-Skripte)**:
   PolyForm Strict 1.0.0 — siehe `LICENSE`
-- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, Source Sans 3, JetBrains Mono,
-  Inter, Noto Sans, STIX Two Text und STIX Two Math; Ausnahme: Phosphor unter MIT) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
+- **Schriften**: SIL OFL 1.1 (Geist, Source Serif 4, JetBrains Mono, Noto Sans Symbols 2,
+  STIX Two Text und STIX Two Math; Ausnahme: Phosphor unter MIT) — **behalten ihre eigenen, offenen Lizenzen**; `LICENSE`
   schraenkt sie nicht ein. Der Lizenztext jeder Familie liegt neben den Schriftdateien
   (`mn_design_system/fonts/<familie>/OFL.txt`)
 - **Symbole**: MIT (Phosphor Icons, `mn_design_system/fonts/phosphor/LICENSE`)

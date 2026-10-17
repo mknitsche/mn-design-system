@@ -45,9 +45,6 @@ def _schnitte(grundschrift: str) -> dict[str, str]:
             "SourceSerif-Italic",
             "SourceSerif-BoldItalic",
         ),
-        ("SourceSans", "SourceSans-Bold", "SourceSans-Italic", "SourceSans-BoldItalic"),
-        ("Inter", "Inter-Bold", "Inter-Italic", "Inter-BoldItalic"),
-        ("NotoSans", "NotoSans-Bold", "NotoSans-Italic", "NotoSans-BoldItalic"),
     ],
 )
 def test_auszeichnung_trifft_den_richtigen_schnitt(grund, fett, kursiv, fettkursiv):

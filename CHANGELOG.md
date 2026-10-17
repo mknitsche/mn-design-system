@@ -8,6 +8,41 @@ oder Doku.
 
 ---
 
+## [0.19.1] — 2026-10-17
+
+### Entfernt — Ballast: Tier magazin und drei ungenutzte Schriftfamilien
+
+Zweck: das Paket traegt nur noch, was ein Modul oder ein Konsument braucht. **Zwei Teile, beide
+brechend fuer jeden, der das Entfernte noch nutzt** (Wheel 5,42 MB → 4,45 MB):
+
+- **Tier `magazin`** (seit 0.19.0 durch `archiv` abgeloest, gleiche Farbwerte): `WebTier.MAGAZIN`,
+  die fuenf Tokens `color.tier.magazin.{bg,bg-soft,border,text,hover-on-dark}`, die Eintraege in
+  Masthead, Sub-Nav, Content-Card, Tier-Chip und Empty-State sowie die Fallback-Tabellen. Es gibt
+  sechs Tier: bibliothek, atelier, kabinett, start, observatorium, archiv. Die Muster-Dokus
+  (`tier_chip`, `sub_nav`, `empty_state`) nennen `archiv`. **Umstieg:** `WebTier.ARCHIV`
+  statt `WebTier.MAGAZIN`, `color.tier.archiv.*` statt `color.tier.magazin.*`.
+- **Schriftfamilien Source Sans 3, Inter, Noto Sans** (je Regular, Bold, Italic, BoldItalic; kein
+  Modul des Design-Systems nutzte sie; die Messung in den Konsumenten und im ausgelieferten CSS fand
+  keinen Verweis): die zwoelf Schriftdateien, ihre Registrierung und Familien-Zuordnung in
+  `fonts/__init__.py` (`SourceSans*`, `Inter*`, `NotoSans*` ohne Symbols2), die Lizenzdateien von
+  `source-sans/` und `inter/`, die Noto-Sans-Zeile in `noto/OFL.txt`, die Eintraege in CITATIONS und
+  README. Wer eine
+  dieser Familien noch per Namen setzt, bekommt ab jetzt einen ReportLab-Fehler statt einer
+  Schrift. Die Dateien liegen im Tag `v0.19.0`.
+- **Stack D** (`stack.available.D`, `stack.size_factor.D`, dazu die Hinweise auf die Umgebungsvariable
+  `MN_PKA_STACK` in `stack.json` und README — ein Schalter, den `build.js` nie las): es bleibt
+  Stack A. `tokens.py` und `dist/` sind ueber den Generator neu gebaut.
+
+**Bleibt:** Noto Sans Symbols 2 (`noto/` mit der Schrift und ihrer OFL), Geist, Source Serif 4,
+STIX Two, JetBrains Mono, Phosphor, die Web-Schriften und alles zu LaTeX.
+
+### Tests
+
+- Die Schriftfamilien-Tests (`test_fonts_familien`, `test_fonts_lizenzen`) pruefen die
+  verbleibenden Familien; die Untergrenzen (LP-36) sind von neun auf sieben gesenkt.
+- Die Tier-Tests (`test_tier_vollstaendigkeit`, `test_tokens_tier`, `test_contracts_web` und die
+  Komponenten-Tests) laufen mit sechs Tier; die Token-Tests des Grau-Tiers heissen jetzt `archiv`.
+
 ## [0.19.0] — 2026-10-17
 
 ### Neu — Tier archiv, Zurueck-Zeile (claudeAI TODO-885 Ordnung 2)

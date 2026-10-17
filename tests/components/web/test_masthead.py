@@ -187,7 +187,6 @@ class TestRenderMastheadCss:
             "kabinett",
             "start",
             "observatorium",
-            "magazin",
             "archiv",
         ):
             soll_bg = get(f"color.tier.{tier}.bg")
@@ -208,7 +207,6 @@ class TestRenderMastheadCss:
             "kabinett",
             "start",
             "observatorium",
-            "magazin",
             "archiv",
         ):
             assert f".mn-masthead__pill--{tier}:not(.is-active):hover" in css
