@@ -125,6 +125,7 @@ class TestRenderContentCardCss:
             "start",
             "observatorium",
             "magazin",
+            "archiv",
         ):
             assert f"var(--color-tier-{tier}-border" in css
 
@@ -141,6 +142,7 @@ class TestRenderContentCardCss:
             "start",
             "observatorium",
             "magazin",
+            "archiv",
         ):
             soll = get(f"color.tier.{tier}.border")
             assert soll is not None

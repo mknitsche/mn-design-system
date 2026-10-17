@@ -1,6 +1,6 @@
 """color.tier.* Token-Familie (UX-Welle v0.2, Gemini-Gate Punkt 1 + 3).
 
-6 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/magazin) x
+7 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/magazin/archiv) x
 {bg, bg-soft, border, text}.
 - bg-soft: Sub-Nav-Hover, abgeleitet aus bg (55% ueber Weiss) — vollwertiger
   Token (cross-media-faehig, kein color-mix im Konsumenten).
@@ -16,7 +16,15 @@ import re
 
 from mn_design_system.tokens import get
 
-_TIERS = ["bibliothek", "atelier", "kabinett", "start", "observatorium", "magazin"]
+_TIERS = [
+    "bibliothek",
+    "atelier",
+    "kabinett",
+    "start",
+    "observatorium",
+    "magazin",
+    "archiv",
+]
 _SLOTS = ["bg", "bg-soft", "border", "text"]
 _HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -126,3 +134,19 @@ def test_magazin_text_hat_lesbaren_kontrast():
     assert _kontrast(text, get("color.tier.magazin.bg")) >= 4.5
     assert _kontrast(text, get("color.tier.magazin.bg-soft")) >= 4.5
     assert _kontrast(text, get("color.light.surface")) >= 4.5
+
+
+def test_archiv_hat_in_allen_slots_die_werte_von_magazin():
+    """0.19.0: archiv loest magazin ab (Expand-Contract) — gleiche Grau-Nuance,
+    in jedem Slot (auch hover-on-dark), damit der Namenswechsel keine Farbe bewegt."""
+    for slot in [*_SLOTS, "hover-on-dark"]:
+        assert get(f"color.tier.archiv.{slot}") == get(f"color.tier.magazin.{slot}")
+        assert get(f"color.tier.archiv.{slot}") is not None
+
+
+def test_archiv_bezieht_bg_border_text_aus_der_grau_skala():
+    """Eigene Referenz auf die Grau-Skala, nicht auf magazin: faellt magazin in 0.19.1
+    weg, darf kein Archiv-Token ins Leere zeigen."""
+    assert get("color.tier.archiv.bg") == get("color.grey.50")
+    assert get("color.tier.archiv.border") == get("color.grey.200")
+    assert get("color.tier.archiv.text") == get("color.grey.700")

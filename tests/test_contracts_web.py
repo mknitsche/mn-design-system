@@ -58,10 +58,11 @@ class TestWebTier:
         assert WebTier.START.value == "start"
         assert WebTier.OBSERVATORIUM.value == "observatorium"
         assert WebTier.MAGAZIN.value == "magazin"
+        assert WebTier.ARCHIV.value == "archiv"
 
     def test_member_count(self):
-        """Genau sechs Tier — keiner zu viel, keiner fehlt."""
-        assert len(WebTier) == 6
+        """Genau sieben Tier (0.19.0: archiv neben dem auslaufenden magazin)."""
+        assert len(WebTier) == 7
 
     def test_construct_from_string(self):
         assert WebTier("atelier") is WebTier.ATELIER

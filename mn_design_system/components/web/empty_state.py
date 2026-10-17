@@ -17,6 +17,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
     WebTier.OBSERVATORIUM,
     WebTier.MAGAZIN,
+    WebTier.ARCHIV,
 )
 
 

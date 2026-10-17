@@ -8,6 +8,21 @@ oder Doku.
 
 ---
 
+## [0.19.0] — 2026-10-17
+
+### Neu — Tier archiv, Zurueck-Zeile (claudeAI TODO-885 Ordnung 2)
+
+Alles additiv (Expand-Contract): ein Aufruf aus 0.18.2 liefert dieselbe Ausgabe.
+
+- **Tier `archiv`** loest `magazin` ab: `WebTier.ARCHIV`, Tokens
+  `color.tier.archiv.{bg,bg-soft,border,text,hover-on-dark}` mit denselben Werten wie `magazin`
+  (Grau-Skala; eigene Referenz auf `grey.50/200/700`, nicht auf `magazin`), Eintraege in Masthead,
+  Sub-Nav, Content-Card, Tier-Chip und Empty-State. `WebTier.MAGAZIN` bleibt in 0.19.0 stehen und
+  ist als veraltet markiert; **0.19.1 entfernt es** samt Tokens und Fallbacks.
+- **Komponente `back_link`:** `BackLinkInput(href, label)`, `render_back_link_html`,
+  `render_back_link_css`, Klasse `mn-back-link`. Die eine Zurueck-Zeile je Seite, erstes Kind von
+  `<main>`, nur unterhalb einer Reiterseite (Muster-Doku `_patterns/back_link.md`).
+
 ## [0.18.2] — 2026-10-17
 
 ### Behoben

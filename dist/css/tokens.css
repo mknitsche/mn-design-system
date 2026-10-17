@@ -152,6 +152,11 @@
   --color-tier-magazin-border: #e5e7eb;
   --color-tier-magazin-text: #374151; /** Kontrast auf bg >= 4,5:1 (WCAG 1.4.3), per Test belegt */
   --color-tier-magazin-hover-on-dark: rgba(229,231,235,0.5); /** Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent) */
+  --color-tier-archiv-bg: #f5f5f5; /** 0.19.0: Archiv loest Magazin ab (TODO-885 Ordnung 2) — gleiche Grau-Nuance, eigene Referenz auf die Grau-Skala; magazin entfaellt in 0.19.1 */
+  --color-tier-archiv-bg-soft: #fafafa; /** bg 55% ueber Weiss — Sub-Nav-Hover */
+  --color-tier-archiv-border: #e5e7eb;
+  --color-tier-archiv-text: #374151; /** Kontrast auf bg >= 4,5:1 (WCAG 1.4.3), per Test belegt */
+  --color-tier-archiv-hover-on-dark: rgba(229,231,235,0.5); /** Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent) */
   --radius-none: 0; /** Cards, Buttons, Tabellen — Default Tufte */
   --radius-subtle: 2px; /** minimaler Anschliff falls noetig */
   --radius-card: 4px; /** Cards, Sidenote-Boxen */

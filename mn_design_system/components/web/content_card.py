@@ -44,6 +44,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
     WebTier.OBSERVATORIUM,
     WebTier.MAGAZIN,
+    WebTier.ARCHIV,
 )
 
 # var()-Fallback je Tier-Border — der ECHTE Tier-Wert aus tokens.py
@@ -56,6 +57,7 @@ _TIER_BORDER_FALLBACK: dict[WebTier, str] = {
     WebTier.START: "#bbf7d0",
     WebTier.OBSERVATORIUM: "#fde68a",
     WebTier.MAGAZIN: "#e5e7eb",
+    WebTier.ARCHIV: "#e5e7eb",
 }
 
 
