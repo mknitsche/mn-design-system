@@ -210,7 +210,10 @@ class WetterStripInput(BaseModel):
 
 
 class WebTier(str, Enum):
-    """Die sechs Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
+    """Die Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*.
+
+    MAGAZIN ist veraltet (heisst seit 0.19.0 ARCHIV) und entfaellt in 0.19.1.
+    """
 
     BIBLIOTHEK = "bibliothek"
     ATELIER = "atelier"
@@ -218,6 +221,7 @@ class WebTier(str, Enum):
     START = "start"
     OBSERVATORIUM = "observatorium"
     MAGAZIN = "magazin"
+    ARCHIV = "archiv"
 
 
 class TierChipInput(BaseModel):
@@ -307,6 +311,15 @@ class PageHeaderInput(BaseModel):
 
     title: str = Field(min_length=1)
     lead: str | None = None
+
+
+class BackLinkInput(BaseModel):
+    """Zurueck-Zeile: Link auf die Elternseite (href) mit deren Titel (label)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    href: str = Field(min_length=1)
+    label: str = Field(min_length=1)
 
 
 class FooterLink(BaseModel):

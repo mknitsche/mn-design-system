@@ -28,6 +28,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
     WebTier.OBSERVATORIUM,
     WebTier.MAGAZIN,
+    WebTier.ARCHIV,
 )
 
 # var()-Fallback je Tier (bg + text + hover-on-dark) — die ECHTEN
@@ -41,6 +42,7 @@ _TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
     WebTier.START: ("#f0fdf4", "#166534", "rgba(187,247,208,0.5)"),
     WebTier.OBSERVATORIUM: ("#fffbeb", "#92400e", "rgba(253,230,138,0.5)"),
     WebTier.MAGAZIN: ("#f5f5f5", "#374151", "rgba(229,231,235,0.5)"),
+    WebTier.ARCHIV: ("#f5f5f5", "#374151", "rgba(229,231,235,0.5)"),
 }
 
 

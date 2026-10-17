@@ -146,6 +146,7 @@ class TestRenderSubNavCss:
             "start",
             "observatorium",
             "magazin",
+            "archiv",
         ):
             bg = get(f"color.tier.{tier}.bg")
             border = get(f"color.tier.{tier}.border")

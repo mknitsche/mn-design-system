@@ -279,7 +279,7 @@ class TestTierChipFallback:
     jetzt der Token-Wert des eigenen Tiers."""
 
     @pytest.mark.parametrize(
-        "tier", ["atelier", "kabinett", "observatorium", "magazin"]
+        "tier", ["atelier", "kabinett", "observatorium", "magazin", "archiv"]
     )
     def test_fallback_ohne_tokens_ist_die_eigene_tierfarbe(
         self, browser, tmp_path, tier

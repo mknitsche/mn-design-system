@@ -55,6 +55,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.START,
     WebTier.OBSERVATORIUM,
     WebTier.MAGAZIN,
+    WebTier.ARCHIV,
 )
 
 # var()-Fallback je Tier (bg + border + text) — die ECHTEN color.tier.<tier>.*
@@ -67,6 +68,7 @@ _TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
     WebTier.START: ("#f0fdf4", "#bbf7d0", "#166534"),
     WebTier.OBSERVATORIUM: ("#fffbeb", "#fde68a", "#92400e"),
     WebTier.MAGAZIN: ("#f5f5f5", "#e5e7eb", "#374151"),
+    WebTier.ARCHIV: ("#f5f5f5", "#e5e7eb", "#374151"),
 }
 
 

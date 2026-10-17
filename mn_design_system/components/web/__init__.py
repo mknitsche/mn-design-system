@@ -20,6 +20,10 @@ Status: Erst-Implementierung (Welle E.0). Foto-Homepage ist erster Konsument
 ab PRJ-9.
 """
 
+from mn_design_system.components.web.back_link import (
+    render_back_link_css,
+    render_back_link_html,
+)
 from mn_design_system.components.web.content_card import (
     render_card_grid_css,
     render_card_grid_html,
@@ -89,6 +93,8 @@ __all__ = [
     "WEB_SCHRIFTEN",
     "css_font_stack",
     "echarts_theme",
+    "render_back_link_css",
+    "render_back_link_html",
     "render_card_grid_css",
     "render_card_grid_html",
     "render_content_card_css",
