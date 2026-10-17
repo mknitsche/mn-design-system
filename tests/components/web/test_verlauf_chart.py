@@ -250,17 +250,16 @@ class TestOption:
         mit = verlauf_chart_option(_tage_und_summe())
         assert mit["yAxis"][0] == ohne["yAxis"]
 
-    def test_rechte_achse_traegt_die_einheit_und_hat_kein_gitter(self):
-        """Ein zweites Gitter lege sich schief ueber das erste."""
-        rechts = verlauf_chart_option(_tage_und_summe())["yAxis"][1]
-        assert rechts["name"] == "km"
-        assert rechts["nameTextStyle"] == {"align": "right"}
-        assert rechts["splitLine"] == {"show": False}
-
-    def test_rechte_achse_ohne_einheit_hat_keinen_namen(self):
-        assert (
-            "name" not in verlauf_chart_option(_tage_und_summe(einheit=""))["yAxis"][1]
+    def test_rechte_achse_hat_keinen_namen_und_kein_gitter(self):
+        """0.18.1: der Name oben rechts lag auf der Legende (Browser-Befund); die Einheit steht
+        links. Ein zweites Gitter lege sich schief ueber das erste."""
+        option = verlauf_chart_option(_tage_und_summe())
+        links, rechts = option["yAxis"]
+        assert links["name"] == "km", (
+            "UNTERGRENZE: die Einheit steht an der linken Achse"
         )
+        assert "name" not in rechts
+        assert rechts["splitLine"] == {"show": False}
 
     def test_rechter_rand_macht_platz_fuer_die_beschriftung(self):
         grid = verlauf_chart_option(_tage_und_summe())["grid"]

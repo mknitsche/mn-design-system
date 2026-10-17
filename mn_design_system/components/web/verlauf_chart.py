@@ -137,18 +137,17 @@ def _werteachse(chart: VerlaufChartInput, alle_werte: list[float]) -> dict[str, 
 
 def _rechte_werteachse(chart: VerlaufChartInput) -> dict[str, object]:
     """Zweite Werteachse (0.18.0) fuer Reihen mit ``achse="rechts"``: eigene, freie Skala,
-    dieselbe Einheit, kein zweites Gitter (es lege sich schief ueber das erste)."""
-    achse: dict[str, object] = {
+    dieselbe Einheit, kein zweites Gitter (es lege sich schief ueber das erste).
+
+    0.18.1: OHNE Achsennamen — die Einheit ist dieselbe wie links (dort steht sie), und ein
+    Name oben rechts lag genau auf der Legende („7-Tage-Summe", Browser-Befund 390/1440 px).
+    Welche Reihe rechts liegt, sagen Legende und Bildunterschrift („rechte Achse")."""
+    return {
         "type": "value",
         "scale": True,
         "position": "right",
         "splitLine": {"show": False},
     }
-    if chart.einheit:
-        achse["name"] = chart.einheit
-        achse["nameLocation"] = "end"
-        achse["nameTextStyle"] = {"align": "right"}
-    return achse
 
 
 def verlauf_chart_option(chart: VerlaufChartInput) -> dict[str, object]:
