@@ -20,6 +20,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.KABINETT,
     WebTier.START,
     WebTier.OBSERVATORIUM,
+    WebTier.MAGAZIN,
 )
 
 
@@ -44,7 +45,7 @@ def render_tier_chip_html(input: TierChipInput, *, inline_css: bool = False) -> 
 
 
 def render_tier_chip_css() -> str:
-    """Komponenten-CSS — Layout + 5 Tier-Modifier, Token-Werte via Custom Properties.
+    """Komponenten-CSS — Layout + 6 Tier-Modifier, Token-Werte via Custom Properties.
 
     Konsument muss `dist/css/tokens.css` einbinden, damit
     `var(--color-tier-bibliothek-bg)` etc. greift.

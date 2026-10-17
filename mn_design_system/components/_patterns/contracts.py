@@ -140,13 +140,14 @@ class WetterStripInput(BaseModel):
 
 
 class WebTier(str, Enum):
-    """Die fuenf Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
+    """Die sechs Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
 
     BIBLIOTHEK = "bibliothek"
     ATELIER = "atelier"
     KABINETT = "kabinett"
     START = "start"
     OBSERVATORIUM = "observatorium"
+    MAGAZIN = "magazin"
 
 
 class TierChipInput(BaseModel):

@@ -139,7 +139,14 @@ class TestRenderSubNavCss:
         """Jeder Tier (auch observatorium, 0.17.0) bekommt Hover-/Aktiv-Regeln
         mit dem ECHTEN Token-Wert als var()-Fallback."""
         css = render_sub_nav_css()
-        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+        for tier in (
+            "bibliothek",
+            "atelier",
+            "kabinett",
+            "start",
+            "observatorium",
+            "magazin",
+        ):
             bg = get(f"color.tier.{tier}.bg")
             border = get(f"color.tier.{tier}.border")
             text = get(f"color.tier.{tier}.text")
