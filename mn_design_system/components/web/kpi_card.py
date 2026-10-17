@@ -123,6 +123,11 @@ def render_kpi_card_css() -> str:
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-light-text-muted, #6b7280);
+  /* Deutsche Komposita in schmalen Karten: nach Silben trennen (Seite traegt lang="de"),
+     als letzte Stufe umbrechen statt aus der Karte laufen. */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 .mn-kpi-card__value {
   font-size: var(--web-text-h3, 23px);

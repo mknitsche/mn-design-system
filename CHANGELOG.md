@@ -8,6 +8,15 @@ oder Doku.
 
 ---
 
+## [0.18.2] — 2026-10-17
+
+### Behoben
+- **KpiCard:** das Label trennt deutsche Komposita nach Silben (`hyphens: auto`, Seite `lang="de"`) und
+  bricht als letzte Stufe um, statt aus der Karte zu laufen — „TRAININGSBELASTUN / G“ auf 390 px (mkn-desk,
+  Observatorium Sport). Browser-Test `TestKpiLabelSchmal`.
+- **TierChip:** der Fallback hinter `var(--color-tier-<tier>-*)` war fuer jeden Tier das Gruen der Bibliothek;
+  er ist jetzt der Token-Wert des eigenen Tiers (`tokens.get`). Browser-Test `TestTierChipFallback`.
+
 ## [0.18.1] — 2026-10-17
 
 ### Behoben

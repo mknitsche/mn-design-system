@@ -242,3 +242,67 @@ class TestZeitraumLeisteImBrowser:
             assert page.url.endswith("seite.html?tage=2")
         finally:
             ctx.close()
+
+
+class TestKpiLabelSchmal:
+    """mkn-desk Sport-Seite, 390 px (cld1-S117): „TRAININGSBELASTUN / G (TRIMP)“ brach mitten im
+    Wort. Das Label trennt jetzt nach Silben (`hyphens: auto`, Seite `lang="de"`) und laeuft
+    nie aus der Karte."""
+
+    def test_label_trennt_nach_silben_und_bleibt_in_der_karte(self, browser, tmp_path):
+        html = (
+            '<div style="width:170px">'
+            + render_kpi_card_html(
+                KpiCardInput(label="Trainingsbelastung (TRIMP)", value="118 TRIMP")
+            )
+            + "</div>"
+        )
+        ctx, page = _geladen(
+            browser, tmp_path, _seite(html, render_kpi_card_css()), breite=390
+        )
+        try:
+            hyphens = page.evaluate(
+                "getComputedStyle(document.querySelector('.mn-kpi-card__label')).hyphens"
+            )
+            ueberlauf = page.evaluate(
+                "(() => { const e = document.querySelector('.mn-kpi-card__label');"
+                " return e.scrollWidth - e.clientWidth; })()"
+            )
+        finally:
+            ctx.close()
+        assert hyphens == "auto"
+        assert ueberlauf <= 0, f"Label laeuft {ueberlauf}px aus der Karte"
+
+
+class TestTierChipFallback:
+    """Ohne Token-CSS griff fuer JEDEN Tier der gruene Fallback (Bibliothek). Der Fallback ist
+    jetzt der Token-Wert des eigenen Tiers."""
+
+    @pytest.mark.parametrize(
+        "tier", ["atelier", "kabinett", "observatorium", "magazin"]
+    )
+    def test_fallback_ohne_tokens_ist_die_eigene_tierfarbe(
+        self, browser, tmp_path, tier
+    ):
+        from mn_design_system.components._patterns.contracts import (
+            TierChipInput,
+            WebTier,
+        )
+        from mn_design_system.components.web.tier_chip import (
+            render_tier_chip_css,
+            render_tier_chip_html,
+        )
+
+        chip = render_tier_chip_html(TierChipInput(tier=WebTier(tier), label=tier))
+        seite = (
+            '<!doctype html><html lang="de"><head><meta charset="utf-8">'
+            f"<style>{render_tier_chip_css()}</style></head><body>{chip}</body></html>"
+        )
+        ctx, page = _geladen(browser, tmp_path, seite)
+        try:
+            bg = page.evaluate(
+                "getComputedStyle(document.querySelector('.mn-tier-chip')).backgroundColor"
+            )
+        finally:
+            ctx.close()
+        assert bg == _rgb(f"color.tier.{tier}.bg"), (tier, bg)
