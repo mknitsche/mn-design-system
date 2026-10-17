@@ -18,6 +18,8 @@ ungueltiger Wert abgelehnt wird.
 
 from __future__ import annotations
 
+from datetime import date, datetime, timedelta, timezone
+
 import pytest
 from pydantic import ValidationError
 
@@ -32,6 +34,10 @@ from mn_design_system.components._patterns.contracts import (
     SubNavInput,
     SubNavTab,
     TierChipInput,
+    VerlaufChartInput,
+    VerlaufMarkierung,
+    VerlaufPunkt,
+    VerlaufReihe,
     WebTier,
 )
 
@@ -41,17 +47,18 @@ from mn_design_system.components._patterns.contracts import (
 
 
 class TestWebTier:
-    """str-Enum der vier Web-Tier von mkn-desk.com."""
+    """str-Enum der fuenf Web-Tier von mkn-desk.com."""
 
     def test_valid_values(self):
         assert WebTier.BIBLIOTHEK.value == "bibliothek"
         assert WebTier.ATELIER.value == "atelier"
         assert WebTier.KABINETT.value == "kabinett"
         assert WebTier.START.value == "start"
+        assert WebTier.OBSERVATORIUM.value == "observatorium"
 
     def test_member_count(self):
-        """Genau vier Tier — keiner zu viel, keiner fehlt."""
-        assert len(WebTier) == 4
+        """Genau fuenf Tier — keiner zu viel, keiner fehlt."""
+        assert len(WebTier) == 5
 
     def test_construct_from_string(self):
         assert WebTier("atelier") is WebTier.ATELIER
@@ -432,3 +439,259 @@ class TestCardGridInput:
     def test_extra_forbidden(self):
         with pytest.raises(ValidationError):
             CardGridInput(cards=[_content_card()], foo="bar")
+
+
+# ---------------------------------------------------------------------------
+# Verlauf-Chart (0.17.0): VerlaufPunkt / VerlaufReihe / VerlaufMarkierung /
+# VerlaufChartInput
+# ---------------------------------------------------------------------------
+
+
+def _reihe(label: str = "Gewicht", punkte: list[VerlaufPunkt] | None = None):
+    """Helper: gueltige Reihe (Default: zwei erfundene Tageswerte)."""
+    if punkte is None:
+        punkte = [
+            VerlaufPunkt(t=date(2026, 10, 15), wert=80.0),
+            VerlaufPunkt(t=date(2026, 10, 16), wert=79.5),
+        ]
+    return VerlaufReihe(label=label, punkte=punkte)
+
+
+def _chart(**overrides) -> VerlaufChartInput:
+    base = {
+        "titel": "Gewicht",
+        "einheit": "kg",
+        "reihen": [_reihe()],
+        "von": date(2026, 10, 1),
+        "bis": date(2026, 10, 17),
+    }
+    base.update(overrides)
+    return VerlaufChartInput(**base)
+
+
+class TestVerlaufPunkt:
+    def test_datum_wird_akzeptiert(self):
+        p = VerlaufPunkt(t=date(2026, 10, 17), wert=1.5)
+        assert p.t == date(2026, 10, 17)
+        assert not isinstance(p.t, datetime)
+
+    def test_datum_als_iso_string(self):
+        assert VerlaufPunkt(t="2026-10-17", wert=1).t == date(2026, 10, 17)
+
+    def test_zeitpunkt_als_iso_string(self):
+        p = VerlaufPunkt(t="2026-10-17T06:30:00", wert=1)
+        assert isinstance(p.t, datetime)
+
+    def test_datetime_ohne_zone_ist_berlin(self):
+        """Oktober (MESZ): Berlin ist UTC+2 — ein naives datetime wird so gelesen."""
+        p = VerlaufPunkt(t=datetime(2026, 10, 17, 6, 30), wert=1)  # noqa: DTZ001 - naiv ist der Pruefgegenstand
+        assert p.t.utcoffset() == timedelta(hours=2)
+
+    def test_datetime_ohne_zone_ist_berlin_im_winter(self):
+        """Januar (MEZ): UTC+1 — echte Zone, kein fester Versatz."""
+        p = VerlaufPunkt(t=datetime(2026, 1, 17, 6, 30), wert=1)  # noqa: DTZ001 - naiv ist der Pruefgegenstand
+        assert p.t.utcoffset() == timedelta(hours=1)
+
+    def test_datetime_mit_zone_bleibt_unveraendert(self):
+        t = datetime(2026, 10, 17, 6, 30, tzinfo=timezone.utc)
+        assert VerlaufPunkt(t=t, wert=1).t == t
+        assert VerlaufPunkt(t=t, wert=1).t.utcoffset() == timedelta(0)
+
+    def test_wert_nan_und_inf_abgelehnt(self):
+        """JSON kennt kein NaN/Infinity — der Block im HTML waere nicht parsebar."""
+        for schlecht in (float("nan"), float("inf"), float("-inf")):
+            with pytest.raises(ValidationError):
+                VerlaufPunkt(t=date(2026, 10, 17), wert=schlecht)
+
+    def test_wert_pflicht(self):
+        with pytest.raises(ValidationError):
+            VerlaufPunkt(t=date(2026, 10, 17))
+
+    def test_frozen(self):
+        p = VerlaufPunkt(t=date(2026, 10, 17), wert=1)
+        with pytest.raises(ValidationError):
+            p.wert = 2
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            VerlaufPunkt(t=date(2026, 10, 17), wert=1, foo="bar")
+
+
+class TestVerlaufReihe:
+    def test_minimal_valid(self):
+        r = VerlaufReihe(label="Ruhepuls", punkte=[])
+        assert r.art == "messung"  # Default
+
+    def test_punkte_duerfen_leer_sein(self):
+        """Eine Reihe ohne Punkte ist gueltig — die Achse steht auch ohne Daten."""
+        assert VerlaufReihe(label="X", punkte=[]).punkte == []
+
+    def test_art_gleitend(self):
+        assert VerlaufReihe(label="7-Tage", punkte=[], art="gleitend").art == "gleitend"
+
+    def test_art_ungueltig(self):
+        with pytest.raises(ValidationError):
+            VerlaufReihe(label="X", punkte=[], art="trend")
+
+    def test_label_grenzen(self):
+        VerlaufReihe(label="a", punkte=[])
+        VerlaufReihe(label="a" * 40, punkte=[])
+        with pytest.raises(ValidationError):
+            VerlaufReihe(label="", punkte=[])
+        with pytest.raises(ValidationError):
+            VerlaufReihe(label="a" * 41, punkte=[])
+
+    def test_frozen(self):
+        r = VerlaufReihe(label="X", punkte=[])
+        with pytest.raises(ValidationError):
+            r.label = "Y"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            VerlaufReihe(label="X", punkte=[], foo="bar")
+
+
+class TestVerlaufMarkierung:
+    def test_minimal_valid(self):
+        m = VerlaufMarkierung(t=date(2026, 10, 10), label="Lauf")
+        assert m.label == "Lauf"
+
+    def test_datetime_ohne_zone_ist_berlin(self):
+        m = VerlaufMarkierung(t=datetime(2026, 10, 10, 8, 0), label="Lauf")  # noqa: DTZ001 - naiv ist der Pruefgegenstand
+        assert m.t.utcoffset() == timedelta(hours=2)
+
+    def test_label_grenzen(self):
+        VerlaufMarkierung(t=date(2026, 10, 10), label="a" * 30)
+        with pytest.raises(ValidationError):
+            VerlaufMarkierung(t=date(2026, 10, 10), label="")
+        with pytest.raises(ValidationError):
+            VerlaufMarkierung(t=date(2026, 10, 10), label="a" * 31)
+
+    def test_frozen(self):
+        m = VerlaufMarkierung(t=date(2026, 10, 10), label="Lauf")
+        with pytest.raises(ValidationError):
+            m.label = "Andere"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            VerlaufMarkierung(t=date(2026, 10, 10), label="Lauf", foo="bar")
+
+
+class TestVerlaufChartInput:
+    def test_minimal_valid_defaults(self):
+        c = _chart()
+        assert c.zielband_min is None and c.zielband_max is None
+        assert c.markierungen == []
+        assert c.dezimalstellen == 1
+        assert c.hoehe == 260
+        assert c.beschreibung is None
+
+    def test_reihen_leer_abgelehnt(self):
+        with pytest.raises(ValidationError):
+            _chart(reihen=[])
+
+    def test_reihen_grenzen(self):
+        _chart(reihen=[_reihe(f"R{i}") for i in range(4)])
+        with pytest.raises(ValidationError):
+            _chart(reihen=[_reihe(f"R{i}") for i in range(5)])
+
+    def test_von_muss_vor_bis_liegen(self):
+        with pytest.raises(ValidationError, match="von muss vor bis liegen"):
+            _chart(von=date(2026, 10, 17), bis=date(2026, 10, 17))
+        with pytest.raises(ValidationError, match="von muss vor bis liegen"):
+            _chart(von=date(2026, 10, 18), bis=date(2026, 10, 17))
+
+    def test_zielband_beide_oder_keins(self):
+        _chart(zielband_min=70.0, zielband_max=80.0)
+        with pytest.raises(ValidationError, match="Zielband"):
+            _chart(zielband_min=70.0)
+        with pytest.raises(ValidationError, match="Zielband"):
+            _chart(zielband_max=80.0)
+
+    def test_zielband_min_nicht_ueber_max(self):
+        _chart(zielband_min=75.0, zielband_max=75.0)  # Grenzfall: gleich ist gueltig
+        with pytest.raises(ValidationError, match="Zielband"):
+            _chart(zielband_min=80.0, zielband_max=70.0)
+
+    def test_zielband_nan_abgelehnt(self):
+        with pytest.raises(ValidationError):
+            _chart(zielband_min=float("nan"), zielband_max=80.0)
+
+    def test_markierungen_grenzen(self):
+        m = [VerlaufMarkierung(t=date(2026, 10, 2), label=f"M{i}") for i in range(12)]
+        assert len(_chart(markierungen=m).markierungen) == 12
+        with pytest.raises(ValidationError):
+            _chart(markierungen=[*m, VerlaufMarkierung(t=date(2026, 10, 3), label="X")])
+
+    def test_dezimalstellen_grenzen(self):
+        for n in (0, 1, 2, 3):
+            assert _chart(dezimalstellen=n).dezimalstellen == n
+        for n in (-1, 4):
+            with pytest.raises(ValidationError):
+                _chart(dezimalstellen=n)
+
+    def test_hoehe_nur_stufen(self):
+        for h in (180, 220, 260, 320, 400, 600):
+            assert _chart(hoehe=h).hoehe == h
+        with pytest.raises(ValidationError):
+            _chart(hoehe=300)
+
+    def test_titel_grenzen(self):
+        _chart(titel="a" * 80)
+        with pytest.raises(ValidationError):
+            _chart(titel="")
+        with pytest.raises(ValidationError):
+            _chart(titel="a" * 81)
+
+    def test_einheit_grenzen(self):
+        _chart(einheit="")  # Einheit darf leer sein (z.B. Verhaeltniszahl)
+        _chart(einheit="a" * 16)
+        with pytest.raises(ValidationError):
+            _chart(einheit="a" * 17)
+
+    def test_frozen(self):
+        c = _chart()
+        with pytest.raises(ValidationError):
+            c.titel = "Anders"
+
+    def test_extra_forbidden(self):
+        with pytest.raises(ValidationError):
+            _chart(farbe="#ff0000")
+
+    # --- beschreibung_text(): Default fuer aria-label ----------------------
+
+    def test_beschreibung_default_nennt_titel_einheit_letztstand_zeitraum(self):
+        text = _chart().beschreibung_text()
+        assert "Gewicht" in text
+        assert "kg" in text
+        assert "79,5" in text  # Letztstand der ersten Reihe, deutsches Komma
+        assert "16.10.2026" in text  # Datum des Letztstands
+        assert "01.10.2026" in text and "17.10.2026" in text  # Zeitraum
+
+    def test_beschreibung_default_rundet_mit_dezimalstellen(self):
+        reihe = _reihe(punkte=[VerlaufPunkt(t=date(2026, 10, 16), wert=79.456)])
+        assert "79,46" in _chart(reihen=[reihe], dezimalstellen=2).beschreibung_text()
+        assert "79" in _chart(reihen=[reihe], dezimalstellen=0).beschreibung_text()
+
+    def test_beschreibung_default_tausendertrenner(self):
+        reihe = _reihe(punkte=[VerlaufPunkt(t=date(2026, 10, 16), wert=12345.0)])
+        text = _chart(reihen=[reihe], einheit="Anzahl", dezimalstellen=0)
+        assert "12.345" in text.beschreibung_text()
+
+    def test_beschreibung_default_letztstand_ist_juengster_punkt(self):
+        """Nicht der zuletzt genannte, sondern der zeitlich juengste Punkt."""
+        reihe = _reihe(
+            punkte=[
+                VerlaufPunkt(t=date(2026, 10, 16), wert=79.5),
+                VerlaufPunkt(t=date(2026, 10, 3), wert=90.0),
+            ]
+        )
+        assert "79,5" in _chart(reihen=[reihe]).beschreibung_text()
+
+    def test_beschreibung_default_ohne_punkte(self):
+        text = _chart(reihen=[_reihe(punkte=[])]).beschreibung_text()
+        assert "keine Werte" in text
+        assert "Gewicht" in text
+
+    def test_beschreibung_explizit_gewinnt(self):
+        assert _chart(beschreibung="Eigener Text").beschreibung_text() == "Eigener Text"

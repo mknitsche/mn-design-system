@@ -21,11 +21,11 @@ in der Tier-Border-Farbe. Kein Icon, keine Interaktivitaet im Primitiv selbst.
 
 | Feld | Typ | Constraint |
 |---|---|---|
-| `tier` | `WebTier` | Enum (bibliothek, atelier, kabinett, start) |
+| `tier` | `WebTier` | Enum (bibliothek, atelier, kabinett, start, observatorium) |
 | `label` | `str` | min_length=1, sichtbarer Text |
 | `bordered` | `bool` | Default True — L2-Status-Chip mit Border; False = L3-Background-only |
 
-`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start` — mappt
+`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium` — mappt
 1:1 auf die `color.tier.<tier>.*`-Token-Familie.
 
 ## Verwendete Tokens
@@ -43,7 +43,7 @@ in der Tier-Border-Farbe. Kein Icon, keine Interaktivitaet im Primitiv selbst.
   `1px solid transparent` als Basis, die tierspezifische Regel setzt `border-color`.
 - `bordered=False` → keine Border-Klasse, reiner Background-Chip.
 - `label` wird per `html.escape()` XSS-sicher ausgegeben.
-- `render_tier_chip_css()` gibt Regeln fuer alle 4 Tiers aus.
+- `render_tier_chip_css()` gibt Regeln fuer alle 5 Tiers aus.
 
 ## Tier-Bezug
 
@@ -55,6 +55,7 @@ Tier-abhaengige Komponente. Der `tier`-Wert waehlt die `color.tier.<tier>.*`-Fam
 | `atelier` | Amber — Atelier/Arbeit |
 | `kabinett` | Rot — Kabinett/privat |
 | `start` | Alias auf `bibliothek` (eigene Identitaet ohne Token-Migration spaeter moeglich) |
+| `observatorium` | Alias auf `atelier` (AMBER-Bereich, seit 0.17.0; eigene Nuance spaeter ohne Konsumenten-Aenderung) |
 
 Die Tier-Modifier-Klasse am Wurzel-Element (`mn-tier-chip--{tier}`) traegt die
 Farbvarianz; kein Inline-Hex.

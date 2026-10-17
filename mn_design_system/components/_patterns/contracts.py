@@ -10,9 +10,18 @@ zwischen Spec und Implementation.
 
 from __future__ import annotations
 
+from datetime import date, datetime
 from enum import Enum
+from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from mn_design_system.components._patterns._verlauf import (
+    berlin_wanduhr,
+    datum_de,
+    zahl_de,
+    zeit_als_berlin,
+)
 
 # ---------------------------------------------------------------------------
 # Sparkline
@@ -131,12 +140,13 @@ class WetterStripInput(BaseModel):
 
 
 class WebTier(str, Enum):
-    """Die vier Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
+    """Die fuenf Web-Tier von mkn-desk.com. Mappt auf color.tier.<tier>.*."""
 
     BIBLIOTHEK = "bibliothek"
     ATELIER = "atelier"
     KABINETT = "kabinett"
     START = "start"
+    OBSERVATORIUM = "observatorium"
 
 
 class TierChipInput(BaseModel):
@@ -338,3 +348,123 @@ class MastheadInput(BaseModel):
     nach dem Kontext-Chip gerendert; eine App fuellt ihn client-seitig."""
     user_chip_label: str = "…"
     """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
+
+
+# ---------------------------------------------------------------------------
+# Verlauf-Chart (0.17.0) — Zeitreihen-Diagramm auf Apache ECharts
+# ---------------------------------------------------------------------------
+
+
+class VerlaufPunkt(BaseModel):
+    """Ein Messpunkt: Zeitpunkt (Tag oder Zeitstempel) und Wert.
+
+    t: `date` fuer Tageswerte, `datetime` fuer Zeitpunkt-Werte. Ein `datetime`
+       ohne Zeitzone wird als Europe/Berlin gelesen.
+    wert: endliche Zahl (NaN/Infinity sind in JSON nicht darstellbar).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    t: date | datetime
+    wert: float = Field(allow_inf_nan=False)
+
+    @field_validator("t")
+    @classmethod
+    def _t_berlin(cls, t: date | datetime) -> date | datetime:
+        return zeit_als_berlin(t)
+
+
+class VerlaufReihe(BaseModel):
+    """Eine Linie im Diagramm.
+
+    label: Name in Legende und Tooltip (1..40 Zeichen).
+    punkte: Messpunkte; darf leer sein (die Achse steht auch ohne Daten).
+    art: "messung" = durchgezogene Linie, "gleitend" = gestrichelte Glaettung.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1, max_length=40)
+    punkte: list[VerlaufPunkt]
+    art: Literal["messung", "gleitend"] = "messung"
+
+
+class VerlaufMarkierung(BaseModel):
+    """Senkrechte Marke (Ereignis) im Diagramm: Zeitpunkt und kurze Beschriftung."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    t: date | datetime
+    label: str = Field(min_length=1, max_length=30)
+
+    @field_validator("t")
+    @classmethod
+    def _t_berlin(cls, t: date | datetime) -> date | datetime:
+        return zeit_als_berlin(t)
+
+
+class VerlaufChartInput(BaseModel):
+    """API-Contract fuer render_verlauf_chart_html() / verlauf_chart_option().
+
+    titel / einheit: Ueberschrift (1..80) und Einheit der Werteachse (0..16).
+    reihen: 1..4 Linien; Punkte ausserhalb von `von`..`bis` werden nicht gezeichnet.
+    von / bis: sichtbares Zeitfenster (ganze Tage, `bis` einschliesslich); die
+       Zeitachse steht auch ohne Punkte. Es gilt von < bis.
+    zielband_min / zielband_max: optionales Band; beide oder keins, min <= max.
+    markierungen: hoechstens 12 senkrechte Ereignis-Marken.
+    dezimalstellen: Nachkommastellen in Achse und Tooltip (0..3).
+    hoehe: Flaechenhoehe in px, nur feste Stufen (das CSS kennt je Stufe eine
+       Klasse; ein `style=`-Attribut gibt es bewusst nie).
+    beschreibung: aria-label der Flaeche; ohne Angabe liefert
+       `beschreibung_text()` einen Text aus Titel, Einheit, Letztstand, Zeitraum.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    titel: str = Field(min_length=1, max_length=80)
+    einheit: str = Field(max_length=16)
+    reihen: list[VerlaufReihe] = Field(min_length=1, max_length=4)
+    von: date
+    bis: date
+    zielband_min: float | None = Field(default=None, allow_inf_nan=False)
+    zielband_max: float | None = Field(default=None, allow_inf_nan=False)
+    markierungen: list[VerlaufMarkierung] = Field(default_factory=list, max_length=12)
+    dezimalstellen: int = Field(default=1, ge=0, le=3)
+    hoehe: Literal[180, 220, 260, 320, 400, 600] = 260
+    beschreibung: str | None = None
+
+    @model_validator(mode="after")
+    def _fenster_und_zielband(self) -> VerlaufChartInput:
+        if self.von >= self.bis:
+            raise ValueError("von muss vor bis liegen")
+        if (self.zielband_min is None) != (self.zielband_max is None):
+            raise ValueError("Zielband braucht Minimum und Maximum (beide oder keins)")
+        if self.zielband_min is not None and self.zielband_min > self.zielband_max:
+            raise ValueError("Zielband: Minimum darf das Maximum nicht uebersteigen")
+        return self
+
+    def beschreibung_text(self) -> str:
+        """aria-label: die explizite `beschreibung`, sonst ein Satz aus den Daten.
+
+        Der Default nennt Titel, Einheit, den juengsten Punkt der ERSTEN Reihe im
+        Fenster (mit Datum) und den Zeitraum — ein Screenreader-Nutzer erfaehrt
+        so den Stand, ohne das Diagramm zu sehen.
+        """
+        if self.beschreibung is not None:
+            return self.beschreibung
+        kopf = f"{self.titel} ({self.einheit})" if self.einheit else self.titel
+        zeitraum = f"{datum_de(self.von)} bis {datum_de(self.bis)}"
+        im_fenster = [
+            p
+            for p in self.reihen[0].punkte
+            if self.von <= berlin_wanduhr(p.t).date() <= self.bis
+        ]
+        if not im_fenster:
+            return f"{kopf}: keine Werte im Zeitraum {zeitraum}."
+        letzter = max(im_fenster, key=lambda p: berlin_wanduhr(p.t))
+        wert = zahl_de(letzter.wert, self.dezimalstellen)
+        mit_einheit = f"{wert} {self.einheit}" if self.einheit else wert
+        return (
+            f"{kopf}: zuletzt {mit_einheit} am {datum_de(letzter.t)}, "
+            f"Zeitraum {zeitraum}."
+        )

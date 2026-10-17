@@ -11,6 +11,7 @@ from mn_design_system.components.web.sub_nav import (
     render_sub_nav_css,
     render_sub_nav_html,
 )
+from mn_design_system.tokens import get
 
 
 def _make_input(**overrides) -> SubNavInput:
@@ -133,3 +134,16 @@ class TestRenderSubNavCss:
         """Keine pt-Einheiten — die Sub-Nav ist rein web."""
         css = render_sub_nav_css()
         assert "pt" not in css
+
+    def test_tier_fallback_matches_real_tokens(self):
+        """Jeder Tier (auch observatorium, 0.17.0) bekommt Hover-/Aktiv-Regeln
+        mit dem ECHTEN Token-Wert als var()-Fallback."""
+        css = render_sub_nav_css()
+        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+            bg = get(f"color.tier.{tier}.bg")
+            border = get(f"color.tier.{tier}.border")
+            text = get(f"color.tier.{tier}.text")
+            assert f".mn-sub-nav--{tier} .mn-sub-nav__tab" in css
+            assert f"var(--color-tier-{tier}-border, {border})" in css
+            assert f"var(--color-tier-{tier}-bg, {bg})" in css
+            assert f"var(--color-tier-{tier}-text, {text})" in css

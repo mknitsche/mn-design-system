@@ -1,0 +1,10 @@
+{
+  "name": "echarts",
+  "version": "6.1.0",
+  "datei": "echarts.common.min.js",
+  "sha256": "61f13280aba3161f77fc801bf5f9c786f55f10432153a0683fc5cc0700b013d5",
+  "quelle": "https://registry.npmjs.org/echarts/-/echarts-6.1.0.tgz",
+  "tarball_integrity": "sha512-q0yaFPggC9FUdsWH4blavRWFmxdrIodbkoKNAjJudAI6CA9gNPxHtV2RcZNEepZVlk4yvBYkOkbk6HIVpIyHZA==",
+  "lizenz": "Apache-2.0",
+  "hinweis": "sha256 gilt fuer package/dist/echarts.common.min.js (715020 Byte, der common-Build); die volle package/dist/echarts.min.js (1,1 MB) hat b66b25aeb4df84e33199dc21694014d336d222cbd9deb0e5a7c14bd6aa0d0fd0 und ist NICHT vendort. Massgeblich fuer die Echtheit ist tarball_integrity (npm view echarts@6.1.0 dist.integrity)."
+}

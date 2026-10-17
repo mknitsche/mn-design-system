@@ -1,9 +1,11 @@
 """color.tier.* Token-Familie (UX-Welle v0.2, Gemini-Gate Punkt 1 + 3).
 
-4 Tier-Familien (bibliothek/atelier/kabinett/start) x {bg, bg-soft, border, text}.
+5 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium) x
+{bg, bg-soft, border, text}.
 - bg-soft: Sub-Nav-Hover, abgeleitet aus bg (55% ueber Weiss) — vollwertiger
   Token (cross-media-faehig, kein color-mix im Konsumenten).
 - start: referenzielles Alias auf bibliothek (Style-Dictionary-Reference).
+- observatorium: referenzielles Alias auf atelier (AMBER-Bereich, 0.17.0).
 """
 
 from __future__ import annotations
@@ -12,12 +14,12 @@ import re
 
 from mn_design_system.tokens import get
 
-_TIERS = ["bibliothek", "atelier", "kabinett", "start"]
+_TIERS = ["bibliothek", "atelier", "kabinett", "start", "observatorium"]
 _SLOTS = ["bg", "bg-soft", "border", "text"]
 _HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
-def test_alle_16_tier_tokens_vorhanden():
+def test_alle_20_tier_tokens_vorhanden():
     for tier in _TIERS:
         for slot in _SLOTS:
             key = f"color.tier.{tier}.{slot}"
@@ -35,6 +37,15 @@ def test_start_ist_alias_auf_bibliothek():
     """Gemini-Gate Punkt 3: start referenziert bibliothek (kein Hex-Copy)."""
     for slot in _SLOTS:
         assert get(f"color.tier.start.{slot}") == get(f"color.tier.bibliothek.{slot}")
+
+
+def test_observatorium_ist_alias_auf_atelier():
+    """0.17.0: observatorium referenziert atelier (AMBER-Werte unter eigenem
+    Namen, wie start auf bibliothek) — alle Slots inkl. hover-on-dark gleich."""
+    for slot in [*_SLOTS, "hover-on-dark"]:
+        alias = get(f"color.tier.observatorium.{slot}")
+        assert alias is not None, f"Token fehlt: color.tier.observatorium.{slot}"
+        assert alias == get(f"color.tier.atelier.{slot}")
 
 
 def test_bg_soft_werte():

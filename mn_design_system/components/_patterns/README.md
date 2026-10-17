@@ -21,6 +21,7 @@ Implementierungen.
 | Sparkline | `sparkline.md` | `SparklineInput` | `pdf/sparkline.py` |
 | Wetter-Strip | `wetter_strip.md` | `WetterStripInput`, `WetterDay` | `pdf/wetter_strip.py` |
 | KPI-Card | `kpi_card.md` | `KpiCardInput`, `KpiTrendDirection` | `pdf/kpi_card.py` |
+| Verlauf-Chart | `verlauf_chart.md` | `VerlaufChartInput`, `VerlaufReihe`, `VerlaufPunkt`, `VerlaufMarkierung` | — (nur Web: `web/verlauf_chart.py`) |
 
 ## Workflow fuer neue Patterns
 

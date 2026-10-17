@@ -26,7 +26,7 @@ keine Ueberschrift — der Block ist bewusst leise.
 | `message` | `str` | min_length=1, sichtbarer Hinweistext |
 | `tier` | `WebTier \| None` | Default None — optionale Tier-Familie fuer eine zarte farbliche Verankerung |
 
-`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start` — mappt
+`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium` — mappt
 1:1 auf die `color.tier.<tier>.*`-Token-Familie.
 
 ## Verwendete Tokens
@@ -48,7 +48,7 @@ keine Ueberschrift — der Block ist bewusst leise.
   Regel ueberschreibt `border-left-color` mit der Tier-Border-Farbe.
 - `message` wird per `html.escape()` XSS-sicher ausgegeben.
 - `render_empty_state_css()` gibt die Basis-Regel plus Modifier-Regeln fuer alle
-  4 Tiers aus.
+  5 Tiers aus.
 - `inline_css=True` haengt das Komponenten-CSS in einem `<style>`-Block an —
   fuer Single-Snippet-Embeds.
 
@@ -64,6 +64,7 @@ zarte Verankerung im jeweiligen Web-Bereich:
 | `atelier` | Amber — Atelier/Arbeit |
 | `kabinett` | Rot — Kabinett/privat |
 | `start` | Alias auf `bibliothek` (eigene Identitaet ohne Token-Migration spaeter moeglich) |
+| `observatorium` | Alias auf `atelier` (AMBER-Bereich, seit 0.17.0; eigene Nuance spaeter ohne Konsumenten-Aenderung) |
 
 Die Tier-Modifier-Klasse am Wurzel-Element (`mn-empty-state--{tier}`) traegt die
 Farbvarianz; kein Inline-Hex.
