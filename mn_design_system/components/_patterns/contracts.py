@@ -321,6 +321,21 @@ class BackLinkInput(BaseModel):
     href: str = Field(min_length=1)
     label: str = Field(min_length=1)
 
+    @field_validator("href")
+    @classmethod
+    def _nur_interner_pfad(cls, v: str) -> str:
+        """Zurueck-Zeilen zeigen immer auf interne Seiten: nach dem Strippen genau ein fuehrendes
+        `/`, kein `//` (protokoll-relativ), kein Backslash, keine Steuerzeichen. Schema-Ziele
+        (`javascript:`, `data:`, `https:`) fallen damit von selbst heraus (XSS)."""
+        v = v.strip()
+        if not v.startswith("/") or v.startswith("//"):
+            raise ValueError(
+                "href muss ein interner Pfad sein (genau ein fuehrendes '/')"
+            )
+        if "\\" in v or any(ord(c) < 32 or ord(c) == 127 for c in v):
+            raise ValueError("href darf weder Backslash noch Steuerzeichen enthalten")
+        return v
+
 
 class FooterLink(BaseModel):
     """Ein Link im rechten Cluster der Footer-Schlusszeile."""
