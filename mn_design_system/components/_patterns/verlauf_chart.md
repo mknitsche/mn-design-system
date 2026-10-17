@@ -13,7 +13,7 @@
     └──────────────────────────
       01.08.   01.09.   01.10.
     ▐█████████████████████████▌  ← Zoom-Leiste (dataZoom slider)
- Waage · 7-Tage-Mittel (gestrichelt). Zielband 78,0–81,0 kg
+ Waage · 7-Tage-Mittel (gestrichelt). Zielband 78–81 kg
 ```
 
 ## API-Contract
@@ -24,7 +24,7 @@
 |---|---|---|
 | `titel` | `str` | 1..80 |
 | `einheit` | `str` | 0..16, Einheit der Werteachse |
-| `reihen` | `list[VerlaufReihe]` | 1..4 |
+| `reihen` | `list[VerlaufReihe]` | 1..4; die erste liegt auf der linken Achse (sie traegt Zielband, Marken, Beschreibung) |
 | `von`, `bis` | `date` | `von < bis`; ganze Tage, `bis` einschliesslich |
 | `zielband_min`, `zielband_max` | `float \| None` | beide oder keins, `min <= max` |
 | `markierungen` | `list[VerlaufMarkierung]` | max. 12 |
@@ -33,7 +33,8 @@
 | `beschreibung` | `str \| None` | aria-label; Default `beschreibung_text()` |
 
 `VerlaufReihe`: `label` (1..40), `punkte` (darf leer sein), `art` (`messung` =
-durchgezogen, `gleitend` = gestrichelt, ohne Symbole). `VerlaufPunkt`: `t`
+durchgezogen, `gleitend` = gestrichelt, ohne Symbole), `achse` (`links` = Default,
+`rechts` = zweite Werteachse, seit 0.17.1). `VerlaufPunkt`: `t`
 (`date` oder `datetime`; ein `datetime` ohne Zone gilt als Europe/Berlin), `wert`
 (endlich — NaN/Infinity sind in JSON nicht darstellbar). `VerlaufMarkierung`: `t`,
 `label` (1..30).
@@ -69,6 +70,18 @@ durchgezogen, `gleitend` = gestrichelt, ohne Symbole). `VerlaufPunkt`: `t`
 - **Leeres Fenster:** Achse plus Hinweis „keine Werte im Fenster", kein Zoom.
 - **Zielband:** Mit Zielband erhaelt die Werteachse feste, runde Grenzen, damit ein Band
   ausserhalb der Daten nicht abgeschnitten wird.
+- **Zielband-Beschriftung:** unter dem Diagramm ohne ueberfluessige Nullen und deutsch:
+  „Zielband 70–74 kg", „72,5–74 kg", „1.000–1.500 kcal"; ein negativer Wert traegt das
+  Minuszeichen U+2212. Die Nachkommastellen sind `dezimalstellen`, gekuerzt wird nur,
+  was hinter dem Komma nur aus Nullen besteht.
+- **Zweite Werteachse (0.17.1):** liegt mindestens eine Reihe auf `achse="rechts"`
+  (z.B. 7-Tage-Summen neben Tageswerten), ist `yAxis` der Option eine Liste aus linker
+  und rechter Achse, die rechten Reihen zeigen mit `yAxisIndex: 1` auf die rechte.
+  Beide Achsen tragen dieselbe Einheit (`einheit`) und dieselbe Zahlenschreibweise; die
+  rechte hat eine freie Skala und kein Gitter, der rechte Rand wird auf 48 px verbreitert.
+  Zielband und feste Achsengrenzen gelten nur fuer die linke Achse und richten sich nur
+  nach den linken Reihen. Ohne rechte Reihe bleibt `yAxis` ein einzelnes Objekt — die
+  Option ist dann dieselbe wie in 0.17.0. Die Textlegende nennt „(rechte Achse)".
 - **Zoom:** ziehen/pinch (inside) und Leiste; das Mausrad zoomt nur mit Strg, damit die
   Seite unter dem Zeiger weiter scrollt. `touch-action: pan-y` laesst die Seite
   senkrecht scrollen.

@@ -30,7 +30,7 @@ from html import escape
 from typing import Literal
 
 from mn_design_system.components._patterns._verlauf import berlin_wanduhr
-from mn_design_system.components._patterns._zahl import zahl_de
+from mn_design_system.components._patterns._zahl import zahl_de_kurz
 from mn_design_system.components._patterns.contracts import (
     VerlaufChartInput,
     VerlaufReihe,
@@ -103,6 +103,8 @@ def _reihe_option(
         serie["showSymbol"] = False
     else:
         serie["showSymbol"] = len(punkte) <= _SYMBOLE_BIS
+    if reihe.achse == "rechts":
+        serie["yAxisIndex"] = 1
     return serie
 
 
@@ -133,12 +135,33 @@ def _werteachse(chart: VerlaufChartInput, alle_werte: list[float]) -> dict[str, 
     return achse
 
 
+def _rechte_werteachse(chart: VerlaufChartInput) -> dict[str, object]:
+    """Zweite Werteachse (0.17.1) fuer Reihen mit ``achse="rechts"``: eigene, freie Skala,
+    dieselbe Einheit, kein zweites Gitter (es lege sich schief ueber das erste)."""
+    achse: dict[str, object] = {
+        "type": "value",
+        "scale": True,
+        "position": "right",
+        "splitLine": {"show": False},
+    }
+    if chart.einheit:
+        achse["name"] = chart.einheit
+        achse["nameLocation"] = "end"
+        achse["nameTextStyle"] = {"align": "right"}
+    return achse
+
+
 def verlauf_chart_option(chart: VerlaufChartInput) -> dict[str, object]:
     """ECharts-Option fuer das Diagramm — reines JSON, deterministisch, ohne Farben.
 
     Zeitfenster: ganze Tage von ``von`` bis einschliesslich ``bis``; Punkte ausserhalb
     fehlen. Zeitpunkte erscheinen als Berliner Wanduhr (ein ``date`` bleibt Datum).
     Zahlen- und Datumsformat von Achse und Tooltip setzt der Loader.
+
+    Zweite Werteachse (0.17.1): liegt mindestens eine Reihe auf ``achse="rechts"``, ist
+    ``yAxis`` eine Liste aus linker und rechter Achse, und jene Reihen zeigen mit
+    ``yAxisIndex: 1`` auf die rechte; sonst bleibt ``yAxis`` ein einzelnes Objekt. Zielband
+    und Achsengrenzen gelten nur fuer die linke Achse.
     """
     punkte = [_punkte(r, chart) for r in chart.reihen]
     series = [_reihe_option(r, p) for r, p in zip(chart.reihen, punkte, strict=True)]
@@ -163,20 +186,38 @@ def verlauf_chart_option(chart: VerlaufChartInput) -> dict[str, object]:
             ],
         }
 
+    # Die linke Achse (mit ihrem Zielband) richtet sich nur nach den linken Reihen: eine
+    # Summe in anderer Groessenordnung auf der rechten Achse blaeht sie nicht auf.
+    links = _werteachse(
+        chart,
+        [
+            w
+            for reihe, pkt in zip(chart.reihen, punkte, strict=True)
+            if reihe.achse == "links"
+            for _, w in pkt
+        ],
+    )
+    hat_rechte_achse = any(r.achse == "rechts" for r in chart.reihen)
+
     option: dict[str, object] = {
         "animationDuration": 300,
         "aria": {
             "enabled": True,
             "label": {"description": chart.beschreibung_text()},
         },
-        "grid": {"left": 48, "right": 12, "top": 32, "bottom": 56},
+        "grid": {
+            "left": 48,
+            "right": 48 if hat_rechte_achse else 12,
+            "top": 32,
+            "bottom": 56,
+        },
         "xAxis": {
             "type": "time",
             "min": chart.von.isoformat(),
             "max": f"{chart.bis.isoformat()}T23:59:59",
             "axisLabel": {"formatter": dict(_ZEIT_FORMAT), "hideOverlap": True},
         },
-        "yAxis": _werteachse(chart, [w for reihe in punkte for _, w in reihe]),
+        "yAxis": [links, _rechte_werteachse(chart)] if hat_rechte_achse else links,
         "series": series,
         "tooltip": {"trigger": "axis", "renderMode": "richText", "confine": True},
     }
@@ -213,15 +254,20 @@ def _json_fuer_script(option: dict[str, object]) -> str:
 
 
 def _legende(chart: VerlaufChartInput) -> str:
-    teile = [
-        f"{r.label} (gestrichelt)" if r.art == "gleitend" else r.label
-        for r in chart.reihen
-    ]
+    teile = []
+    for r in chart.reihen:
+        merkmale = []
+        if r.art == "gleitend":
+            merkmale.append("gestrichelt")
+        if r.achse == "rechts":
+            merkmale.append("rechte Achse")
+        teile.append(f"{r.label} ({', '.join(merkmale)})" if merkmale else r.label)
     text = " · ".join(teile)
     if chart.zielband_min is not None and chart.zielband_max is not None:
+        # Ohne ueberfluessige Nullen: „70–74 kg", nicht „70,0–74,0 kg".
         grenzen = (
-            f"{zahl_de(chart.zielband_min, chart.dezimalstellen)}–"
-            f"{zahl_de(chart.zielband_max, chart.dezimalstellen)}"
+            f"{zahl_de_kurz(chart.zielband_min, chart.dezimalstellen)}–"
+            f"{zahl_de_kurz(chart.zielband_max, chart.dezimalstellen)}"
         )
         einheit = f" {chart.einheit}" if chart.einheit else ""
         text += f". Zielband {grenzen}{einheit}"
@@ -410,13 +456,16 @@ _LOADER = """
     if (!flaeche || !daten) return;
     var option = JSON.parse(daten.textContent);
     var dezimalstellen = parseInt(figur.getAttribute("data-dezimalstellen"), 10);
-    var einheit = option.yAxis.name || "";
+    var achsen = Array.isArray(option.yAxis) ? option.yAxis : [option.yAxis];
+    var einheit = achsen[0].name || "";
     var dunkel = document.documentElement.dataset.schema === 'dunkel';
     var schema = dunkel ? "mn-dunkel" : "mn-hell";
 
-    option.yAxis.axisLabel = {
-      formatter: function (wert) { return zahl(wert, 0, dezimalstellen); }
-    };
+    achsen.forEach(function (achse) {
+      achse.axisLabel = {
+        formatter: function (wert) { return zahl(wert, 0, dezimalstellen); }
+      };
+    });
     option.tooltip.formatter = function (params) {
       return tooltipText(params, einheit, dezimalstellen);
     };
