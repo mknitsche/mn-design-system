@@ -19,8 +19,12 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from mn_design_system.components._patterns._verlauf import (
     berlin_wanduhr,
     datum_de,
-    zahl_de,
     zeit_als_berlin,
+)
+from mn_design_system.components._patterns._zahl import (
+    delta_de,
+    rundet_auf_null,
+    zahl_de,
 )
 
 # ---------------------------------------------------------------------------
@@ -57,6 +61,19 @@ class KpiTrendDirection(str, Enum):
     NEUTRAL = "neutral"
 
 
+class KpiWertung(str, Enum):
+    """Bewertung einer Bewegung: war sie gut, schlecht oder ist sie nicht zu werten.
+
+    Folgt aus der Bewegung (``KpiTrendDirection``) und der Polaritaet
+    (``KpiCardInput.richtung``): beim Gewicht ist ein Rueckgang GUT, bei den Schritten
+    ein Anstieg.
+    """
+
+    GUT = "gut"
+    SCHLECHT = "schlecht"
+    NEUTRAL = "neutral"
+
+
 class KpiCardInput(BaseModel):
     """API-Contract fuer build_kpi_card().
 
@@ -65,6 +82,16 @@ class KpiCardInput(BaseModel):
     change_pct: optional, prozentuale Veraenderung (positiv/negativ/null)
     sparkline_values: optional Zeitreihe fuer kleine Trend-Linie
     caption: optional Untertitel-Text (z.B. "30 Tage")
+
+    Seit 0.17.1 (alle optional, ohne sie aendert sich nichts):
+    richtung: Polaritaet — welche Bewegung ist GUT? "hoeher" (Default: Anstieg gut,
+        gruen), "niedriger" (Rueckgang gut, z.B. Gewicht, Ruhepuls) oder "neutral"
+        (keine Wertung, immer gedaempft).
+    delta_wert: absolutes Delta statt Prozent (z.B. -1.2 fuer "−1,2 kg"); deutsch
+        formatiert. Zugleich mit change_pct nicht erlaubt (Mehrdeutigkeit).
+    delta_einheit: Einheit hinter dem Delta ("kg"); nur mit delta_wert.
+    dezimalstellen: Nachkommastellen des Deltas (0..6, Default 1). Rundet das Delta
+        damit auf null, steht "unveraendert" und die Bewegung gilt als neutral.
     """
 
     model_config = {"extra": "forbid", "frozen": True}
@@ -74,17 +101,60 @@ class KpiCardInput(BaseModel):
     change_pct: float | None = None
     sparkline_values: list[float] | None = None
     caption: str | None = None
+    richtung: Literal["hoeher", "niedriger", "neutral"] = "hoeher"
+    delta_wert: float | None = Field(default=None, allow_inf_nan=False)
+    delta_einheit: str = ""
+    dezimalstellen: int = Field(default=1, ge=0, le=6)
+
+    @model_validator(mode="after")
+    def _delta_eindeutig(self) -> KpiCardInput:
+        if self.delta_wert is not None and self.change_pct is not None:
+            raise ValueError(
+                "change_pct und delta_wert zugleich sind mehrdeutig: die Karte zeigt "
+                "genau EIN Delta (Prozent oder absolut)"
+            )
+        if self.delta_einheit and self.delta_wert is None:
+            raise ValueError("delta_einheit braucht delta_wert")
+        return self
 
     def trend_direction(self) -> KpiTrendDirection:
-        """Abgeleiteter Trend aus change_pct.
+        """Abgeleiteter Trend aus change_pct oder delta_wert.
 
         v0.4.1 (S239 B5): Schwellwert von 0.01 auf 0.5 hochgezogen — KT-1
         Briefing-Befund 30.04.: kleine Bewegungen (<0.5%) sollen nicht
         rot/gruen markiert werden, sondern neutral (grau, color.viz.muted).
+
+        v0.17.1: bei gesetztem ``delta_wert`` entscheidet das Vorzeichen; ein Delta,
+        das auf ``dezimalstellen`` gerundet null ist, gilt als neutral (keine
+        Prozent-Schwelle: sie gehoert dem Prozentwert).
         """
+        if self.delta_wert is not None:
+            if rundet_auf_null(self.delta_wert, self.dezimalstellen):
+                return KpiTrendDirection.NEUTRAL
+            return (
+                KpiTrendDirection.UP if self.delta_wert > 0 else KpiTrendDirection.DOWN
+            )
         if self.change_pct is None or abs(self.change_pct) < 0.5:
             return KpiTrendDirection.NEUTRAL
         return KpiTrendDirection.UP if self.change_pct > 0 else KpiTrendDirection.DOWN
+
+    def wertung(self) -> KpiWertung:
+        """Bewegung und Polaritaet zusammen: war es gut, schlecht oder ungewertet."""
+        richtung = self.trend_direction()
+        if richtung == KpiTrendDirection.NEUTRAL or self.richtung == "neutral":
+            return KpiWertung.NEUTRAL
+        gut_bei = (
+            KpiTrendDirection.UP
+            if self.richtung == "hoeher"
+            else KpiTrendDirection.DOWN
+        )
+        return KpiWertung.GUT if richtung == gut_bei else KpiWertung.SCHLECHT
+
+    def delta_text(self) -> str | None:
+        """Deutsch formatiertes absolutes Delta ("−1,2 kg"), ohne Delta ``None``."""
+        if self.delta_wert is None:
+            return None
+        return delta_de(self.delta_wert, self.dezimalstellen, self.delta_einheit)
 
 
 # ---------------------------------------------------------------------------

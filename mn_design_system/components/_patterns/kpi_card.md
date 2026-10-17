@@ -25,8 +25,14 @@
 | `change_pct` | `float \| None` | optional, prozentuale Veraenderung |
 | `sparkline_values` | `list[float] \| None` | optional, Zeitreihe fuer Trend-Linie |
 | `caption` | `str \| None` | optional, Untertitel (z.B. "30 Tage", "Stand: 04:50") |
+| `richtung` | `"hoeher" \| "niedriger" \| "neutral"` | seit 0.17.1, Default `"hoeher"` — Polaritaet: welche Bewegung ist GUT? |
+| `delta_wert` | `float \| None` | seit 0.17.1, optional — absolutes Delta statt Prozent (nicht zugleich mit `change_pct`) |
+| `delta_einheit` | `str` | seit 0.17.1, Default `""` — Einheit hinter dem Delta; nur mit `delta_wert` |
+| `dezimalstellen` | `int` (0..6) | seit 0.17.1, Default 1 — Nachkommastellen des Deltas |
 
-`trend_direction()`-Methode liefert `KpiTrendDirection.UP/DOWN/NEUTRAL`.
+`trend_direction()`-Methode liefert `KpiTrendDirection.UP/DOWN/NEUTRAL` (aus `delta_wert`,
+sonst aus `change_pct`). `wertung()` liefert `KpiWertung.GUT/SCHLECHT/NEUTRAL`: Bewegung
+x Polaritaet. `delta_text()` liefert das deutsch formatierte Delta oder `None`.
 
 ## Verwendete Tokens
 
@@ -56,6 +62,18 @@
 - Sparkline mit `sparkline_values` (>=2): Drawing aus `build_sparkline()`
 - Sparkline ohne Werte: Spacer (Hoehe identisch)
 - Deutsche Komma-Notation in Change-Display
+- **Polaritaet (0.17.1):** `richtung="niedriger"` macht einen Rueckgang gut (gruen, z.B.
+  Gewicht, Ruhepuls), `"neutral"` wertet nicht (alles gedaempft, z.B. Schlafdauer). Der Pfeil
+  zeigt IMMER die Bewegung, die Farbe die Wertung. Default `"hoeher"` ist das Verhalten von
+  0.17.0 — Ausgabe bytegleich.
+- **Absolutes Delta (0.17.1):** `delta_wert` + `delta_einheit` + `dezimalstellen` ersetzen
+  den Prozentwert: deutsch gesetzt („+1,2 kg", „−1,2 kg", Dezimalkomma, Tausenderpunkt ab
+  1.000, Minuszeichen U+2212, geschuetztes Leerzeichen vor der Einheit), kaufmaennisch
+  gerundet. Rundet das Delta auf null, steht „unverändert" (Bewegung neutral, kein Pfeil im
+  PDF, ■ im Web). Prozent und Delta zugleich ist ein Fehler (Mehrdeutigkeit).
+- **Web-Klassen (0.17.1):** neben `is-up`/`is-down`/`is-neutral` (Bewegung) traegt das Delta bei
+  `richtung != "hoeher"` eine Wertungsklasse `is-gut`/`is-schlecht`/`is-ungewertet`, die im
+  CSS NACH den Bewegungsklassen steht und deren Farbe ueberschreibt.
 
 ## Plattform-Implementierungen
 

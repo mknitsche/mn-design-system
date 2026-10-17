@@ -7,6 +7,7 @@ from pydantic import ValidationError
 from reportlab.graphics.shapes import Drawing
 from reportlab.platypus import Paragraph, Spacer
 
+from mn_design_system.components._patterns._zahl import MINUS, NBSP
 from mn_design_system.components._patterns.contracts import (
     KpiCardInput,
     KpiTrendDirection,
@@ -227,3 +228,109 @@ class TestCaptionSchrift:
         caption = build_kpi_card(inp)[-1]
         namen = {frag.fontName for frag in caption.frags}
         assert "SourceSerif4-BoldItalic" in namen
+
+
+# ---------------------------------------------------------------------------
+# 0.17.1 — Polaritaet und absolutes Delta (derselbe Vertrag wie im Web)
+# ---------------------------------------------------------------------------
+
+#: Ausgabe von 0.17.0, woertlich — alte Aufrufe bleiben bytegleich.
+_ALT_CHANGE = {
+    1.25: '<font color="#2e7d32">▲ +1,25%</font>',
+    -2.3: '<font color="#D32F2F">▼ -2,30%</font>',
+    0.2: '<font color="#b0bec5">▲ +0,20%</font>',
+    -0.2: '<font color="#b0bec5">▼ -0,20%</font>',
+    0.0: '<font color="#b0bec5">▲ +0,00%</font>',
+    0.5: '<font color="#2e7d32">▲ +0,50%</font>',
+    -0.5: '<font color="#D32F2F">▼ -0,50%</font>',
+}
+
+
+class TestAlteAufrufeUnveraendert:
+    @pytest.mark.parametrize("pct", sorted(_ALT_CHANGE))
+    def test_change_ist_bytegleich(self, pct):
+        text = build_kpi_card(KpiCardInput(label="X", value="1", change_pct=pct))[
+            2
+        ].text
+        assert text == _ALT_CHANGE[pct]
+
+    @pytest.mark.parametrize("pct", sorted(_ALT_CHANGE))
+    def test_explizites_hoeher_ist_der_alte_aufruf(self, pct):
+        karte = KpiCardInput(label="X", value="1", change_pct=pct, richtung="hoeher")
+        assert build_kpi_card(karte)[2].text == _ALT_CHANGE[pct]
+
+    def test_ohne_change_bleibt_leer(self):
+        assert build_kpi_card(KpiCardInput(label="X", value="1"))[2].text == ""
+
+
+class TestPolaritaetPdf:
+    SUCCESS = "2e7d32"
+    ERROR = "d32f2f"
+    MUTED = "b0bec5"
+
+    @pytest.mark.parametrize(
+        ("richtung", "pct", "farbe"),
+        [
+            ("niedriger", -2.0, SUCCESS),
+            ("niedriger", 2.0, ERROR),
+            ("niedriger", 0.2, MUTED),
+            ("neutral", 2.0, MUTED),
+            ("neutral", -2.0, MUTED),
+        ],
+    )
+    def test_prozent_faerbt_nach_wertung(self, richtung, pct, farbe):
+        karte = KpiCardInput(label="X", value="1", change_pct=pct, richtung=richtung)
+        text = build_kpi_card(karte)[2].text.lower()
+        assert f'color="#{farbe}"' in text
+        assert ("▲" if pct >= 0 else "▼") in text  # Pfeil = Bewegung, nicht Wertung
+
+    def test_gewicht_ruecklauf_ist_gruen_mit_echtem_minus(self):
+        karte = KpiCardInput(
+            label="Gewicht",
+            value="72,4 kg",
+            delta_wert=-1.2,
+            delta_einheit="kg",
+            richtung="niedriger",
+        )
+        text = build_kpi_card(karte)[2].text
+        assert text == f'<font color="#2e7d32">▼ {MINUS}1,2{NBSP}kg</font>'
+
+    def test_anstieg_bei_niedriger_ist_rot(self):
+        karte = KpiCardInput(
+            label="Gewicht",
+            value="73,4 kg",
+            delta_wert=1.0,
+            delta_einheit="kg",
+            richtung="niedriger",
+        )
+        text = build_kpi_card(karte)[2].text
+        assert text == f'<font color="#D32F2F">▲ +1,0{NBSP}kg</font>'
+
+    def test_tausenderpunkt_wird_nicht_zum_komma(self):
+        """Der alte Prozentpfad ersetzt jeden Punkt durch ein Komma — das Delta
+        kommt schon deutsch an und darf dabei nicht kaputtgehen."""
+        karte = KpiCardInput(
+            label="Schritte", value="9.800", delta_wert=1250.0, dezimalstellen=0
+        )
+        assert "+1.250" in build_kpi_card(karte)[2].text
+
+    def test_unveraendert_ohne_pfeil_gedaempft(self):
+        karte = KpiCardInput(label="X", value="1", delta_wert=-0.04, delta_einheit="kg")
+        text = build_kpi_card(karte)[2].text
+        assert text == '<font color="#b0bec5">unverändert</font>'
+
+    def test_einheit_wird_fuer_reportlab_escaped(self):
+        karte = KpiCardInput(label="X", value="1", delta_wert=1.0, delta_einheit="<b>")
+        assert "&lt;b&gt;" in build_kpi_card(karte)[2].text
+
+    def test_paragraph_baut_ohne_fehler(self):
+        """Der Paragraph wird gewrappt — ein kaputtes Markup wirft hier."""
+        karte = KpiCardInput(
+            label="X",
+            value="1",
+            delta_wert=-1.2,
+            delta_einheit="kg",
+            richtung="niedriger",
+        )
+        flowable = build_kpi_card(karte)[2]
+        flowable.wrap(200, 100)

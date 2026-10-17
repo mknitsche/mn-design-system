@@ -18,6 +18,7 @@ from html import escape
 from mn_design_system.components._patterns.contracts import (
     KpiCardInput,
     KpiTrendDirection,
+    KpiWertung,
     SparklineInput,
 )
 from mn_design_system.components.web.sparkline import render_sparkline_svg
@@ -32,6 +33,15 @@ _TREND_CLASS = {
     KpiTrendDirection.UP: "is-up",
     KpiTrendDirection.DOWN: "is-down",
     KpiTrendDirection.NEUTRAL: "is-neutral",
+}
+
+# Wertungs-Klassen (0.17.1): nur wenn die Polaritaet nicht der Default ist. Die Klasse
+# der Bewegung (is-up/is-down/is-neutral) bleibt, die Wertung faerbt sie um — so bleibt
+# das HTML eines alten Aufrufs bytegleich.
+_WERTUNG_CLASS = {
+    KpiWertung.GUT: "is-gut",
+    KpiWertung.SCHLECHT: "is-schlecht",
+    KpiWertung.NEUTRAL: "is-ungewertet",
 }
 
 
@@ -56,11 +66,18 @@ def render_kpi_card_html(input: KpiCardInput, *, inline_css: bool = False) -> st
     parts.append(f'<div class="mn-kpi-card__label">{label}</div>')
     parts.append(f'<div class="mn-kpi-card__value">{value}</div>')
 
-    if input.change_pct is not None:
-        sign = "+" if input.change_pct > 0 else ""
-        change_str = escape(f"{sign}{input.change_pct:.2f}%")
+    delta = input.delta_text()
+    if delta is not None or input.change_pct is not None:
+        if delta is not None:
+            change_str = escape(delta)
+        else:
+            sign = "+" if input.change_pct > 0 else ""
+            change_str = escape(f"{sign}{input.change_pct:.2f}%")
+        classes = trend_class
+        if input.richtung != "hoeher" and direction != KpiTrendDirection.NEUTRAL:
+            classes += f" {_WERTUNG_CLASS[input.wertung()]}"
         parts.append(
-            f'<div class="mn-kpi-card__change {trend_class}">{trend_glyph} {change_str}</div>'
+            f'<div class="mn-kpi-card__change {classes}">{trend_glyph} {change_str}</div>'
         )
 
     if input.sparkline_values:
@@ -86,6 +103,10 @@ def render_kpi_card_css() -> str:
 
     Konsument muss `dist/css/tokens.css` in seinen Build-Output einbinden,
     damit `var(--color-light-text)` etc. greift.
+
+    0.17.1: `is-gut` / `is-schlecht` / `is-ungewertet` stehen NACH `is-up` / `is-down` /
+    `is-neutral` und haben dieselbe Spezifitaet — die spaetere Regel gewinnt. So wird
+    bei `richtung="niedriger"` aus einem Rueckgang (`is-down`) ein gruenes Delta.
     """
     return """
 .mn-kpi-card {
@@ -120,6 +141,15 @@ def render_kpi_card_css() -> str:
   color: var(--color-status-error, #d32f2f);
 }
 .mn-kpi-card__change.is-neutral {
+  color: var(--color-light-text-muted, #6b7280);
+}
+.mn-kpi-card__change.is-gut {
+  color: var(--color-status-success, #2e7d32);
+}
+.mn-kpi-card__change.is-schlecht {
+  color: var(--color-status-error, #d32f2f);
+}
+.mn-kpi-card__change.is-ungewertet {
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-kpi-card__sparkline {

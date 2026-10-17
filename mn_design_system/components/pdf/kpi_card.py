@@ -10,6 +10,8 @@ Gap-Spalten fuer Tile-Look).
 
 from __future__ import annotations
 
+from xml.sax.saxutils import escape
+
 from reportlab.lib.colors import HexColor
 from reportlab.lib.enums import TA_LEFT, TA_RIGHT
 from reportlab.lib.styles import ParagraphStyle
@@ -19,6 +21,7 @@ from reportlab.platypus import Flowable, Paragraph, Spacer
 from mn_design_system.components._patterns.contracts import (
     KpiCardInput,
     KpiTrendDirection,
+    KpiWertung,
     SparklineInput,
 )
 from mn_design_system.components.pdf.sparkline import build_sparkline
@@ -67,8 +70,8 @@ def _build_styles() -> dict[str, ParagraphStyle]:
     }
 
 
-def _format_change(change_pct: float | None) -> str:
-    """Change-Pct mit Trend-Pfeil und Farbe (deutsche Komma-Notation).
+def _format_change(input: KpiCardInput) -> str:
+    """Change mit Trend-Pfeil und Farbe (deutsche Komma-Notation).
 
     v0.4.3 (S241 KT-1 B-7): Glyph konsistent in allen 3 Stufen, nur Farbe variiert.
       - |Δ| < 0.5%   → muted (grau, `color.viz.muted`), ▲/▼ in voller Groesse.
@@ -77,21 +80,31 @@ def _format_change(change_pct: float | None) -> str:
         bei allen Stufen, der dezente Status wird ueber die Farbe transportiert.
       - |Δ| >= 0.5%, change >= 0 → success (▲), gruen.
       - |Δ| >= 0.5%, change <  0 → error (▼), rot.
+
+    v0.17.1: die Farbe folgt der Wertung (Bewegung x Polaritaet ``richtung``): bei
+    ``richtung="niedriger"`` ist ein Rueckgang gruen, bei ``"neutral"`` bleibt alles
+    gedaempft. Mit ``delta_wert`` steht das deutsch formatierte absolute Delta
+    („−1,2 kg") statt des Prozentwerts; rundet es auf null, steht „unverändert" ohne
+    Pfeil. Ohne die neuen Felder ist die Ausgabe die von 0.17.0.
     """
-    if change_pct is None:
+    delta = input.delta_text()
+    if delta is None and input.change_pct is None:
         return ""
-    color_success = token_get("color.status.success", "#2e7d32")
-    color_error = token_get("color.status.error", "#D32F2F")
-    color_muted = token_get("color.viz.muted", "#b0bec5")
-    abs_pct = abs(change_pct)
+    wertung = input.wertung()
+    if wertung == KpiWertung.GUT:
+        color = token_get("color.status.success", "#2e7d32")
+    elif wertung == KpiWertung.SCHLECHT:
+        color = token_get("color.status.error", "#D32F2F")
+    else:
+        color = token_get("color.viz.muted", "#b0bec5")
+    if delta is not None:
+        direction = input.trend_direction()
+        glyph = {"up": "▲ ", "down": "▼ ", "neutral": ""}[direction.value]
+        # Das Delta ist schon deutsch gesetzt (Tausenderpunkt!): kein `.`→`,` darueber.
+        return f'<font color="{color}">{glyph}{escape(delta)}</font>'
+    change_pct = input.change_pct
     glyph = "▲" if change_pct >= 0 else "▼"
     sign = "+" if change_pct >= 0 else ""
-    if abs_pct < 0.5:
-        color = color_muted
-    elif change_pct >= 0:
-        color = color_success
-    else:
-        color = color_error
     s = f'<font color="{color}">{glyph} {sign}{change_pct:.2f}%</font>'
     return s.replace(".", ",")
 
@@ -105,7 +118,8 @@ def build_kpi_card(
     """Erzeugt KPI-Karten-Flowables.
 
     Args:
-        input: Pydantic-Contract mit label, value, change_pct, sparkline_values, caption.
+        input: Pydantic-Contract mit label, value, change_pct, sparkline_values, caption
+            (seit 0.17.1 auch richtung, delta_wert, delta_einheit, dezimalstellen).
         sparkline_width / sparkline_height: optional Sparkline-Dimension.
 
     Returns:
@@ -129,7 +143,7 @@ def build_kpi_card(
     return [
         Paragraph(input.label, styles["label"]),
         Paragraph(input.value, styles["value"]),
-        Paragraph(_format_change(input.change_pct), styles["change"]),
+        Paragraph(_format_change(input), styles["change"]),
         sparkline,
         Paragraph(input.caption or "", styles["caption"]),
     ]
