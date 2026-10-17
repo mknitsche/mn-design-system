@@ -1,4 +1,4 @@
-"""Tests fuer Web-KPI-Card-Renderer (Welle E.0; Polaritaet und Delta 0.17.1)."""
+"""Tests fuer Web-KPI-Card-Renderer (Welle E.0; Polaritaet und Delta 0.18.0)."""
 
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ class TestRenderKpiCardCss:
 
 
 # ---------------------------------------------------------------------------
-# 0.17.1 — alte Aufrufe bleiben bytegleich
+# 0.18.0 — alte Aufrufe bleiben bytegleich
 # ---------------------------------------------------------------------------
 
 
@@ -240,7 +240,7 @@ class TestAlteAufrufeUnveraendert:
 
 
 # ---------------------------------------------------------------------------
-# 0.17.1 — Polaritaet
+# 0.18.0 — Polaritaet
 # ---------------------------------------------------------------------------
 
 

@@ -83,7 +83,7 @@ class KpiCardInput(BaseModel):
     sparkline_values: optional Zeitreihe fuer kleine Trend-Linie
     caption: optional Untertitel-Text (z.B. "30 Tage")
 
-    Seit 0.17.1 (alle optional, ohne sie aendert sich nichts):
+    Seit 0.18.0 (alle optional, ohne sie aendert sich nichts):
     richtung: Polaritaet — welche Bewegung ist GUT? "hoeher" (Default: Anstieg gut,
         gruen), "niedriger" (Rueckgang gut, z.B. Gewicht, Ruhepuls) oder "neutral"
         (keine Wertung, immer gedaempft).
@@ -124,7 +124,7 @@ class KpiCardInput(BaseModel):
         Briefing-Befund 30.04.: kleine Bewegungen (<0.5%) sollen nicht
         rot/gruen markiert werden, sondern neutral (grau, color.viz.muted).
 
-        v0.17.1: bei gesetztem ``delta_wert`` entscheidet das Vorzeichen; ein Delta,
+        v0.18.0: bei gesetztem ``delta_wert`` entscheidet das Vorzeichen; ein Delta,
         das auf ``dezimalstellen`` gerundet null ist, gilt als neutral (keine
         Prozent-Schwelle: sie gehoert dem Prozentwert).
         """
@@ -265,7 +265,7 @@ class SubNavInput(BaseModel):
 
 
 class ZeitraumOption(BaseModel):
-    """Eine Option der Zeitraum-Leiste (0.17.1).
+    """Eine Option der Zeitraum-Leiste (0.18.0).
 
     label: sichtbarer Text ("30 Tage").
     href: Adresse der Option ("?tage=30") — die Leiste besteht aus Links.
@@ -280,7 +280,7 @@ class ZeitraumOption(BaseModel):
 
 
 class ZeitraumLeisteInput(BaseModel):
-    """Zeitraum-Leiste (0.17.1): Segment-Leiste aus Links, z.B. fuer ``?tage=30|90|365``.
+    """Zeitraum-Leiste (0.18.0): Segment-Leiste aus Links, z.B. fuer ``?tage=30|90|365``.
 
     optionen: 2..6 Optionen (eine einzelne waere keine Auswahl). Hoechstens eine ist
               aktiv; keine aktive Option ist erlaubt (der Konsument kennt dann den
@@ -487,7 +487,7 @@ class VerlaufReihe(BaseModel):
     label: Name in Legende und Tooltip (1..40 Zeichen).
     punkte: Messpunkte; darf leer sein (die Achse steht auch ohne Daten).
     art: "messung" = durchgezogene Linie, "gleitend" = gestrichelte Glaettung.
-    achse: "links" (Default) oder "rechts" (0.17.1) — liegt eine Reihe rechts, bekommt
+    achse: "links" (Default) oder "rechts" (0.18.0) — liegt eine Reihe rechts, bekommt
        das Diagramm eine zweite Werteachse mit eigener Skala (z.B. 7-Tage-Summen neben
        Tageswerten). Beide Achsen tragen dieselbe Einheit (`VerlaufChartInput.einheit`).
     """
@@ -520,7 +520,7 @@ class VerlaufChartInput(BaseModel):
     titel / einheit: Ueberschrift (1..80) und Einheit der Werteachse (0..16).
     reihen: 1..4 Linien; Punkte ausserhalb von `von`..`bis` werden nicht gezeichnet.
        Die erste Reihe liegt auf der linken Achse (sie traegt Zielband, Marken und
-       die Beschreibung); weitere duerfen `achse="rechts"` haben (0.17.1).
+       die Beschreibung); weitere duerfen `achse="rechts"` haben (0.18.0).
     von / bis: sichtbares Zeitfenster (ganze Tage, `bis` einschliesslich); die
        Zeitachse steht auch ohne Punkte. Es gilt von < bis.
     zielband_min / zielband_max: optionales Band; beide oder keins, min <= max.

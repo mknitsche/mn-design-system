@@ -1,4 +1,4 @@
-"""Web-Renderer Zeitraum-Leiste — HTML + CSS, 0.17.1.
+"""Web-Renderer Zeitraum-Leiste — HTML + CSS, 0.18.0.
 
 Konsumiert ZeitraumLeisteInput aus `_patterns.contracts`. Segment-Leiste aus Links
 (``?tage=30|90|365``): ein ``<nav>``, je Option ein ``<a>``, die gewaehlte Option traegt

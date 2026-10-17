@@ -1,4 +1,4 @@
-"""Tests fuer die Web-Zeitraum-Leiste (0.17.1).
+"""Tests fuer die Web-Zeitraum-Leiste (0.18.0).
 
 Segment-Leiste aus Links fuer ``?tage=30|90|365``: ein <nav>, je Option ein <a>, der
 aktive Zustand traegt ``aria-current="page"``. Reines HTML + CSS, kein Skript.

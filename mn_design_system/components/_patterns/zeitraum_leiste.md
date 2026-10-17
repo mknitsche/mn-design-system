@@ -60,3 +60,7 @@ in Akzentfarbe auf zartem Indigo. Tier-neutral.
 - `mn_design_system/components/web/zeitraum_leiste.py` — `render_zeitraum_leiste_html()`,
   `render_zeitraum_leiste_css()`
 - PDF / LaTeX: nicht vorgesehen (Bedienelement)
+
+## Sicherheit
+
+`href` wird HTML-escaped, aber nicht auf das Schema geprueft (wie bei allen Link-Vertraegen der Bibliothek: `SubNavTab`, Content-Card, Masthead). Die Ziele kommen aus dem Code des Konsumenten; eine Nutzereingabe gehoert nie ungeprueft in `href` (kein `javascript:`).

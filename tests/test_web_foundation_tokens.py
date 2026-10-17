@@ -73,12 +73,12 @@ def test_print_tokens_untouched():
 
 
 def test_web_touch_target_token():
-    """0.17.1: kleinste Kantenlaenge eines Bedienelements fuer Finger (WCAG 2.5.5)."""
+    """0.18.0: kleinste Kantenlaenge eines Bedienelements fuer Finger (WCAG 2.5.5)."""
     assert get("web.touch-target") == "44px"
 
 
 def test_web_scroll_max_h_token():
-    """0.17.1: Hoehe, ab der ein Tabellen-Bereich scrollt statt die Seite zu dehnen."""
+    """0.18.0: Hoehe, ab der ein Tabellen-Bereich scrollt statt die Seite zu dehnen."""
     assert get("web.scroll-max-h") == "22rem"
 
 

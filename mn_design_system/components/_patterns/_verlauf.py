@@ -3,7 +3,7 @@
 Intern: der Vertrag (`contracts.py`, `beschreibung_text`) und der Renderer
 (`components/web/verlauf_chart.py`) brauchen dieselbe Berliner Wanduhr. EINE Stelle
 statt zwei Kopien, die auseinanderlaufen. Die deutsche Zahlenschreibweise steht seit
-0.17.1 in `_zahl.py`.
+0.18.0 in `_zahl.py`.
 """
 
 from __future__ import annotations

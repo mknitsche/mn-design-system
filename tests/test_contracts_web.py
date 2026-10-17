@@ -537,7 +537,7 @@ class TestVerlaufReihe:
             VerlaufReihe(label="X", punkte=[], art="trend")
 
     def test_achse_default_links(self):
-        """0.17.1: ohne Angabe liegt die Reihe links (wie bis 0.17.0)."""
+        """0.18.0: ohne Angabe liegt die Reihe links (wie bis 0.17.0)."""
         assert VerlaufReihe(label="X", punkte=[]).achse == "links"
 
     @pytest.mark.parametrize("achse", ["links", "rechts"])
@@ -731,7 +731,7 @@ class TestVerlaufChartInput:
 
 
 # ---------------------------------------------------------------------------
-# ZeitraumOption / ZeitraumLeisteInput (0.17.1)
+# ZeitraumOption / ZeitraumLeisteInput (0.18.0)
 # ---------------------------------------------------------------------------
 
 

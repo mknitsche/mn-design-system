@@ -1,4 +1,4 @@
-"""Deutsches Zahlenformat (0.17.1) — intern.
+"""Deutsches Zahlenformat (0.18.0) — intern.
 
 Der Verlauf-Chart (Beschreibung, Zielband) und die KPI-Karte (absolutes Delta) brauchen
 dieselbe Schreibweise: Komma als Dezimal-, Punkt als Tausendertrenner, echtes

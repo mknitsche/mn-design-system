@@ -1,4 +1,4 @@
-"""Deutsches Zahlenformat (intern, ``components/_patterns/_zahl.py``, 0.17.1).
+"""Deutsches Zahlenformat (intern, ``components/_patterns/_zahl.py``, 0.18.0).
 
 Eine Stelle fuer Dezimalkomma, Tausenderpunkt, Minuszeichen U+2212 und die Frage
 „rundet das auf null?" — der Verlauf-Chart und die KPI-Karte brauchen dasselbe.

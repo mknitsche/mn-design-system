@@ -34,7 +34,7 @@
 
 `VerlaufReihe`: `label` (1..40), `punkte` (darf leer sein), `art` (`messung` =
 durchgezogen, `gleitend` = gestrichelt, ohne Symbole), `achse` (`links` = Default,
-`rechts` = zweite Werteachse, seit 0.17.1). `VerlaufPunkt`: `t`
+`rechts` = zweite Werteachse, seit 0.18.0). `VerlaufPunkt`: `t`
 (`date` oder `datetime`; ein `datetime` ohne Zone gilt als Europe/Berlin), `wert`
 (endlich — NaN/Infinity sind in JSON nicht darstellbar). `VerlaufMarkierung`: `t`,
 `label` (1..30).
@@ -74,7 +74,7 @@ durchgezogen, `gleitend` = gestrichelt, ohne Symbole), `achse` (`links` = Defaul
   „Zielband 70–74 kg", „72,5–74 kg", „1.000–1.500 kcal"; ein negativer Wert traegt das
   Minuszeichen U+2212. Die Nachkommastellen sind `dezimalstellen`, gekuerzt wird nur,
   was hinter dem Komma nur aus Nullen besteht.
-- **Zweite Werteachse (0.17.1):** liegt mindestens eine Reihe auf `achse="rechts"`
+- **Zweite Werteachse (0.18.0):** liegt mindestens eine Reihe auf `achse="rechts"`
   (z.B. 7-Tage-Summen neben Tageswerten), ist `yAxis` der Option eine Liste aus linker
   und rechter Achse, die rechten Reihen zeigen mit `yAxisIndex: 1` auf die rechte.
   Beide Achsen tragen dieselbe Einheit (`einheit`) und dieselbe Zahlenschreibweise; die

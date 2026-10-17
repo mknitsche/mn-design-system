@@ -6,7 +6,7 @@
   Token (cross-media-faehig, kein color-mix im Konsumenten).
 - start: referenzielles Alias auf bibliothek (Style-Dictionary-Reference).
 - observatorium: referenzielles Alias auf atelier (AMBER-Bereich, 0.17.0).
-- magazin: eigene, gedaempfte Grau-Nuance (0.17.1) — bg/border/text referenzieren die
+- magazin: eigene, gedaempfte Grau-Nuance (0.18.0) — bg/border/text referenzieren die
   Grau-Skala, bg-soft und hover-on-dark sind abgeleitet.
 """
 
@@ -87,7 +87,7 @@ def _kontrast(a: str, b: str) -> float:
 
 
 def test_magazin_ist_eine_graue_nuance_aus_der_grau_skala():
-    """0.17.1: magazin ist KEIN Alias auf einen farbigen Tier, sondern bezieht bg,
+    """0.18.0: magazin ist KEIN Alias auf einen farbigen Tier, sondern bezieht bg,
     border und text aus der Grau-Skala (Lead-Entscheid: gedaempfte Grau-Nuance)."""
     assert get("color.tier.magazin.bg") == get("color.grey.50")
     assert get("color.tier.magazin.border") == get("color.grey.200")
