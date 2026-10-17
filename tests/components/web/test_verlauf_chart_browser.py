@@ -185,6 +185,12 @@ def server(tmp_path_factory):
     )
     (site / "seite.html").write_text(_seite(True), encoding="utf-8")
     (site / "ohne-bibliothek.html").write_text(_seite(False), encoding="utf-8")
+    (site / "dunkel.html").write_text(
+        _seite(True).replace(
+            '<html lang="de">', '<html lang="de" data-schema="dunkel">'
+        ),
+        encoding="utf-8",
+    )
 
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
@@ -321,6 +327,17 @@ class TestGrundlage:
             assert groesse[0] > 300 and groesse[1] > 150, (kennung, groesse)
             assert seite.pixel(kennung) > 500, kennung  # nicht leer
 
+    def test_waagerechtes_ziehen_gehoert_dem_diagramm_senkrechtes_der_seite(
+        self, seite
+    ):
+        assert (
+            seite.js(
+                "getComputedStyle(document.querySelector("
+                "'[data-verlauf-chart=puls] .verlauf-chart__flaeche')).touchAction"
+            )
+            == "pan-y"
+        )
+
     def test_flaeche_hat_die_stufenhoehe(self, seite):
         assert (
             seite.js(
@@ -447,7 +464,7 @@ class TestBausteine:
 
 
 # ---------------------------------------------------------------------------
-# Loader: deutsche Zahlen und Daten, Groessenanpassung
+# Loader: deutsche Zahlen und Daten, Groessenanpassung, Theme-Wahl
 # ---------------------------------------------------------------------------
 
 
@@ -487,6 +504,26 @@ class TestLoader:
             ])""",
         )
         assert text.splitlines()[0] == "10.10.2026 07:30"
+
+    def test_theme_hell_ist_der_standard_dunkel_nur_bei_gesetztem_schema(
+        self, browser, server, seite
+    ):
+        hell_text = _rgb("color.light.text-muted")
+        dunkel_text = _rgb("color.dark.text-muted")
+        # Kantenglaettung mischt Farben: ein paar Fremdpixel sind normal, daher
+        # "viel" gegen "fast keine" statt Gleichheit mit null.
+        assert seite.pixel("puls", hell_text, toleranz=3) > 100
+        assert seite.pixel("puls", dunkel_text, toleranz=3) < 20
+        ctx = browser.new_context(
+            viewport={"width": 1000, "height": 900}, reduced_motion="reduce"
+        )
+        try:
+            d = _Seite(ctx.new_page(), f"{server}/dunkel.html")
+            assert d.konsole == []
+            assert d.pixel("puls", dunkel_text, toleranz=3) > 100
+            assert d.pixel("puls", hell_text, toleranz=3) < 20
+        finally:
+            ctx.close()
 
     def test_tooltip_ohne_treffer_ist_leer(self, seite):
         assert (
