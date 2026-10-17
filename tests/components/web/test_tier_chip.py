@@ -48,7 +48,7 @@ class TestRenderTierChipHtml:
 class TestRenderTierChipCss:
     def test_uses_tier_custom_properties(self):
         css = render_tier_chip_css()
-        for tier in ("bibliothek", "atelier", "kabinett", "start"):
+        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
             assert f"var(--color-tier-{tier}-bg" in css
             assert f"var(--color-tier-{tier}-text" in css
 

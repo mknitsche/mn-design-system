@@ -8,6 +8,68 @@ oder Doku.
 
 ---
 
+## [0.17.0] — 2026-10-17
+
+### Neu — Tier observatorium, Komponente verlauf_chart (claudeAI TODO-885 § 4.10a)
+
+Der neue Bereich Observatorium (Gesundheits- und Sportwerte, AMBER, nur der Eigentuemer) braucht
+einen eigenen Tier und ein Zeitreihen-Diagramm. Beides kommt additiv in EINEM Release: kein
+bestehender Verwender bricht.
+
+- **Tier `observatorium`** (Alias auf `atelier`, wie `start` auf `bibliothek` verweist):
+  `WebTier.OBSERVATORIUM`, Tokens `color.tier.observatorium.{bg,bg-soft,border,text,hover-on-dark}`
+  als Referenzen auf `color.tier.atelier.*` — AMBER-Werte unter eigenem Namen, eine eigene Nuance
+  spaeter ohne Konsumenten-Aenderung. Eingetragen in Masthead, Tier-Chip, Sub-Nav, Content-Card
+  und Empty-State (jede dieser Komponenten fuehrt eine eigene Tier-Liste; ohne Eintrag bekaeme die
+  Sub-Nav des neuen Bereichs keine Hover- und Aktiv-Farbe).
+- **Komponente `verlauf_chart`** auf Apache ECharts 6.1.0, selbst gehostet. Vertrag
+  `VerlaufChartInput` (+ `VerlaufReihe`, `VerlaufPunkt`, `VerlaufMarkierung`): 1..4 Reihen, Zeitfenster
+  `von`/`bis`, optionales Zielband, bis zu 12 Ereignis-Marken, feste Hoehenstufen (CSS-Klasse, nie
+  `style=`), `datetime` ohne Zeitzone gilt als Europe/Berlin, NaN/Infinity abgelehnt.
+  `verlauf_chart_option()` ist reines JSON ohne Farbe und ohne Funktion;
+  `render_verlauf_chart_html()` legt es als `<script type="application/json">`-Datenblock ab
+  (`<` als `\u003c`) und liefert Flaeche, Textlegende und `aria-label`;
+  `echarts_theme("hell"|"dunkel")` baut das Theme aus den Tokens; `render_verlauf_chart_js()` ist
+  der Loader (deutsches Zahlen- und Datumsformat per `Intl`, `ResizeObserver`, Theme-Wahl,
+  `prefers-reduced-motion`); `render_verlauf_chart_css()` liefert Layout und sechs Hoehenklassen.
+  Alles laeuft unter `script-src 'self'` / `style-src 'self'` — kein Inline-Skript, kein Inline-Stil,
+  kein CDN. Spec: `components/_patterns/verlauf_chart.md`.
+- **Vendoring Apache ECharts 6.1.0** unter `mn_design_system/vendor/echarts/` (Apache-2.0, LICENSE
+  und NOTICE byte-gleich aus dem npm-Tarball, `VENDOR.json` mit Pin, SHA-256 und Tarball-Integrity;
+  `vendor_js_dir()`, `ECHARTS_DATEI`, `ECHARTS_VERSION` in `components.web`). **Datei: der
+  `common`-Build `echarts.common.min.js`** (715 KB, 240 KB gzip), SHA-256 `61f13280…b013d5`. Die
+  volle `echarts.min.js` (1,1 MB, SHA-256 `b66b25ae…0fd0`) ist bewusst NICHT vendort: der Plan
+  nannte irrtuemlich deren Hash fuer die common-Datei; massgeblich ist die Tarball-Integrity
+  (`sha512-q0yaFPgg…`), die mit der Registry uebereinstimmt. Dass der common-Build alles enthaelt,
+  was die Option benutzt (Linie, Zeitachse, Tooltip, Legende, dataZoom inside + slider, markArea,
+  markLine, graphic, aria), beweist `tests/components/web/test_verlauf_chart_browser.py` per
+  Ausfuehrung in Chromium unter strenger CSP — jeder Baustein mit sichtbarer Wirkung (Pixel,
+  Zoom-Zustand, Attribut), nicht per Textsuche: ECharts meldet einen fehlenden Baustein im
+  Minify-Build nicht. `package-data` liefert `vendor/**` mit aus.
+
+### Entscheidungen im Bau (Abweichungen vom Plan-Wortlaut, begruendet)
+
+- **Theme-Text:** gedaempfter Text (`color.{light,dark}.text-muted`) statt `color.grey.600` — das
+  Token ist `#999999` (2,8:1 auf Weiss), Achsenbeschriftung braucht 4,5:1; ein Test prueft den
+  Kontrast.
+- **Zeitfenster:** `bis` gilt einschliesslich (`xAxis.max` = Ende des Tages): ein Blutdruck um 07:30
+  am letzten Tag verschwaende sonst.
+- **Zahlenformat im Loader:** Komma, Tausenderpunkt und `dezimalstellen` kann reines JSON nicht
+  ausdruecken; der Loader setzt Achsen- und Tooltip-Formatierer aus `data-dezimalstellen`.
+- **Zielband:** feste, runde Achsengrenzen, weil `markArea` die Achse nicht erweitert.
+- **Mausrad zoomt nur mit Strg** (`touch-action: pan-y` am Diagramm): sonst liesse sich die Seite
+  unter dem Zeiger nicht mehr scrollen.
+- **Hoehe** als `height` (nicht `min-height`): feste Hoehe vermeidet eine Rueckkopplung zwischen
+  Canvas und `ResizeObserver`.
+- **Leeres Fenster:** Achse und Hinweis „keine Werte im Fenster", ohne Zoom-Leiste.
+
+### Tests
+
+`tests/test_vendor_echarts.py` (Hash, Lizenz, package-data), `tests/test_contracts_web.py`
+(Vertrag), `tests/components/web/test_verlauf_chart.py` (Option, HTML, Theme, Loader, CSS),
+`tests/components/web/test_verlauf_chart_browser.py` (Wirkung im Browser, nur mit Playwright +
+Chromium, sonst sichtbar uebersprungen). Waechter-Tests sind per Mutation geprueft.
+
 ## [0.16.1] — 2026-10-13
 
 ### Geaendert — STIX Two Math 2.13 unter der OFL (KT-1-Entscheid 2026-10-13)

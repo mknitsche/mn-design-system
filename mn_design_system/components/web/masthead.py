@@ -26,6 +26,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.ATELIER,
     WebTier.KABINETT,
     WebTier.START,
+    WebTier.OBSERVATORIUM,
 )
 
 # var()-Fallback je Tier (bg + text + hover-on-dark) — die ECHTEN
@@ -37,6 +38,7 @@ _TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
     WebTier.ATELIER: ("#fffbeb", "#92400e", "rgba(253,230,138,0.5)"),
     WebTier.KABINETT: ("#fef2f2", "#991b1b", "rgba(254,202,202,0.5)"),
     WebTier.START: ("#f0fdf4", "#166534", "rgba(187,247,208,0.5)"),
+    WebTier.OBSERVATORIUM: ("#fffbeb", "#92400e", "rgba(253,230,138,0.5)"),
 }
 
 
@@ -112,7 +114,7 @@ def render_masthead_html(input: MastheadInput, *, inline_css: bool = False) -> s
 
 
 def render_masthead_css() -> str:
-    """Komponenten-CSS — Layout + 4 Tier-Modifier, Token-Werte via Custom
+    """Komponenten-CSS — Layout + 5 Tier-Modifier, Token-Werte via Custom
     Properties. Konsument bindet `dist/css/tokens.css` ein.
     """
     rules = [

@@ -57,7 +57,7 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 - `transition: background 120ms` (Spec §A5).
 - `label` und `href` werden per `html.escape()` (href mit `quote=True`)
   XSS-sicher ausgegeben.
-- `render_sub_nav_css()` gibt Hover- und Aktiv-Regeln fuer alle 4 Tiers aus.
+- `render_sub_nav_css()` gibt Hover- und Aktiv-Regeln fuer alle 5 Tiers aus.
 - Schmale Viewports (strikt unter `web.layout.bp-tablet`, `max-width: 1023.98px`):
   die Tab-Zeile wird zu einer horizontal scrollbaren Leiste INNERHALB der
   Sub-Nav (`overflow-x: auto`, schmale unauffaellige Scrollbar), die Tabs
@@ -101,7 +101,7 @@ Tier-Wechsel; das ist L1/Top-Nav).
 
 ## Varianten
 
-- Pro Tier eine Farbvariante (bibliothek / atelier / kabinett / start) — keine
+- Pro Tier eine Farbvariante (bibliothek / atelier / kabinett / start / observatorium) — keine
   weiteren strukturellen Varianten, die Tab-Anzahl ist variabel (min. 1).
 
 ## Plattform-Implementierungen

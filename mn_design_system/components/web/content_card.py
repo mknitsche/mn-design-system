@@ -42,6 +42,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.ATELIER,
     WebTier.KABINETT,
     WebTier.START,
+    WebTier.OBSERVATORIUM,
 )
 
 # var()-Fallback je Tier-Border — der ECHTE Tier-Wert aus tokens.py
@@ -52,6 +53,7 @@ _TIER_BORDER_FALLBACK: dict[WebTier, str] = {
     WebTier.ATELIER: "#fde68a",
     WebTier.KABINETT: "#fecaca",
     WebTier.START: "#bbf7d0",
+    WebTier.OBSERVATORIUM: "#fde68a",
 }
 
 
@@ -94,7 +96,7 @@ def render_content_card_html(
 
 
 def render_content_card_css() -> str:
-    """Komponenten-CSS — Layout + 4 Tier-Border-Modifier, Token-Werte via
+    """Komponenten-CSS — Layout + 5 Tier-Border-Modifier, Token-Werte via
     CSS Custom Properties.
 
     Konsument muss `dist/css/tokens.css` einbinden, damit

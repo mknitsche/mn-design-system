@@ -57,6 +57,14 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - **Verwendung:** UI-Symbole (PUA E000–F8FF), insgesamt 1.512 Glyphen in 6 Stilen
 - **Beispiel:** `caret-right` (U+E13A) als Bullet-Glyph
 
+## Bibliotheken im Paket
+
+### Apache ECharts 6.1.0
+- Apache ECharts 6.1.0 — Apache License 2.0 — https://echarts.apache.org
+- **Projekt:** Apache Software Foundation
+- **Verwendung:** Zeitreihen-Diagramm (`verlauf_chart`); ausgeliefert wird der Build `echarts.common.min.js`, unveraendert aus dem npm-Tarball (Pin, SHA-256 und Tarball-Integrity in `mn_design_system/vendor/echarts/VENDOR.json`)
+- **Im Paket:** `mn_design_system/vendor/echarts/` mit `LICENSE` und `NOTICE` des Upstream-Projekts; Apache-2.0 verlangt, beides bei jeder Weitergabe mitzugeben
+
 ## Inspirations- und Referenzwerke
 
 - **Tufte, E. R.** (1983/1990). *The Visual Display of Quantitative Information* / *Envisioning Information*. Graphics Press.

@@ -232,7 +232,7 @@
     },
 
     "tier": {
-      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 4 Familien je bg / bg-soft / border / text / hover-on-dark. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich)." },
+      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 5 Familien je bg / bg-soft / border / text / hover-on-dark. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias, observatorium = atelier-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich)." },
       "bibliothek": {
         "bg":      { "value": "#f0fdf4" },
         "bg-soft": { "value": "#f7fef9", "comment": "bg 55% ueber Weiss — Sub-Nav-Hover" },
@@ -260,6 +260,13 @@
         "border":  { "value": "{color.tier.bibliothek.border.value}" },
         "text":    { "value": "{color.tier.bibliothek.text.value}" },
         "hover-on-dark": { "value": "{color.tier.bibliothek.hover-on-dark.value}" }
+      },
+      "observatorium": {
+        "bg":      { "value": "{color.tier.atelier.bg.value}", "comment": "AMBER-Bereich Observatorium, Werte des Ateliers unter eigenem Namen (TODO-885 § 6); eigene Nuance spaeter ohne Konsumenten-Aenderung" },
+        "bg-soft": { "value": "{color.tier.atelier.bg-soft.value}" },
+        "border":  { "value": "{color.tier.atelier.border.value}" },
+        "text":    { "value": "{color.tier.atelier.text.value}" },
+        "hover-on-dark": { "value": "{color.tier.atelier.hover-on-dark.value}" }
       }
     }
   }

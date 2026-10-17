@@ -12,6 +12,7 @@ etc. nutzen, automatisch responsiv. Eine Override-Stelle, kein Drift.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from mn_design_system.fonts import FONT_DIR
@@ -55,6 +56,27 @@ def render_font_face(url_prefix: str) -> str:
         "}"
         for familie, gewicht, stil, datei in WEB_SCHRIFTEN
     )
+
+
+def vendor_js_dir() -> Path:
+    """Verzeichnis der mitgelieferten Diagramm-Bibliothek (Apache ECharts, 0.17.0).
+
+    Enthaelt ``ECHARTS_DATEI`` samt ``LICENSE``, ``NOTICE`` und ``VENDOR.json`` (Pin und
+    SHA-256). Der Konsument kopiert die Datei unter einem versionierten Namen in sein
+    Auslieferverzeichnis (wie bei ``web_font_dir``) und gibt LICENSE und NOTICE weiter —
+    Apache-2.0 verlangt beides.
+    """
+    return Path(__file__).parents[2] / "vendor" / "echarts"
+
+
+def _vendor_echarts() -> dict[str, str]:
+    return json.loads((vendor_js_dir() / "VENDOR.json").read_text(encoding="utf-8"))
+
+
+#: Dateiname und Version der Bibliothek, gelesen aus ``VENDOR.json`` — die EINE Quelle,
+#: nicht ein zweites Mal getippt.
+ECHARTS_DATEI: str = _vendor_echarts()["datei"]
+ECHARTS_VERSION: str = _vendor_echarts()["version"]
 
 
 #: Die Schluessel von :func:`css_font_stack` — zugleich die Namen der Tokens
