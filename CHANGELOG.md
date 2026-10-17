@@ -8,6 +8,12 @@ oder Doku.
 
 ---
 
+## [0.18.1] — 2026-10-17
+
+### Behoben
+
+- **verlauf_chart:** die rechte Werteachse traegt keinen Namen mehr. Er stand oben rechts genau auf der Legende („7-Tage-Summe“), sichtbar bei 390 und 1440 px im Konsumenten (mkn-desk Observatorium). Die Einheit steht an der linken Achse; welche Reihe rechts liegt, sagen Legende und Bildunterschrift.
+
 ## [0.18.0] — 2026-10-17
 
 > Versionsnummer nach der Regel in `README.md` (neue Komponente und neue Token-Familie = Minor-Sprung): bis zum Review als 0.17.1 gebaut, vor dem ersten Tag auf 0.18.0 gehoben (Critic-Befund MITTEL).
