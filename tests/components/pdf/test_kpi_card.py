@@ -231,7 +231,7 @@ class TestCaptionSchrift:
 
 
 # ---------------------------------------------------------------------------
-# 0.17.1 — Polaritaet und absolutes Delta (derselbe Vertrag wie im Web)
+# 0.18.0 — Polaritaet und absolutes Delta (derselbe Vertrag wie im Web)
 # ---------------------------------------------------------------------------
 
 #: Ausgabe von 0.17.0, woertlich — alte Aufrufe bleiben bytegleich.
@@ -266,7 +266,8 @@ class TestAlteAufrufeUnveraendert:
 class TestPolaritaetPdf:
     SUCCESS = "2e7d32"
     ERROR = "d32f2f"
-    MUTED = "b0bec5"
+    # 0.18.0: neue Pfade (Polaritaet, absolutes Delta) graeulich-lesbar statt viz.muted (Critic: 1,9:1)
+    MUTED = "6b7280"
 
     @pytest.mark.parametrize(
         ("richtung", "pct", "farbe"),
@@ -317,7 +318,7 @@ class TestPolaritaetPdf:
     def test_unveraendert_ohne_pfeil_gedaempft(self):
         karte = KpiCardInput(label="X", value="1", delta_wert=-0.04, delta_einheit="kg")
         text = build_kpi_card(karte)[2].text
-        assert text == '<font color="#b0bec5">unverändert</font>'
+        assert text == '<font color="#6b7280">unverändert</font>'
 
     def test_einheit_wird_fuer_reportlab_escaped(self):
         karte = KpiCardInput(label="X", value="1", delta_wert=1.0, delta_einheit="<b>")

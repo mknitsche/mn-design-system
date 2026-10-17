@@ -213,7 +213,7 @@ class TestOption:
         )["yAxis"]
         assert y["min"] < 80.0 < y["max"]
 
-    # ---- 0.17.1: zweite Werteachse -------------------------------------
+    # ---- 0.18.0: zweite Werteachse -------------------------------------
 
     def test_ohne_rechte_reihe_bleibt_die_werteachse_ein_objekt(self):
         """Bestehende Aufrufe: ``yAxis`` ist weiter EIN Objekt, kein ``yAxisIndex``,

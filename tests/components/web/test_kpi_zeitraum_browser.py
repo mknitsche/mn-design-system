@@ -1,4 +1,4 @@
-"""KPI-Karte und Zeitraum-Leiste im echten Browser (0.17.1): Wirkung statt Schreibweise.
+"""KPI-Karte und Zeitraum-Leiste im echten Browser (0.18.0): Wirkung statt Schreibweise.
 
 ``test_kpi_card.py`` / ``test_zeitraum_leiste.py`` beweisen, was die Komponenten ERZEUGEN.
 Hier entscheidet der Browser, was daraus WIRD: welche Farbe das Delta einer Karte mit

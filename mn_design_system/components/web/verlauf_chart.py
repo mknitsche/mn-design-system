@@ -136,7 +136,7 @@ def _werteachse(chart: VerlaufChartInput, alle_werte: list[float]) -> dict[str, 
 
 
 def _rechte_werteachse(chart: VerlaufChartInput) -> dict[str, object]:
-    """Zweite Werteachse (0.17.1) fuer Reihen mit ``achse="rechts"``: eigene, freie Skala,
+    """Zweite Werteachse (0.18.0) fuer Reihen mit ``achse="rechts"``: eigene, freie Skala,
     dieselbe Einheit, kein zweites Gitter (es lege sich schief ueber das erste)."""
     achse: dict[str, object] = {
         "type": "value",
@@ -158,7 +158,7 @@ def verlauf_chart_option(chart: VerlaufChartInput) -> dict[str, object]:
     fehlen. Zeitpunkte erscheinen als Berliner Wanduhr (ein ``date`` bleibt Datum).
     Zahlen- und Datumsformat von Achse und Tooltip setzt der Loader.
 
-    Zweite Werteachse (0.17.1): liegt mindestens eine Reihe auf ``achse="rechts"``, ist
+    Zweite Werteachse (0.18.0): liegt mindestens eine Reihe auf ``achse="rechts"``, ist
     ``yAxis`` eine Liste aus linker und rechter Achse, und jene Reihen zeigen mit
     ``yAxisIndex: 1`` auf die rechte; sonst bleibt ``yAxis`` ein einzelnes Objekt. Zielband
     und Achsengrenzen gelten nur fuer die linke Achse.

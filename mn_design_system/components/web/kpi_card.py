@@ -35,7 +35,7 @@ _TREND_CLASS = {
     KpiTrendDirection.NEUTRAL: "is-neutral",
 }
 
-# Wertungs-Klassen (0.17.1): nur wenn die Polaritaet nicht der Default ist. Die Klasse
+# Wertungs-Klassen (0.18.0): nur wenn die Polaritaet nicht der Default ist. Die Klasse
 # der Bewegung (is-up/is-down/is-neutral) bleibt, die Wertung faerbt sie um — so bleibt
 # das HTML eines alten Aufrufs bytegleich.
 _WERTUNG_CLASS = {
@@ -104,7 +104,7 @@ def render_kpi_card_css() -> str:
     Konsument muss `dist/css/tokens.css` in seinen Build-Output einbinden,
     damit `var(--color-light-text)` etc. greift.
 
-    0.17.1: `is-gut` / `is-schlecht` / `is-ungewertet` stehen NACH `is-up` / `is-down` /
+    0.18.0: `is-gut` / `is-schlecht` / `is-ungewertet` stehen NACH `is-up` / `is-down` /
     `is-neutral` und haben dieselbe Spezifitaet — die spaetere Regel gewinnt. So wird
     bei `richtung="niedriger"` aus einem Rueckgang (`is-down`) ein gruenes Delta.
     """

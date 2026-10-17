@@ -65,7 +65,7 @@ zarte Verankerung im jeweiligen Web-Bereich:
 | `kabinett` | Rot — Kabinett/privat |
 | `start` | Alias auf `bibliothek` (eigene Identitaet ohne Token-Migration spaeter moeglich) |
 | `observatorium` | Alias auf `atelier` (AMBER-Bereich, seit 0.17.0; eigene Nuance spaeter ohne Konsumenten-Aenderung) |
-| `magazin` | Gedaempftes Grau (seit 0.17.1; eigene Nuance aus der Grau-Skala: `bg` grey.50, `border` grey.200, `text` grey.700) — Magazin/Lesesaal, bewusst farbneutral |
+| `magazin` | Gedaempftes Grau (seit 0.18.0; eigene Nuance aus der Grau-Skala: `bg` grey.50, `border` grey.200, `text` grey.700) — Magazin/Lesesaal, bewusst farbneutral |
 
 Die Tier-Modifier-Klasse am Wurzel-Element (`mn-empty-state--{tier}`) traegt die
 Farbvarianz; kein Inline-Hex.

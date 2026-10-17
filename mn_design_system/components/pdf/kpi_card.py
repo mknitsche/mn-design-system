@@ -81,7 +81,7 @@ def _format_change(input: KpiCardInput) -> str:
       - |Δ| >= 0.5%, change >= 0 → success (▲), gruen.
       - |Δ| >= 0.5%, change <  0 → error (▼), rot.
 
-    v0.17.1: die Farbe folgt der Wertung (Bewegung x Polaritaet ``richtung``): bei
+    v0.18.0: die Farbe folgt der Wertung (Bewegung x Polaritaet ``richtung``): bei
     ``richtung="niedriger"`` ist ein Rueckgang gruen, bei ``"neutral"`` bleibt alles
     gedaempft. Mit ``delta_wert`` steht das deutsch formatierte absolute Delta
     („−1,2 kg") statt des Prozentwerts; rundet es auf null, steht „unverändert" ohne
@@ -95,7 +95,12 @@ def _format_change(input: KpiCardInput) -> str:
         color = token_get("color.status.success", "#2e7d32")
     elif wertung == KpiWertung.SCHLECHT:
         color = token_get("color.status.error", "#D32F2F")
+    elif delta is not None or input.richtung != "hoeher":
+        # 0.18.0-Pfade (absolutes Delta, Polaritaet): lesbares Grau (4,8:1 auf Weiss) statt
+        # `color.viz.muted` (1,9:1) — „unverändert" und neutrale Werte sind Text, kein Diagramm.
+        color = token_get("color.light.text-muted", "#6b7280")
     else:
+        # Alter Prozent-Pfad unveraendert (bytegleich zu 0.17.0).
         color = token_get("color.viz.muted", "#b0bec5")
     if delta is not None:
         direction = input.trend_direction()
@@ -119,7 +124,7 @@ def build_kpi_card(
 
     Args:
         input: Pydantic-Contract mit label, value, change_pct, sparkline_values, caption
-            (seit 0.17.1 auch richtung, delta_wert, delta_einheit, dezimalstellen).
+            (seit 0.18.0 auch richtung, delta_wert, delta_einheit, dezimalstellen).
         sparkline_width / sparkline_height: optional Sparkline-Dimension.
 
     Returns:

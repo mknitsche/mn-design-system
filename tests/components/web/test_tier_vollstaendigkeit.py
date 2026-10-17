@@ -5,7 +5,7 @@ Content-Card, Empty-State). Ein neuer Tier ohne Eintrag dort bekaeme keine Hover
 Aktiv-Farbe — und kein Test fiele auf, solange die Tests ihre Tier-Liste von Hand
 tippen. Dieser Test leitet die Liste aus dem Enum ab und prueft die Wirkung (die Regel
 steht im CSS, mit dem ECHTEN Token-Wert als ``var()``-Rueckfall), nicht die Schreibweise
-einer Liste (0.17.1, Tier ``magazin``).
+einer Liste (0.18.0, Tier ``magazin``).
 """
 
 from __future__ import annotations

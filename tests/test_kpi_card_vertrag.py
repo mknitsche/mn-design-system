@@ -1,4 +1,4 @@
-"""KpiCardInput: Polaritaet und absolutes Delta (0.17.1).
+"""KpiCardInput: Polaritaet und absolutes Delta (0.18.0).
 
 Neu und optional: ``richtung`` (welche Bewegung ist gut?), ``delta_wert`` mit
 ``delta_einheit`` und ``dezimalstellen``. Ohne diese Felder aendert sich nichts —

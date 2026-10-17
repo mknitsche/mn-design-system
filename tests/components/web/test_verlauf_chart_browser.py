@@ -114,7 +114,7 @@ def _diagramme() -> dict[str, VerlaufChartInput]:
             hoehe=220,
             **fenster,
         ),
-        # 0.17.1: die ERSTE Reihe hat im Fenster keinen Punkt (ihre Messungen liegen
+        # 0.18.0: die ERSTE Reihe hat im Fenster keinen Punkt (ihre Messungen liegen
         # ein Jahr zurueck), das Zielband haengt aber an der ersten Reihe — wird es noch
         # gezeichnet? (Critic-Hinweis 0.17.0: ungeprueft)
         "erste-leer": VerlaufChartInput(
@@ -135,7 +135,7 @@ def _diagramme() -> dict[str, VerlaufChartInput]:
             dezimalstellen=1,
             **fenster,
         ),
-        # 0.17.1: Tageswerte links (0..12 km), 7-Tage-Summe rechts (30..80 km)
+        # 0.18.0: Tageswerte links (0..12 km), 7-Tage-Summe rechts (30..80 km)
         "zwei-achsen": VerlaufChartInput(
             titel="Laufen",
             einheit="km",
@@ -512,7 +512,7 @@ class TestBausteine:
 
 
 class TestZweiteWerteachse:
-    """Reihen mit ``achse="rechts"`` haben eine eigene Skala (0.17.1): Tageswerte bis 12
+    """Reihen mit ``achse="rechts"`` haben eine eigene Skala (0.18.0): Tageswerte bis 12
     und 7-Tage-Summen bis 80 teilen sich KEINE Achse."""
 
     def test_zwei_achsen_und_die_summe_zeigt_auf_die_zweite(self, seite):
@@ -578,7 +578,7 @@ class TestZweiteWerteachse:
 
 class TestErsteReiheOhnePunkte:
     """Das Zielband und die Marken haengen an der ERSTEN Reihe. Hat sie im Fenster keinen
-    Punkt, die zweite aber schon, muss das Band trotzdem stehen (0.17.1)."""
+    Punkt, die zweite aber schon, muss das Band trotzdem stehen (0.18.0)."""
 
     def test_zielband_wird_gezeichnet(self, seite):
         zielband = _rgb("color.status.success-bg")

@@ -8,7 +8,9 @@ oder Doku.
 
 ---
 
-## [0.17.1] — 2026-10-17
+## [0.18.0] — 2026-10-17
+
+> Versionsnummer nach der Regel in `README.md` (neue Komponente und neue Token-Familie = Minor-Sprung): bis zum Review als 0.17.1 gebaut, vor dem ersten Tag auf 0.18.0 gehoben (Critic-Befund MITTEL).
 
 ### Neu — Tier magazin, KPI-Polaritaet, Zeitraum-Leiste, zweite Werteachse (claudeAI TODO-885 Welle C)
 
