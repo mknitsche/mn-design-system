@@ -51,8 +51,9 @@ durchgezogen, `gleitend` = gestrichelt, ohne Symbole). `VerlaufPunkt`: `t`
 ## Einbindung beim Konsumenten (CSP `script-src 'self'`)
 
 1. `web.vendor_js_dir() / web.ECHARTS_DATEI` unter dem versionierten Namen
-   `echarts-<ECHARTS_VERSION>.min.js` ausliefern; LICENSE und NOTICE aus
-   demselben Ordner mitgeben (Apache-2.0).
+   `echarts-<ECHARTS_VERSION>.min.js` ausliefern; LICENSE, NOTICE und
+   `licenses/LICENSE-d3` aus demselben Ordner mitgeben (Apache-2.0; der Build
+   enthaelt d3.js-Code unter BSD-3, dessen Lizenztext mitgehen muss).
 2. `render_verlauf_chart_js()` als eigene Datei ausliefern.
 3. Beide als `<script src="…" defer>` einbinden, Bibliothek zuerst. Unter einer
    Nonce-CSP traegt jedes Tag das Nonce der Antwort. NIE inline.

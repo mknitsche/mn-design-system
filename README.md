@@ -129,6 +129,10 @@ gewollt.
   schraenkt sie nicht ein. Der Lizenztext jeder Familie liegt neben den Schriftdateien
   (`mn_design_system/fonts/<familie>/OFL.txt`)
 - **Symbole**: MIT (Phosphor Icons, `mn_design_system/fonts/phosphor/LICENSE`)
+- **Diagramm-Bibliothek**: Apache ECharts 6.1.0 (Apache License 2.0; der Build enthaelt
+  Teile von d3.js unter BSD 3-Clause) — **behaelt ihre eigenen, offenen Lizenzen**;
+  `LICENSE` schraenkt sie nicht ein. Die Lizenztexte liegen neben der Datei
+  (`mn_design_system/vendor/echarts/`: `LICENSE`, `NOTICE`, `licenses/LICENSE-d3`)
 - **Logos** (mkn-fotografie / PKA): proprietaer, keine Markenrechte eingeraeumt
   — NICHT in diesem Repo, siehe `NOTICE`
 

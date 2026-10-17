@@ -34,8 +34,10 @@ bestehender Verwender bricht.
   `prefers-reduced-motion`); `render_verlauf_chart_css()` liefert Layout und sechs Hoehenklassen.
   Alles laeuft unter `script-src 'self'` / `style-src 'self'` — kein Inline-Skript, kein Inline-Stil,
   kein CDN. Spec: `components/_patterns/verlauf_chart.md`.
-- **Vendoring Apache ECharts 6.1.0** unter `mn_design_system/vendor/echarts/` (Apache-2.0, LICENSE
-  und NOTICE byte-gleich aus dem npm-Tarball, `VENDOR.json` mit Pin, SHA-256 und Tarball-Integrity;
+- **Vendoring Apache ECharts 6.1.0** unter `mn_design_system/vendor/echarts/` (Apache-2.0, LICENSE,
+  NOTICE und `licenses/LICENSE-d3` byte-gleich aus dem npm-Tarball — der Build enthaelt d3.js-Code
+  (BSD-3, Mike Bostock), auf dessen Lizenztext die ECharts-LICENSE verweist und der bei der
+  Weitergabe mitgehen muss; `VENDOR.json` mit Pin, SHA-256 und Tarball-Integrity;
   `vendor_js_dir()`, `ECHARTS_DATEI`, `ECHARTS_VERSION` in `components.web`). **Datei: der
   `common`-Build `echarts.common.min.js`** (715 KB, 240 KB gzip), SHA-256 `61f13280…b013d5`. Die
   volle `echarts.min.js` (1,1 MB, SHA-256 `b66b25ae…0fd0`) ist bewusst NICHT vendort: der Plan
@@ -56,7 +58,13 @@ bestehender Verwender bricht.
   am letzten Tag verschwaende sonst.
 - **Zahlenformat im Loader:** Komma, Tausenderpunkt und `dezimalstellen` kann reines JSON nicht
   ausdruecken; der Loader setzt Achsen- und Tooltip-Formatierer aus `data-dezimalstellen`.
-- **Zielband:** feste, runde Achsengrenzen, weil `markArea` die Achse nicht erweitert.
+- **Zielband:** feste, runde Achsengrenzen, weil `markArea` die Achse nicht erweitert. Im
+  dunklen Theme ist das Band `color.status.success` mit Deckkraft 0,2 (das helle `success-bg`
+  wuerde auf dunklem Grund blenden).
+- **Raender:** `grid` 48/12/32/56 statt 48/12/16/40 (links/rechts/oben/unten): oben ist Platz
+  fuer Einheit und Legende, unten fuer Achsentext und die Zoom-Leiste (18 px hoch, 6 px Rand).
+- **Gitter dunkel:** `color.dark.border` (nicht `grey.600`, wie der Plan fuer Hell/Dunkel
+  gemeinsam nennt) — dieselbe Kontrast-Begruendung wie beim Text.
 - **Mausrad zoomt nur mit Strg** (`touch-action: pan-y` am Diagramm): sonst liesse sich die Seite
   unter dem Zeiger nicht mehr scrollen.
 - **Hoehe** als `height` (nicht `min-height`): feste Hoehe vermeidet eine Rueckkopplung zwischen
@@ -65,7 +73,8 @@ bestehender Verwender bricht.
 
 ### Tests
 
-`tests/test_vendor_echarts.py` (Hash, Lizenz, package-data), `tests/test_contracts_web.py`
+`tests/test_vendor_echarts.py` (Hash, Lizenz, jeder `/licenses/`-Verweis der LICENSE hat seine
+Datei, package-data), `tests/test_contracts_web.py`
 (Vertrag), `tests/components/web/test_verlauf_chart.py` (Option, HTML, Theme, Loader, CSS),
 `tests/components/web/test_verlauf_chart_browser.py` (Wirkung im Browser, nur mit Playwright +
 Chromium, sonst sichtbar uebersprungen). Waechter-Tests sind per Mutation geprueft.
