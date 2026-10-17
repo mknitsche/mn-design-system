@@ -63,7 +63,14 @@ Lizenzen + Quellenangaben aller verwendeten Schriften, Symbole und Inspirationsq
 - Apache ECharts 6.1.0 — Apache License 2.0 — https://echarts.apache.org
 - **Projekt:** Apache Software Foundation
 - **Verwendung:** Zeitreihen-Diagramm (`verlauf_chart`); ausgeliefert wird der Build `echarts.common.min.js`, unveraendert aus dem npm-Tarball (Pin, SHA-256 und Tarball-Integrity in `mn_design_system/vendor/echarts/VENDOR.json`)
-- **Im Paket:** `mn_design_system/vendor/echarts/` mit `LICENSE` und `NOTICE` des Upstream-Projekts; Apache-2.0 verlangt, beides bei jeder Weitergabe mitzugeben
+- **Im Paket:** `mn_design_system/vendor/echarts/` mit `LICENSE`, `NOTICE` und `licenses/LICENSE-d3` des Upstream-Projekts; Apache-2.0 und BSD-3 verlangen, die Lizenztexte bei jeder Weitergabe mitzugeben
+- **Enthaelt:** Teile von d3.js (siehe unten)
+
+### d3.js (in Apache ECharts enthalten)
+- **Autor:** Mike Bostock
+- **Lizenz:** BSD 3-Clause (Copyright 2010-2016 Mike Bostock)
+- **URL:** https://github.com/d3/d3
+- **Verwendung:** nur als Teil von `echarts.common.min.js` (laut ECharts-`LICENSE`: Layout-Hilfen fuer Treemap, Baum und Kraftgraph sowie die Quantil-Rechnung in `util/number`); der Lizenztext liegt unveraendert in `mn_design_system/vendor/echarts/licenses/LICENSE-d3` — die ECharts-`LICENSE` verweist darauf
 
 ## Inspirations- und Referenzwerke
 

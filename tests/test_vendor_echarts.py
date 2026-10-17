@@ -89,6 +89,36 @@ def test_license_ist_apache_2_0_im_wortlaut():
     assert "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION" in text
 
 
+def _lizenz_verweise() -> set[str]:
+    """Pfade `/licenses/<name>`, auf die der LICENSE-Text des Upstream-Projekts verweist.
+
+    Nicht gemeint sind URLs wie `http://www.apache.org/licenses/LICENSE-2.0`: vor dem
+    `/licenses/` einer Paketreferenz steht kein Buchstabe, Ziffer oder Punkt."""
+    text = (_vendor_dir() / "LICENSE").read_text(encoding="utf-8")
+    return set(re.findall(r"(?<![A-Za-z0-9.])/licenses/([A-Za-z0-9._-]+)", text))
+
+
+def test_jeder_lizenz_verweis_der_license_datei_liegt_im_vendor_ordner():
+    """Die Apache-LICENSE nennt Teile mit eigener Lizenz (d3.js, BSD-3) und verweist auf
+    `/licenses/LICENSE-d3`. Der Build enthaelt d3-Code; BSD-3 verlangt, dass der
+    Lizenztext bei der Weitergabe mitgeht — ein Verweis ins Leere verletzt das."""
+    verweise = _lizenz_verweise()
+    assert verweise == {"LICENSE-d3"}, (
+        verweise
+    )  # Untergrenze: der Verweis wird gefunden
+    fehlend = sorted(
+        n for n in verweise if not (_vendor_dir() / "licenses" / n).is_file()
+    )
+    assert not fehlend, f"Lizenzdatei(en) fehlen im Vendor-Ordner: {fehlend}"
+
+
+def test_d3_lizenz_ist_bsd_3_im_wortlaut():
+    text = (_vendor_dir() / "licenses" / "LICENSE-d3").read_text(encoding="utf-8")
+    assert "Mike Bostock" in text
+    assert "Redistribution and use in source and binary forms" in text
+    assert "Neither the name of the author nor the names of contributors" in text
+
+
 def test_notice_vorhanden_und_nennt_die_asf():
     text = (_vendor_dir() / "NOTICE").read_text(encoding="utf-8")
     assert "Apache ECharts" in text
@@ -123,6 +153,7 @@ def test_package_data_liefert_die_vendor_dateien_aus():
         _vendor_dir() / "VENDOR.json",
         _vendor_dir() / "LICENSE",
         _vendor_dir() / "NOTICE",
+        _vendor_dir() / "licenses" / "LICENSE-d3",
         _vendor_dir() / _vendor_json()["datei"],
     }
     assert erwartet <= abgedeckt, sorted(str(p) for p in erwartet - abgedeckt)

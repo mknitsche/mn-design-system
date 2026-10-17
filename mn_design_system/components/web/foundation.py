@@ -61,10 +61,12 @@ def render_font_face(url_prefix: str) -> str:
 def vendor_js_dir() -> Path:
     """Verzeichnis der mitgelieferten Diagramm-Bibliothek (Apache ECharts, 0.17.0).
 
-    Enthaelt ``ECHARTS_DATEI`` samt ``LICENSE``, ``NOTICE`` und ``VENDOR.json`` (Pin und
-    SHA-256). Der Konsument kopiert die Datei unter einem versionierten Namen in sein
-    Auslieferverzeichnis (wie bei ``web_font_dir``) und gibt LICENSE und NOTICE weiter —
-    Apache-2.0 verlangt beides.
+    Enthaelt ``ECHARTS_DATEI`` samt ``LICENSE``, ``NOTICE``, ``licenses/LICENSE-d3`` und
+    ``VENDOR.json`` (Pin und SHA-256). Der Konsument kopiert die Datei unter einem
+    versionierten Namen in sein Auslieferverzeichnis (wie bei ``web_font_dir``) und gibt
+    LICENSE, NOTICE und ``licenses/`` weiter — Apache-2.0 verlangt LICENSE und NOTICE; der
+    Build enthaelt ausserdem d3.js-Code (BSD-3), dessen Lizenztext ``licenses/LICENSE-d3``
+    ebenfalls mitgehen muss.
     """
     return Path(__file__).parents[2] / "vendor" / "echarts"
 
