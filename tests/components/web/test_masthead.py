@@ -181,7 +181,14 @@ class TestRenderMastheadCss:
     def test_tier_fallback_matches_real_tokens(self):
         """Der var()-Fallback je Tier-Pill/Chip muss der ECHTE Tier-Wert sein."""
         css = render_masthead_css()
-        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+        for tier in (
+            "bibliothek",
+            "atelier",
+            "kabinett",
+            "start",
+            "observatorium",
+            "magazin",
+        ):
             soll_bg = get(f"color.tier.{tier}.bg")
             soll_text = get(f"color.tier.{tier}.text")
             assert soll_bg is not None and soll_text is not None
@@ -194,7 +201,14 @@ class TestRenderMastheadCss:
         Vorschau auf den Aktiv-Zustand, nur fuer inaktive Pills."""
         css = render_masthead_css()
         assert "rgba(255, 255, 255, 0.08)" not in css
-        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+        for tier in (
+            "bibliothek",
+            "atelier",
+            "kabinett",
+            "start",
+            "observatorium",
+            "magazin",
+        ):
             assert f".mn-masthead__pill--{tier}:not(.is-active):hover" in css
             assert f"var(--color-tier-{tier}-hover-on-dark" in css
             assert get(f"color.tier.{tier}.hover-on-dark") is not None

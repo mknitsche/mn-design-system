@@ -52,7 +52,14 @@ def test_css_uses_foundation_tokens():
 def test_css_tier_modifier_uses_border_token():
     """Pro Tier eine border-left-color aus der color.tier-Familie."""
     css = render_empty_state_css()
-    for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+    for tier in (
+        "bibliothek",
+        "atelier",
+        "kabinett",
+        "start",
+        "observatorium",
+        "magazin",
+    ):
         assert f"var(--color-tier-{tier}-border" in css
 
 

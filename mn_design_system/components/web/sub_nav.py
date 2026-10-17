@@ -38,7 +38,7 @@ Schmale Viewports (strikt unter `web.layout.bp-tablet`, 0.14.1/0.14.2):
   (`prefers-reduced-motion` ist damit von selbst eingehalten).
 
 CSS-Strategie wie kpi_card / wetter_strip: Token-Werte via CSS Custom
-Properties, `render_sub_nav_css()` liefert Regeln fuer alle 5 Tiers.
+Properties, `render_sub_nav_css()` liefert Regeln fuer alle 6 Tiers.
 """
 
 from __future__ import annotations
@@ -54,6 +54,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.KABINETT,
     WebTier.START,
     WebTier.OBSERVATORIUM,
+    WebTier.MAGAZIN,
 )
 
 # var()-Fallback je Tier (bg + border + text) — die ECHTEN color.tier.<tier>.*
@@ -65,6 +66,7 @@ _TIER_FALLBACK: dict[WebTier, tuple[str, str, str]] = {
     WebTier.KABINETT: ("#fef2f2", "#fecaca", "#991b1b"),
     WebTier.START: ("#f0fdf4", "#bbf7d0", "#166534"),
     WebTier.OBSERVATORIUM: ("#fffbeb", "#fde68a", "#92400e"),
+    WebTier.MAGAZIN: ("#f5f5f5", "#e5e7eb", "#374151"),
 }
 
 
@@ -101,7 +103,7 @@ def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
 
 
 def render_sub_nav_css() -> str:
-    """Komponenten-CSS — Layout + 5 Tier-Modifier, Token-Werte via Custom Properties.
+    """Komponenten-CSS — Layout + 6 Tier-Modifier, Token-Werte via Custom Properties.
 
     Konsument muss `dist/css/tokens.css` einbinden, damit
     `var(--color-tier-bibliothek-bg)` etc. greift.

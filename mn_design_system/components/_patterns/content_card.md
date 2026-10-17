@@ -66,7 +66,7 @@ CSS-Variable `--mn-card-grid-cols` (Wert aus `CardGridInput.columns`).
   mit eingebetteten Content-Cards.
 - `title`, `body` und `href` werden per `html.escape()` (href mit `quote=True`,
   da Attribut-Kontext) XSS-sicher ausgegeben.
-- `render_content_card_css()` gibt Layout + Border-Regeln fuer alle 5 Tiers aus.
+- `render_content_card_css()` gibt Layout + Border-Regeln fuer alle 6 Tiers aus.
 - `render_card_grid_css()` setzt `grid-template-columns:
   repeat(var(--mn-card-grid-cols, 3), 1fr)` — Spaltenzahl rein ueber die
   CSS-Variable, kein Hardcode.

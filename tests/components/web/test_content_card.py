@@ -118,7 +118,14 @@ class TestRenderContentCardCss:
 
     def test_tier_modifier_uses_border_token(self):
         css = render_content_card_css()
-        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+        for tier in (
+            "bibliothek",
+            "atelier",
+            "kabinett",
+            "start",
+            "observatorium",
+            "magazin",
+        ):
             assert f"var(--color-tier-{tier}-border" in css
 
     def test_tier_border_fallback_matches_token(self):
@@ -127,7 +134,14 @@ class TestRenderContentCardCss:
         Fallback (FOUC / fehlende tokens.css), darf die Tier-Zuordnung
         visuell nicht verloren gehen."""
         css = render_content_card_css()
-        for tier in ("bibliothek", "atelier", "kabinett", "start", "observatorium"):
+        for tier in (
+            "bibliothek",
+            "atelier",
+            "kabinett",
+            "start",
+            "observatorium",
+            "magazin",
+        ):
             soll = get(f"color.tier.{tier}.border")
             assert soll is not None
             assert f"var(--color-tier-{tier}-border, {soll})" in css
