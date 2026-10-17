@@ -264,6 +264,42 @@ class SubNavInput(BaseModel):
     aria_label: str = Field(default="Bereichs-Navigation", min_length=1)
 
 
+class ZeitraumOption(BaseModel):
+    """Eine Option der Zeitraum-Leiste (0.17.1).
+
+    label: sichtbarer Text ("30 Tage").
+    href: Adresse der Option ("?tage=30") — die Leiste besteht aus Links.
+    active: True = die aktuell gewaehlte Option (aria-current="page").
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+    active: bool = False
+
+
+class ZeitraumLeisteInput(BaseModel):
+    """Zeitraum-Leiste (0.17.1): Segment-Leiste aus Links, z.B. fuer ``?tage=30|90|365``.
+
+    optionen: 2..6 Optionen (eine einzelne waere keine Auswahl). Hoechstens eine ist
+              aktiv; keine aktive Option ist erlaubt (der Konsument kennt dann den
+              Wert der Adresse nicht, z.B. ``?tage=7``).
+    aria_label: Landmark-Label des <nav> (WCAG 2.4.1), Default "Zeitraum".
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    optionen: list[ZeitraumOption] = Field(min_length=2, max_length=6)
+    aria_label: str = Field(default="Zeitraum", min_length=1)
+
+    @model_validator(mode="after")
+    def _hoechstens_eine_aktiv(self) -> ZeitraumLeisteInput:
+        if sum(o.active for o in self.optionen) > 1:
+            raise ValueError("hoechstens eine Option darf aktiv sein")
+        return self
+
+
 class PageHeaderInput(BaseModel):
     """Seiten-Kopf: H1 + optionaler Lead-Absatz."""
 

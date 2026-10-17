@@ -78,6 +78,10 @@ from mn_design_system.components.web.wetter_strip import (
     render_wetter_strip_css,
     render_wetter_strip_html,
 )
+from mn_design_system.components.web.zeitraum_leiste import (
+    render_zeitraum_leiste_css,
+    render_zeitraum_leiste_html,
+)
 
 __all__ = [
     "ECHARTS_DATEI",
@@ -113,6 +117,8 @@ __all__ = [
     "render_verlauf_chart_js",
     "render_wetter_strip_css",
     "render_wetter_strip_html",
+    "render_zeitraum_leiste_css",
+    "render_zeitraum_leiste_html",
     "vendor_js_dir",
     "verlauf_chart_option",
     "web_font_dir",

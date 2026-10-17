@@ -39,6 +39,8 @@ from mn_design_system.components._patterns.contracts import (
     VerlaufPunkt,
     VerlaufReihe,
     WebTier,
+    ZeitraumLeisteInput,
+    ZeitraumOption,
 )
 
 # ---------------------------------------------------------------------------
@@ -696,3 +698,82 @@ class TestVerlaufChartInput:
 
     def test_beschreibung_explizit_gewinnt(self):
         assert _chart(beschreibung="Eigener Text").beschreibung_text() == "Eigener Text"
+
+
+# ---------------------------------------------------------------------------
+# ZeitraumOption / ZeitraumLeisteInput (0.17.1)
+# ---------------------------------------------------------------------------
+
+
+def _optionen(aktiv: int | None = 0) -> list[ZeitraumOption]:
+    namen = [("30 Tage", "?tage=30"), ("90 Tage", "?tage=90"), ("1 Jahr", "?tage=365")]
+    return [
+        ZeitraumOption(label=label, href=href, active=i == aktiv)
+        for i, (label, href) in enumerate(namen)
+    ]
+
+
+class TestZeitraumOption:
+    def test_minimal(self):
+        o = ZeitraumOption(label="30 Tage", href="?tage=30")
+        assert o.active is False
+
+    def test_active(self):
+        assert ZeitraumOption(label="X", href="?x", active=True).active is True
+
+    def test_label_und_href_sind_pflicht(self):
+        with pytest.raises(ValidationError):
+            ZeitraumOption(label="", href="?x")
+        with pytest.raises(ValidationError):
+            ZeitraumOption(label="X", href="")
+
+    def test_frozen_und_extra_forbid(self):
+        o = ZeitraumOption(label="X", href="?x")
+        with pytest.raises(ValidationError):
+            o.label = "Y"
+        with pytest.raises(ValidationError):
+            ZeitraumOption(label="X", href="?x", foo="bar")
+
+
+class TestZeitraumLeisteInput:
+    def test_gueltig_mit_drei_optionen(self):
+        inp = ZeitraumLeisteInput(optionen=_optionen())
+        assert len(inp.optionen) == 3
+        assert inp.aria_label == "Zeitraum"
+
+    def test_eine_option_ist_keine_auswahl(self):
+        with pytest.raises(ValidationError):
+            ZeitraumLeisteInput(optionen=_optionen()[:1])
+
+    def test_zu_viele_optionen_werden_abgelehnt(self):
+        zu_viele = [
+            ZeitraumOption(label=str(i), href=f"?tage={i}") for i in range(1, 8)
+        ]
+        with pytest.raises(ValidationError):
+            ZeitraumLeisteInput(optionen=zu_viele)
+
+    def test_sechs_optionen_sind_gueltig(self):
+        sechs = [ZeitraumOption(label=str(i), href=f"?tage={i}") for i in range(1, 7)]
+        assert len(ZeitraumLeisteInput(optionen=sechs).optionen) == 6
+
+    def test_keine_aktive_option_ist_gueltig(self):
+        """?tage=7 steht in keiner Option: der Konsument markiert dann keine."""
+        inp = ZeitraumLeisteInput(optionen=_optionen(aktiv=None))
+        assert not any(o.active for o in inp.optionen)
+
+    def test_zwei_aktive_optionen_werden_abgelehnt(self):
+        optionen = _optionen(aktiv=0)
+        optionen[1] = ZeitraumOption(label="90 Tage", href="?tage=90", active=True)
+        with pytest.raises(ValidationError, match="aktiv"):
+            ZeitraumLeisteInput(optionen=optionen)
+
+    def test_aria_label_ist_pflichtig_nicht_leer(self):
+        with pytest.raises(ValidationError):
+            ZeitraumLeisteInput(optionen=_optionen(), aria_label="")
+
+    def test_frozen_und_extra_forbid(self):
+        inp = ZeitraumLeisteInput(optionen=_optionen())
+        with pytest.raises(ValidationError):
+            inp.aria_label = "X"
+        with pytest.raises(ValidationError):
+            ZeitraumLeisteInput(optionen=_optionen(), foo="bar")

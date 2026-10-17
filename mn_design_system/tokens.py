@@ -328,6 +328,8 @@ TOKENS = {
     "web.layout.page-inset": "44px",
     "web.layout.bp-mobile": "640px",
     "web.layout.bp-tablet": "1024px",
+    "web.touch-target": "44px",
+    "web.scroll-max-h": "22rem",
 }
 
 # Helper

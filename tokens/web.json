@@ -51,6 +51,8 @@
       "page-inset":    { "value": "44px",   "comment": "Seiten-Einzug Desktop; responsiv 32px Tablet / 16px Mobil via render_foundation_css()" },
       "bp-mobile":     { "value": "640px",  "comment": "Breakpoint: < 640 = mobil" },
       "bp-tablet":     { "value": "1024px", "comment": "Breakpoint: 640-1024 = Tablet; >= 1024 = Desktop" }
-    }
+    },
+    "touch-target": { "value": "44px", "comment": "v0.17.1: kleinste Kantenlaenge eines Bedienelements fuer Finger (WCAG 2.5.5, Apple HIG 44pt) — Zeitraum-Leiste, Auf-/Zuklapp-Schalter" },
+    "scroll-max-h": { "value": "22rem", "comment": "v0.17.1: Hoehe, ab der ein Tabellen-Bereich in sich scrollt statt die Seite zu dehnen (Messwert-Tabellen)" }
   }
 }
