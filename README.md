@@ -241,19 +241,21 @@ bei alten Pointern.
 | **KI-News** | Aktiv (innerhalb claudeAI) | Indirekt |
 | **Paper / Newsletter** | Geplant | TBD |
 
-## Multi-KI-Edit-Workflow
+## Aenderungsweg
 
-Das Repo ist **public** — lesbar, aber source-available und nicht veraenderbar
-(siehe Abschnitt Rechte). Fuer KT-1s eigene Werkzeuge gilt diese Schranke nicht:
-sie arbeiten in seinem Namen und duerfen direkt am Token-Set arbeiten:
+Das Repo ist **public** — lesbar, aber source-available und nicht veraenderbar durch
+Dritte (siehe Abschnitt Rechte). Gestaltung ist „meins im engen Sinne": **KT-1
+entscheidet**. Rechtemodell: ADR-074 (Stufe II) im claudeAI-Repo.
 
-- **Claude Design** (browser) — Token-/Komponenten-Edit ohne IDE-Roundtrip
-- **Codex Web** — gleiche Idee, andere KI
-- **Cursor / GitHub Copilot** — IDE-Integration mit Repo-Kontext
-- **Terminal-Sessions** — claudeAI-Hauptsession, Worktrees
-
-Jede dieser KI-Quellen committet auf `main`, claudeAI-Konsumenten ziehen den
-Submodul-Pointer nach. Konsistenz-Schutz: SemVer-Tags + Pre-Commit-Drift-Hook.
+- **`main` ist geschuetzt:** Pull Request Pflicht, kein direkter Commit, lineare
+  Historie (Rebase), kein Force-Push.
+- **Terminal-Instanzen** (macb-claude, cld1-claude — KT-1s Claude-Code-Sessions) aendern
+  ueber **Branch → PR → Merge** und **releasen**: Tag `vX.Y.Z` auf dem gemergten Commit,
+  der Release-Workflow (`release.yml`) baut das Wheel. Innen handeln sie in KT-1s Namen.
+- **Weitere KI-Instanzen** (Claude-App/Cowork, Codex, Claude Design im Browser) liefern
+  **Vorschlaege, Reviews oder Artefakte**. Ein Artefakt ist eine abgeleitete Kopie, nie die
+  Quelle. Uebernommen wird es nur ueber eine Terminal-Instanz per Pull Request.
+- **Extern:** Issues ja, Pull Requests nein (`CONTRIBUTING.md`).
 
 ## Distributions-Schichten
 

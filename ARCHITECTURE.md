@@ -1,222 +1,190 @@
 # MN PKA Design-System — Architektur
 
-> **Stand:** 2026-04-29 (v0.3.0) · S238 Welle D
+> **Stand:** 2026-10-17 (v0.19.0). Beschreibt den Ist-Zustand; die Versions-Historie
+> steht im [CHANGELOG](CHANGELOG.md), die Komponenten-Specs unter
+> `mn_design_system/components/_patterns/`.
 >
-> Dieses Dokument beschreibt das **architektonische Fundament** des Design-Systems —
-> die vier Schichten, das Pattern-First-Prinzip und die Multi-Renderer-Targets.
-> Versionsuebergreifende Rezepte (Konsumieren, neuen Token anlegen) stehen in der
-> Konsumenten-Anleitung im claudeAI-Repo:
-> `docs/anleitungen/2026-04-29-ANL-012-token-konsumieren-richtig.md`.
+> Konsumenten-Rezepte (Konsumieren, neuen Token anlegen) stehen in der Anleitung
+> im claudeAI-Repo: `docs/anleitungen/2026-04-29-ANL-012-token-konsumieren-richtig.md`.
 
 ---
 
 ## 1. Vier-Schichten-Modell
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ SCHICHT 4 — Anwendungen                                         │
-│   claudeAI-Briefings · Foto-Homepage · KI-News · Paper · Web    │
-│   Ein Konsument pro Anwendung, kein direkter Token-Zugriff      │
-└─────────────────────────────────────────────────────────────────┘
-                              ↑ konsumiert
-┌─────────────────────────────────────────────────────────────────┐
-│ SCHICHT 3 — Komponenten                                         │
-│   _patterns/ (Markdown-Spec + Pydantic-Contract, frozen)        │
-│   pdf/      web/      latex/                                    │
-│   build_kpi_card / build_sparkline / build_wetter_strip / ...   │
-└─────────────────────────────────────────────────────────────────┘
-                              ↑ rendert auf Basis von
-┌─────────────────────────────────────────────────────────────────┐
-│ SCHICHT 2 — Typografie + Symbole                                │
-│   register_all_fonts() (Geist, Source Serif, JetBrainsMono,     │
-│   STIX Two Math, Phosphor Icons)                                │
-│   Single-Entry-Point ueber importlib.resources                  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↑ verweist auf Schluessel aus
-┌─────────────────────────────────────────────────────────────────┐
-│ SCHICHT 1 — Tokens (SSoT)                                       │
-│   tokens/colors.json · tokens/type.json · tokens/space.json ... │
-│   Style Dictionary v4 → mn_design_system/tokens.py              │
-│   color.indigo.50 / color.status.success / type.body.size ...   │
-└─────────────────────────────────────────────────────────────────┘
+SCHICHT 4 — Anwendungen
+  claudeAI-Briefings (PDF) · mkn-desk.com (Web) · Foto-Homepage, Paper (geplant)
+  Konsumieren Komponenten oder den Loader, nicht die Token-Tabelle direkt.
+        ↑ konsumiert
+SCHICHT 3 — Komponenten
+  _patterns/ (Markdown-Spec + Pydantic-Contract, frozen)
+  pdf/ (ReportLab) · web/ (HTML + CSS + SVG/ECharts) · latex/ (vorgesehen)
+        ↑ rendert auf Basis von
+SCHICHT 2 — Typografie + Symbole
+  Schriften unter mn_design_system/fonts/ (Geist, Source Serif 4, JetBrains Mono,
+  STIX Two, Phosphor; weitere Familien im Paket: Inter, Noto, Source Sans 3),
+  Web-Schriftdateien (woff2) unter fonts/web/
+        ↑ verweist auf Schluessel aus
+SCHICHT 1 — Tokens (SSoT)
+  tokens/*.json → Style Dictionary v4 → mn_design_system/tokens.py, dist/css, dist/json, dist/latex
 ```
 
-Jede Schicht referenziert nur die direkt darunterliegende. Anwendungen importieren
-**nicht** aus Schicht 1 — sie konsumieren Komponenten oder den Loader.
+Jede Schicht referenziert nur die direkt darunterliegende.
 
 ---
 
-## 2. Pattern-First-Prinzip (seit v0.2.0)
+## 2. Pattern-First-Prinzip
 
-Komponenten werden zuerst **renderer-agnostisch** definiert, dann pro Target
-implementiert.
+Eine Komponente wird zuerst renderer-frei definiert (Markdown-Spec plus Pydantic-Contract),
+dann pro Ausgabeziel implementiert.
 
 ```
 mn_design_system/components/
-├── _patterns/                     ← Schicht 3 SSoT (renderer-frei)
-│   ├── contracts.py               ← Pydantic-Models, frozen=True, extra=forbid
-│   ├── kpi_card.md                ← textuelle Spec (Inputs/Outputs/Verhalten)
-│   ├── sparkline.md
-│   └── wetter_strip.md
-├── pdf/                           ← ReportLab-Implementierung
-│   ├── kpi_card.py                ← build_kpi_card(input: KpiCardInput)
-│   ├── sparkline.py
-│   └── wetter_strip.py
-├── web/                           ← (Stub) HTML/CSS-Implementierung
-└── latex/                         ← (Stub) LaTeX-Implementierung
+├── _patterns/    Specs (*.md) und Contracts: contracts.py (Pdf-/Web-Komponenten),
+│                 chat_contracts.py (Twin-Chat), _zahl.py / _verlauf.py (gemeinsame Helfer)
+├── pdf/          ReportLab: kpi_card, sparkline, wetter_strip
+├── web/          HTML/CSS/SVG: Komponenten-Familie, siehe § 5
+└── latex/        vorgesehen, noch ohne Komponenten (siehe § 6)
 ```
 
-**Pydantic-Contract als Vertrag.** Jede Komponente nimmt genau einen `*Input`-Typ.
-`frozen=True` verhindert Side-Effects, `extra=forbid` verhindert Tippfehler
-("subline" statt "caption" bricht laut, nicht still).
-
-Beispiel:
-
-```python
-class KpiCardInput(BaseModel):
-    model_config = {"extra": "forbid", "frozen": True}
-    label: str = Field(min_length=1)
-    value: str = Field(min_length=1)
-    change_pct: float | None = None
-    sparkline_values: list[float] | None = None
-    caption: str | None = None
-```
-
-Renderer haben damit Identische Eingabe-Garantie ueber pdf/web/latex hinweg —
-gleiche Daten, drei Outputs, ein Vertrag.
+Jede Komponente nimmt genau einen `*Input`-Typ. `frozen=True` verhindert Seiteneffekte,
+`extra=forbid` laesst Tippfehler laut brechen. Gleiche Daten, gleicher Vertrag, je Renderer
+eine Ausgabe. Nicht jede Komponente hat jeden Renderer: Zeitraum-Leiste, Verlauf-Chart und
+alle Seiten-/Chat-Bausteine gibt es nur fuer Web.
 
 ---
 
-## 3. Token-Hierarchie
+## 3. Tokens
 
-Style Dictionary v4 baut **flache Lookup-Tabelle** aus den hierarchischen JSONs.
-Die Hierarchie dient der Pflege, nicht der Konsumation.
+Quellen unter `tokens/` (Style Dictionary v4 baut daraus eine flache Lookup-Tabelle):
 
-| JSON-Quelle | Beispiel-Schluessel | Zweck |
-|---|---|---|
-| `tokens/colors.json` | `color.indigo.600`, `color.status.success`, `color.viz.muted` | Farbpalette inkl. Status- und Viz-Familien |
-| `tokens/type.json` | `type.body.size`, `type.h1.leading`, `font.hyphenation.enabled` | Schrift-Rollen + Skalen |
-| `tokens/space.json` | `space.xs`, `space.gutter`, `space.section-gap` | Abstaende (4pt-Skala) |
-| `tokens/radii.json` | `radius.card`, `radius.tag` | Eck-Radien |
-| `tokens/stroke.json` | `stroke.divider`, `stroke.card-border` | Linien-Staerken |
+| Datei | Inhalt |
+|---|---|
+| `colors.json` | Farbpalette: Grau-/Indigo-Skala, Status-, Viz-, Kategorie- und Diagramm-Farben, Tier-Farben `color.tier.<tier>.*` |
+| `typography.json` | `font.family.*` (inkl. Schnitte wie `sans-bold`), `font.size`, `font.leading`, `font.weight`, `font.tracking`, `font.hyphenation` |
+| `spacing.json` | `space.*` (Abstands-Skala) |
+| `radii.json` | `radius.*` |
+| `strokes.json` | `stroke.*` (Linienstaerken) und `shadow.*` |
+| `stack.json` | Schrift-Stack-Wahl: aktiv Stack A, Stack D (Source Sans 3) waehlbar |
+| `web.json` | Web-Schicht: `web.text`, `web.leading`, `web.font`, `web.stroke`, `web.color`, `web.layout`, `web.touch-target` |
+| `families/indigo.json` | Familien-Definition der Indigo-Skala |
 
-**Token-Familien-Konvention** (Tailwind-inspiriert):
-- Skala 50–950 fuer Farb-Familien (z.B. `color.indigo.50` bis `color.indigo.900`)
-- Semantische Status-Familie: `color.status.{success,warning,urgent,error,info}` plus
-  `-bg`/`-tint`-Varianten fuer Background-/Hervorhebungs-Layer
-- Viz-Familie fuer Diagramme/Tabellen: `color.viz.{muted,success-soft,neutral-soft,
-  dark-navy,medium-blue}` (separat von UI-Farben, weil andere Kontrast-Anforderungen)
+Tier-Tokens vorhanden fuer: bibliothek, atelier, kabinett, start, observatorium, archiv
+sowie `magazin` (nur Uebergang, siehe § 4).
 
 ---
 
-## 4. Build-Pipeline
+## 4. Web-Tiers
+
+`WebTier` (in `_patterns/contracts.py`) benennt die Bereiche von mkn-desk.com und mappt
+auf `color.tier.<tier>.*`: **bibliothek, atelier, kabinett, start, observatorium, archiv**.
+`archiv` loest seit 0.19.0 `magazin` ab (gleiche Farbwerte, eigene Referenz). `magazin`
+bleibt in 0.19.0 als veraltet markiert stehen; **0.19.1 entfernt es** samt Tokens und
+Fallbacks.
+
+---
+
+## 5. Web-Komponenten (`components/web/`)
+
+| Modul | Zweck |
+|---|---|
+| `foundation` | Globale responsive Schicht (Media-Queries an den Breakpoints `web.layout.bp-*`), die Style Dictionary nicht erzeugen kann |
+| `masthead` | Editorialer Seitenkopf: Identitaet (Wortmarke, Datum) und Tier-Navigation |
+| `sub_nav` | Auswahl-Navigation innerhalb eines Tiers (Reiter) |
+| `back_link` | Die eine Zurueck-Zeile unterhalb einer Reiterseite (nur interner Pfad) |
+| `page_header` | Seitenkopf mit H1 und optionalem Lead |
+| `footer` | Einzeilige Fusszeile mit Identitaets-Segmenten und Rechtslinks |
+| `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |
+| `tier_chip` | Kleines tier-getoentes Etikett |
+| `empty_state` | Ruhiger Leer-Zustand |
+| `kpi_card` | Kennzahl-Karte (Wert, Veraenderung, Sparkline) |
+| `sparkline` | Kleines Verlaufs-SVG |
+| `wetter_strip` | Wetter-Tabelle mit Phosphor-Icons |
+| `zeitraum_leiste` | Segment-Leiste aus Links (`?tage=30\|90\|365`), ohne Skript |
+| `verlauf_chart` | Zeitreihen-Diagramm auf Apache ECharts: `verlauf_chart_option()` liefert die Option als reines JSON, das Rendern uebernimmt die vendorte Bibliothek |
+| `chat_composer`, `chat_stream`, `status_banner`, `stream_cursor` | Bausteine des Twin-Chats (`/kabinett/chat`); Contracts in `chat_contracts.py`, Nachrichten werden clientseitig eingehaengt |
+
+ECharts 6.1.0 liegt im Paket (`mn_design_system/vendor/echarts/`, Pin und Hash in
+`VENDOR.json`, Lizenztexte daneben); kein CDN, kein Netz beim Seitenbau. Alle
+Web-Komponenten stylen ueber `var(--…)` mit Rueckfall auf den Token-Wert.
+
+---
+
+## 6. PDF und LaTeX
+
+- **PDF** (`components/pdf/`): ReportLab-Implementierungen von kpi_card, sparkline und
+  wetter_strip. Produktiv, Konsument ist claudeAI (Briefings, Reports).
+- **LaTeX** (`components/latex/`): vorgesehen, **noch ohne Komponenten**; das Paket ist ein
+  leerer Platzhalter. Heute gibt es nur die Token-Ausgabe `dist/latex/tokens.tex`
+  (`\def`-Macros). Komponenten kommen mit dem ersten LaTeX-Konsumenten (Paper).
+
+---
+
+## 7. Build-Pipeline
 
 ```
 tokens/*.json
-    │
-    │  npm run build  (Style Dictionary v4)
+    │  npm run build  (Style Dictionary v4, build.js)
     ▼
-mn_design_system/tokens.py   ← In-Package, NICHT mehr in dist/python/
-                               (seit Welle A v0.1.0 direkt im Python-Package)
-dist/css/tokens.css          ← Web-Konsumenten
-dist/json/tokens.json        ← flat, dotted keys (ML/Tools)
-dist/latex/tokens.tex        ← \def-Macros
+mn_design_system/tokens.py   Python-Lookup, im Package
+dist/css/tokens.css          Web
+dist/json/tokens.json        flach, dotted keys
+dist/latex/tokens.tex        \def-Macros
 ```
 
-Begruendung fuer **In-Package-Output**: `pip install -e ./system/design-system/`
-greift dann auf `mn_design_system/tokens.py` direkt zu, kein Pfad-Hack noetig.
-`dist/` bleibt fuer Multi-Renderer-Konsumenten erhalten (Web/LaTeX).
+`dist/` wird committet (Konsumenten brauchen die Ausgaben); Python-Wheels nicht, sie
+entstehen im Release-Workflow. `npm run validate` prueft WCAG-AA-Kontraste und
+Pflicht-Tokens. `package.json` und `pyproject.toml` tragen dieselbe Version
+(`tests/test_versionen_synchron.py`).
 
 ---
 
-## 5. Konsumenten-Liste
+## 8. Konsumenten
 
-| Konsument | Status | Bindungs-Modus |
+| Konsument | Status | Bindung |
 |---|---|---|
-| **claudeAI** | Aktiv (wesentlichster Konsument) | Submodul + `pip install -e ./system/design-system/` |
-| **Foto-Homepage** (mkn-fotografie.de) | Geplant (PRJ-9) | TBD: Submodul oder Sub-Repo-Ausschnitt |
-| **KI-News** | Aktiv (innerhalb claudeAI) | Indirekt ueber claudeAI-Loader |
-| **Wissenschaftliche Paper** | Geplant | TBD |
-| **Newsletter / private Texte** | Geplant | TBD |
-
-**Multi-KI-Edit-Faehigkeit**: Das Repo ist **public** — oeffentlich lesbar, aber
-**source-available** unter PolyForm Strict 1.0.0, nicht Open Source (ohne Logos;
-siehe README, Abschnitt Rechte). Fuer KT-1s eigene Werkzeuge gilt die
-Veraenderungs-Schranke nicht: Claude Design Browser, Codex Web, Cursor und andere
-Tools arbeiten in seinem Namen direkt im Token-Set, ohne IDE-Roundtrip. claudeAI
-bleibt privat (PII), die Design-Schicht ist oeffentlich lesbar — bewusste
-Trennung.
+| **claudeAI** | aktiv (PDF, Briefings) | Python-Wheel aus dem Release |
+| **mkn-desk.com** | aktiv (Web-Komponenten, Tiers) | Python-Wheel aus dem Release |
+| **Foto-Homepage** (mkn-fotografie.de) | geplant | offen |
+| **Paper / Newsletter** | geplant | offen |
 
 ---
 
-## 6. Versionierungs-Politik
+## 9. Rechte und Änderungsweg
 
-**SemVer pre-1.0** (Solo-Maintainer-Modus):
-
-- `0.x.0` — Neue Komponente, neue Token-Familie, ARCHITECTURE-Aenderung
-- `0.x.y` — Bugfix, Doku, kleine Token-Erweiterung
-- `1.0.0` — Erst wenn Foto-Homepage als zweiter Konsument live ist und Paper-Konsument absehbar (zwei stabile Konsumenten = SemVer-Garantien lohnen)
-
-**Tag-Disziplin im Submodul-Repo:**
-
-```bash
-cd system/design-system
-git tag v0.3.0 -m "Welle D: Architektur-Doku"
-git push origin main --tags
-```
-
-claudeAI-Pointer wird im selben Sprint per Commit nachgezogen:
-
-```bash
-cd /Users/mkn1972/claudeAI
-git add system/design-system
-git commit -m "chore(design-system): Submodul auf v0.3.0"
-```
+Das Repo ist oeffentlich lesbar, **source-available** unter PolyForm Strict 1.0.0
+(nicht Open Source; Details im README, Abschnitt Rechte). Veraendern darf nur KT-1; seine
+Terminal-Instanzen arbeiten ueber Branch → PR → Merge, `main` ist geschuetzt. Das
+vollstaendige Modell steht im README, Abschnitt „Aenderungsweg".
 
 ---
 
-## 7. Distributions-Schichten
+## 10. Versionierung und Release
 
-Heute: **eine Schicht aktiv** (Submodul-Live-Edit). Zwei weitere vorbereitet, YAGNI-deferred.
-
-| Schicht | Zweck | Status |
-|---|---|---|
-| **Submodul (Live-Edit)** | Schnelle Iteration, Multi-KI-Edit, claudeAI greift direkt zu | **AKTIV** |
-| **GitHub Packages (versioniert)** | Externe Konsumenten ohne Submodul-Setup, klare SemVer-Bindung | **VORBEREITET** (release.yml in Welle D YAGNI-deferred bis erster externer Konsument) |
-| **PyPI public (langfristig)** | oeffentliche Distribution (source-available, keine Open-Source-Lizenz) | **VAGUE** (nur wenn Drittnutzer auftreten) |
-
-**Wann GitHub-Packages aktivieren?** Wenn der erste externe Konsument (Foto-Homepage,
-Paper) startet. Dann release.yml + build-tokens.yml + claudeAI-pyproject-Dependency
-nachziehen.
+SemVer pre-1.0: `0.x.0` neue Komponente oder Token-Familie, `0.x.y` Bugfix, Doku, kleine
+Token-Erweiterung; `1.0.0` erst mit zwei stabilen externen Konsumenten. Ein Release ist ein
+Tag `vX.Y.Z` auf dem gemergten Commit; `release.yml` baut daraufhin das Wheel und haengt es
+an das GitHub-Release.
 
 ---
 
-## 8. Anti-Patterns
+## 11. Anti-Patterns
 
-1. **Direkter Token-Import in Anwendungen** — Anwendungen konsumieren Komponenten
-   oder den Loader, nicht `mn_design_system.tokens.get` direkt. Ausnahme:
-   Komponenten **innerhalb** dieses Packages (Symmetrie zur eigenen API).
-
-2. **Renderer-spezifische Komponenten ohne Pattern-Spec** — `pdf/foo.py` ohne
-   `_patterns/foo.md` + Contract bricht das Multi-Renderer-Versprechen.
-
-3. **Hartkodierte Werte in Tests** — Tests muessen Tokens via `from
-   mn_design_system.tokens import get` referenzieren, nicht Hex-Strings im Code.
-
-4. **Logos im Repo** — proprietaer, gehoeren nicht in den oeffentlichen Teil des Repos.
-   Logo-Pfade sind im Konsumenten (claudeAI) gepflegt, nicht hier.
-
-5. **Build-Output committen ohne Konsistenz-Check** — `npm run build` muss
-   deterministisch sein (gleicher Token-Stand → gleicher Output). Commits, die
-   nur `tokens.py` aendern ohne `tokens/colors.json`-Aenderung, sind verdaechtig.
+1. **Direkter Token-Import in Anwendungen** — Anwendungen konsumieren Komponenten oder
+   den Loader. Ausnahme: Komponenten innerhalb dieses Packages.
+2. **Renderer-Komponente ohne Pattern-Spec** — `pdf/foo.py` oder `web/foo.py` ohne
+   `_patterns/foo.md` und Contract bricht das Pattern-First-Prinzip.
+3. **Hartkodierte Werte in Tests** — Tokens ueber `mn_design_system.tokens.get` lesen.
+4. **Logos im Repo** — proprietaer, gehoeren nicht in den oeffentlichen Teil (siehe NOTICE).
+5. **Build-Output ohne Quelle** — `npm run build` ist deterministisch; ein Commit, der nur
+   `tokens.py` oder `dist/` aendert, ohne dass sich `tokens/` aendert, ist verdaechtig.
 
 ---
 
 ## Verwandte Dokumente
 
-- **CHANGELOG.md** — Versions-Historie pro Tag
-- **README.md** — Schnellstart + Stack-Wahl
+- **CHANGELOG.md** — Versions-Historie
+- **README.md** — Schnellstart, Stack, Rechte, Aenderungsweg
 - **CITATIONS.md** — Schrift- und Symbol-Lizenzen
-- **claudeAI BG-Note** — `system/referenz/background-notes/design-system.md` (Werdegang)
-- **claudeAI Anleitung** — `docs/anleitungen/2026-04-29-ANL-012-token-konsumieren-richtig.md` (Konsumieren in claudeAI)
-- **claudeAI Spec v3** — `docs/superpowers/specs/2026-04-29-mn-design-system-v3-konsolidierung-design.md`
+- **claudeAI** — `system/referenz/background-notes/design-system.md` (Werdegang),
+  `docs/anleitungen/2026-04-29-ANL-012-token-konsumieren-richtig.md` (Konsumieren)
