@@ -23,6 +23,12 @@ Alles additiv (Expand-Contract): ein Aufruf aus 0.18.2 liefert dieselbe Ausgabe.
   `render_back_link_css`, Klasse `mn-back-link`. Die eine Zurueck-Zeile je Seite, erstes Kind von
   `<main>`, nur unterhalb einer Reiterseite (Muster-Doku `_patterns/back_link.md`).
 
+### Doku
+
+- ARCHITECTURE und README auf Stand (Token-Dateien, Web-Komponenten, Tiers, PDF/LaTeX, Aenderungsweg statt
+  „Multi-KI-Edit-Workflow"); `package.json` auf die Version aus `pyproject.toml`, Waechter-Test
+  `tests/test_versionen_synchron.py`.
+
 ## [0.18.2] — 2026-10-17
 
 ### Behoben
