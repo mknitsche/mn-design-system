@@ -13,6 +13,7 @@ from __future__ import annotations
 from html import escape
 
 from mn_design_system.components._patterns.contracts import TierChipInput, WebTier
+from mn_design_system.tokens import get
 
 _TIERS: tuple[WebTier, ...] = (
     WebTier.BIBLIOTHEK,
@@ -76,13 +77,13 @@ def render_tier_chip_css() -> str:
         t = tier.value
         rules.append(
             f".mn-tier-chip--{t} {{\n"
-            f"  background: var(--color-tier-{t}-bg, #f0fdf4);\n"
-            f"  color: var(--color-tier-{t}-text, #166534);\n"
+            f"  background: var(--color-tier-{t}-bg, {get(f'color.tier.{t}.bg')});\n"
+            f"  color: var(--color-tier-{t}-text, {get(f'color.tier.{t}.text')});\n"
             f"}}"
         )
         rules.append(
             f".mn-tier-chip--{t}.mn-tier-chip--bordered {{\n"
-            f"  border-color: var(--color-tier-{t}-border, #bbf7d0);\n"
+            f"  border-color: var(--color-tier-{t}-border, {get(f'color.tier.{t}.border')});\n"
             f"}}"
         )
     return "\n".join(rules)
