@@ -1,8 +1,9 @@
-"""Gemeinsame Zeit- und Zahlen-Helfer des Verlauf-Charts (0.17.0).
+"""Gemeinsame Zeit-Helfer des Verlauf-Charts (0.17.0).
 
 Intern: der Vertrag (`contracts.py`, `beschreibung_text`) und der Renderer
-(`components/web/verlauf_chart.py`) brauchen dieselbe Berliner Wanduhr und dieselbe
-deutsche Zahlenschreibweise. EINE Stelle statt zwei Kopien, die auseinanderlaufen.
+(`components/web/verlauf_chart.py`) brauchen dieselbe Berliner Wanduhr. EINE Stelle
+statt zwei Kopien, die auseinanderlaufen. Die deutsche Zahlenschreibweise steht seit
+0.17.1 in `_zahl.py`.
 """
 
 from __future__ import annotations
@@ -29,11 +30,6 @@ def berlin_wanduhr(t: date | datetime) -> datetime:
     if t.tzinfo is None:
         return t
     return t.astimezone(VERLAUF_ZEITZONE).replace(tzinfo=None)
-
-
-def zahl_de(wert: float, dezimalstellen: int) -> str:
-    """Deutsche Zahl: Komma als Dezimal-, Punkt als Tausendertrenner."""
-    return f"{wert:,.{dezimalstellen}f}".translate(str.maketrans(",.", ".,"))
 
 
 def datum_de(t: date | datetime) -> str:

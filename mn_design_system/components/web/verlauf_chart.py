@@ -29,10 +29,8 @@ from datetime import datetime, time
 from html import escape
 from typing import Literal
 
-from mn_design_system.components._patterns._verlauf import (
-    berlin_wanduhr,
-    zahl_de,
-)
+from mn_design_system.components._patterns._verlauf import berlin_wanduhr
+from mn_design_system.components._patterns._zahl import zahl_de
 from mn_design_system.components._patterns.contracts import (
     VerlaufChartInput,
     VerlaufReihe,

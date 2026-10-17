@@ -11,6 +11,7 @@ Pydantic-Contracts akzeptieren.
 from mn_design_system.components._patterns.contracts import (
     KpiCardInput,
     KpiTrendDirection,
+    KpiWertung,
     SparklineInput,
     WetterCategory,
     WetterDay,
@@ -20,6 +21,7 @@ from mn_design_system.components._patterns.contracts import (
 __all__ = [
     "KpiCardInput",
     "KpiTrendDirection",
+    "KpiWertung",
     "SparklineInput",
     "WetterCategory",
     "WetterDay",
