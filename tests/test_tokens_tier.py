@@ -1,6 +1,6 @@
 """color.tier.* Token-Familie (UX-Welle v0.2, Gemini-Gate Punkt 1 + 3).
 
-6 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/archiv) x
+7 Tier-Familien (bibliothek/atelier/kabinett/start/observatorium/magazin/archiv) x
 {bg, bg-soft, border, text}.
 - bg-soft: Sub-Nav-Hover, abgeleitet aus bg (55% ueber Weiss) — vollwertiger
   Token (cross-media-faehig, kein color-mix im Konsumenten).
@@ -23,6 +23,7 @@ _TIERS = [
     "kabinett",
     "start",
     "observatorium",
+    "magazin",
     "archiv",
 ]
 _SLOTS = ["bg", "bg-soft", "border", "text"]
@@ -67,7 +68,7 @@ def test_bg_soft_werte():
 
 def test_bg_soft_heller_als_bg():
     """bg-soft ist zarter (heller) als bg — Hover < Aktiv."""
-    for tier in ["bibliothek", "atelier", "kabinett", "archiv"]:
+    for tier in ["bibliothek", "atelier", "kabinett", "magazin", "archiv"]:
         bg = get(f"color.tier.{tier}.bg")
         bg_soft = get(f"color.tier.{tier}.bg-soft")
         bg_sum = sum(int(bg[i : i + 2], 16) for i in (1, 3, 5))
@@ -134,3 +135,11 @@ def test_archiv_bezieht_bg_border_text_aus_der_grau_skala():
     assert get("color.tier.archiv.bg") == get("color.grey.50")
     assert get("color.tier.archiv.border") == get("color.grey.200")
     assert get("color.tier.archiv.text") == get("color.grey.700")
+
+
+def test_tier_tokens_magazin_gleich_archiv():
+    """0.20.0: magazin kommt neben archiv zurueck (Erweitern vor Zurueckbauen) —
+    in jedem Slot dieselben Werte, damit der Namenswechsel keine Farbe bewegt."""
+    for slot in [*_SLOTS, "hover-on-dark"]:
+        assert get(f"color.tier.magazin.{slot}") is not None
+        assert get(f"color.tier.magazin.{slot}") == get(f"color.tier.archiv.{slot}")

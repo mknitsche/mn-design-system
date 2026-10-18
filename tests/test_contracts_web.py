@@ -49,7 +49,7 @@ from mn_design_system.components._patterns.contracts import (
 
 
 class TestWebTier:
-    """str-Enum der sechs Web-Tier von mkn-desk.com."""
+    """str-Enum der sieben Web-Tier von mkn-desk.com."""
 
     def test_valid_values(self):
         assert WebTier.BIBLIOTHEK.value == "bibliothek"
@@ -57,11 +57,17 @@ class TestWebTier:
         assert WebTier.KABINETT.value == "kabinett"
         assert WebTier.START.value == "start"
         assert WebTier.OBSERVATORIUM.value == "observatorium"
+        assert WebTier.MAGAZIN.value == "magazin"
         assert WebTier.ARCHIV.value == "archiv"
 
     def test_member_count(self):
-        """Genau sechs Tier (seit 0.19.1; archiv hat den Tier magazin ersetzt)."""
-        assert len(WebTier) == 6
+        """Genau sieben Tier (0.20.0: magazin kommt neben archiv zurueck, Erweitern)."""
+        assert len(WebTier) == 7
+
+    def test_webtier_magazin_existiert_neben_archiv(self):
+        assert WebTier("magazin") is WebTier.MAGAZIN
+        assert WebTier("archiv") is WebTier.ARCHIV
+        assert WebTier.MAGAZIN is not WebTier.ARCHIV
 
     def test_construct_from_string(self):
         assert WebTier("atelier") is WebTier.ATELIER

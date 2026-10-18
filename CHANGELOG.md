@@ -8,6 +8,27 @@ oder Doku.
 
 ---
 
+## [0.20.0] — 2026-10-18
+
+### Neu — Tier magazin neben archiv, Listenzeile, Pfadzeile (claudeAI Magazin-Welle 0)
+
+Alles additiv (Erweitern vor Zurueckbauen): ein Aufruf aus 0.19.1 liefert dieselbe Ausgabe.
+
+- **Tier `magazin` kehrt zurueck, `archiv` bleibt:** `WebTier.MAGAZIN`, Tokens
+  `color.tier.magazin.{bg,bg-soft,border,text,hover-on-dark}` mit denselben Werten wie `archiv`
+  (Grau-Skala), Eintraege in Masthead, Sub-Nav, Content-Card, Tier-Chip und Empty-State sowie die
+  Fallback-Tabellen und Muster-Dokus. Es gibt sieben Tier. `archiv` entfaellt in einer spaeteren
+  Version, wenn kein Konsument es mehr nutzt.
+- **Komponente `datei_zeile`:** `DateiZeileInput`, `render_datei_zeile_html`, `render_datei_liste_html`,
+  `render_datei_zeile_css`; Klassenvertrag `mn-datei-liste` / `mn-datei-zeile` (+ `--ordner`) mit
+  `__kennung`, `__vorschau`, `__name`, `__satz`, `__etikett`, `__meta`, `__meta--groesse`, `__neu`,
+  `__aktion`. Ein- und zweizeilig (Umbruch an `web.layout.bp-mobile`). Link-Ziele: nur interne oder
+  relative Pfade (Muster-Doku `_patterns/datei_zeile.md`).
+- **Komponente `pfad_zeile`:** `PfadZeileInput(vorfahren)`, `render_pfad_zeile_html` (leer bei keinen
+  Vorfahren), `render_pfad_zeile_css`, Klasse `mn-pfad-zeile` (Muster-Doku `_patterns/pfad_zeile.md`).
+
+---
+
 ## [0.19.1] — 2026-10-17
 
 ### Entfernt — Ballast: Tier magazin und drei ungenutzte Schriftfamilien

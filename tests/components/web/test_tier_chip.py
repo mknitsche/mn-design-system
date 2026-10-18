@@ -54,6 +54,7 @@ class TestRenderTierChipCss:
             "kabinett",
             "start",
             "observatorium",
+            "magazin",
             "archiv",
         ):
             assert f"var(--color-tier-{tier}-bg" in css

@@ -43,6 +43,7 @@ _TIERS: tuple[WebTier, ...] = (
     WebTier.KABINETT,
     WebTier.START,
     WebTier.OBSERVATORIUM,
+    WebTier.MAGAZIN,
     WebTier.ARCHIV,
 )
 
@@ -55,6 +56,7 @@ _TIER_BORDER_FALLBACK: dict[WebTier, str] = {
     WebTier.KABINETT: "#fecaca",
     WebTier.START: "#bbf7d0",
     WebTier.OBSERVATORIUM: "#fde68a",
+    WebTier.MAGAZIN: "#e5e7eb",
     WebTier.ARCHIV: "#e5e7eb",
 }
 

@@ -101,7 +101,7 @@ Tier-Wechsel; das ist L1/Top-Nav).
 
 ## Varianten
 
-- Pro Tier eine Farbvariante (bibliothek / atelier / kabinett / start / observatorium / archiv) — keine
+- Pro Tier eine Farbvariante (bibliothek / atelier / kabinett / start / observatorium / magazin / archiv) — keine
   weiteren strukturellen Varianten, die Tab-Anzahl ist variabel (min. 1).
 
 ## Plattform-Implementierungen
