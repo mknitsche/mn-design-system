@@ -25,7 +25,8 @@ _TIERS = [t.value for t in WebTier]
 
 def test_untergrenze_alle_tiers_sind_da():
     """LP-36: eine leere Enum-Ableitung wuerde jeden Test unten trivial bestehen."""
-    assert len(_TIERS) >= 6
+    assert len(_TIERS) >= 7
+    assert "magazin" in _TIERS
     assert "archiv" in _TIERS
 
 

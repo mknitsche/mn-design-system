@@ -26,7 +26,7 @@ keine Ueberschrift — der Block ist bewusst leise.
 | `message` | `str` | min_length=1, sichtbarer Hinweistext |
 | `tier` | `WebTier \| None` | Default None — optionale Tier-Familie fuer eine zarte farbliche Verankerung |
 
-`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium`, `archiv` — mappt
+`WebTier` (Pydantic-Enum): `bibliothek`, `atelier`, `kabinett`, `start`, `observatorium`, `magazin`, `archiv` — mappt
 1:1 auf die `color.tier.<tier>.*`-Token-Familie.
 
 ## Verwendete Tokens
@@ -65,6 +65,7 @@ zarte Verankerung im jeweiligen Web-Bereich:
 | `kabinett` | Rot — Kabinett/privat |
 | `start` | Alias auf `bibliothek` (eigene Identitaet ohne Token-Migration spaeter moeglich) |
 | `observatorium` | Alias auf `atelier` (AMBER-Bereich, seit 0.17.0; eigene Nuance spaeter ohne Konsumenten-Aenderung) |
+| `magazin` | Gedaempftes Grau (seit 0.20.0, wieder neben `archiv`; gleiche Werte wie `archiv`) — Magazin, bewusst farbneutral |
 | `archiv` | Gedaempftes Grau (seit 0.19.0; eigene Nuance aus der Grau-Skala: `bg` grey.50, `border` grey.200, `text` grey.700) — Archiv, bewusst farbneutral |
 
 Die Tier-Modifier-Klasse am Wurzel-Element (`mn-empty-state--{tier}`) traegt die

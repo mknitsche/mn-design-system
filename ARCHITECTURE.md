@@ -1,6 +1,6 @@
 # MN PKA Design-System — Architektur
 
-> **Stand:** 2026-10-17 (v0.19.1). Beschreibt den Ist-Zustand; die Versions-Historie
+> **Stand:** 2026-10-18 (v0.20.0). Beschreibt den Ist-Zustand; die Versions-Historie
 > steht im [CHANGELOG](CHANGELOG.md), die Komponenten-Specs unter
 > `mn_design_system/components/_patterns/`.
 >
@@ -69,16 +69,17 @@ Quellen unter `tokens/` (Style Dictionary v4 baut daraus eine flache Lookup-Tabe
 | `web.json` | Web-Schicht: `web.text`, `web.leading`, `web.font`, `web.stroke`, `web.color`, `web.layout`, `web.touch-target` |
 | `families/indigo.json` | Familien-Definition der Indigo-Skala |
 
-Tier-Tokens vorhanden fuer: bibliothek, atelier, kabinett, start, observatorium, archiv.
+Tier-Tokens vorhanden fuer: bibliothek, atelier, kabinett, start, observatorium, magazin, archiv.
 
 ---
 
 ## 4. Web-Tiers
 
 `WebTier` (in `_patterns/contracts.py`) benennt die Bereiche von mkn-desk.com und mappt
-auf `color.tier.<tier>.*`: **bibliothek, atelier, kabinett, start, observatorium, archiv**.
-`archiv` hat in 0.19.0 den Tier `magazin` abgeloest (gleiche Farbwerte, eigene Referenz auf die
-Grau-Skala); 0.19.1 hat `magazin` samt Tokens und Fallbacks entfernt.
+auf `color.tier.<tier>.*`: **bibliothek, atelier, kabinett, start, observatorium, magazin, archiv**.
+`archiv` hat in 0.19.0 den Tier `magazin` abgeloest, 0.19.1 hat `magazin` entfernt, 0.20.0 fuehrt
+`magazin` neben `archiv` wieder ein (gleiche Farbwerte, eigene Referenz auf die Grau-Skala; Erweitern
+vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die Konsumenten umgestellt sind).
 
 ---
 
@@ -90,6 +91,8 @@ Grau-Skala); 0.19.1 hat `magazin` samt Tokens und Fallbacks entfernt.
 | `masthead` | Editorialer Seitenkopf: Identitaet (Wortmarke, Datum) und Tier-Navigation |
 | `sub_nav` | Auswahl-Navigation innerhalb eines Tiers (Reiter) |
 | `back_link` | Die eine Zurueck-Zeile unterhalb einer Reiterseite (nur interner Pfad) |
+| `datei_zeile` | Listenzeile fuer Ordner und Dateien (Kennung/Vorschau, Name, Meta, Aktion; ein- und zweizeilig) |
+| `pfad_zeile` | Pfadzeile: Vorfahren eines Ordners als Links |
 | `page_header` | Seitenkopf mit H1 und optionalem Lead |
 | `footer` | Einzeilige Fusszeile mit Identitaets-Segmenten und Rechtslinks |
 | `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |

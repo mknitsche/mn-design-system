@@ -232,7 +232,7 @@
     },
 
     "tier": {
-      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 6 Familien je bg / bg-soft / border / text / hover-on-dark. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias, observatorium = atelier-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich), archiv = gedaempfte Grau-Nuance (bg/border/text referenzieren die Grau-Skala; 0.19.0 neu, loest den bis 0.19.0 gefuehrten Tier magazin ab, der in 0.19.1 entfallen ist)." },
+      "_meta": { "value": "Web-Tier-Farben mkn-desk.com (UX-Welle v0.2). 7 Familien je bg / bg-soft / border / text / hover-on-dark. bg-soft = bg zu 55% ueber Weiss (Sub-Nav-Hover, zarter als Aktiv-bg). start = bibliothek-Alias, observatorium = atelier-Alias (eigene Identitaet spaeter ohne Token-Migration moeglich), archiv = gedaempfte Grau-Nuance (bg/border/text referenzieren die Grau-Skala; 0.19.0 neu, loest den bis 0.19.0 gefuehrten Tier magazin ab, der seit 0.20.0 als magazin wieder neben archiv steht: Erweitern vor Zurueckbauen, gleiche Werte)." },
       "bibliothek": {
         "bg":      { "value": "#f0fdf4" },
         "bg-soft": { "value": "#f7fef9", "comment": "bg 55% ueber Weiss — Sub-Nav-Hover" },
@@ -267,6 +267,13 @@
         "border":  { "value": "{color.tier.atelier.border.value}" },
         "text":    { "value": "{color.tier.atelier.text.value}" },
         "hover-on-dark": { "value": "{color.tier.atelier.hover-on-dark.value}" }
+      },
+      "magazin": {
+        "bg":      { "value": "{color.grey.50.value}", "comment": "0.20.0: Magazin neben Archiv (Erweitern vor Zurueckbauen) — gleiche Grau-Nuance, eigene Referenz auf die Grau-Skala; archiv entfaellt in einer spaeteren Version" },
+        "bg-soft": { "value": "#fafafa", "comment": "bg 55% ueber Weiss — Sub-Nav-Hover" },
+        "border":  { "value": "{color.grey.200.value}" },
+        "text":    { "value": "{color.grey.700.value}", "comment": "Kontrast auf bg >= 4,5:1 (WCAG 1.4.3), per Test belegt" },
+        "hover-on-dark": { "value": "rgba(229,231,235,0.5)", "comment": "Masthead-Pill Hover auf Dunkel — Tier-Glow (border halbtransparent)" }
       },
       "archiv": {
         "bg":      { "value": "{color.grey.50.value}", "comment": "Archiv — gedaempfte Grau-Nuance (TODO-885 Ordnung 2; 0.19.0 neu, ersetzt seit 0.19.1 den Tier magazin); bg/border/text referenzieren die Grau-Skala" },

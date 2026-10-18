@@ -217,6 +217,7 @@ class WebTier(str, Enum):
     KABINETT = "kabinett"
     START = "start"
     OBSERVATORIUM = "observatorium"
+    MAGAZIN = "magazin"
     ARCHIV = "archiv"
 
 
@@ -331,6 +332,67 @@ class BackLinkInput(BaseModel):
         if "\\" in v or any(ord(c) < 32 or ord(c) == 127 for c in v):
             raise ValueError("href darf weder Backslash noch Steuerzeichen enthalten")
         return v
+
+
+def _sicheres_ziel(v: str) -> str:
+    """Link-Ziel einer Datei-/Pfadzeile: interner absoluter Pfad ODER relativer Pfad.
+
+    Abgewiesen werden Schema-Ziele (`javascript:`, `data:`, `https:` — ein Doppelpunkt vor dem
+    ersten `/`), protokoll-relative Ziele (`//`), Backslash und Steuerzeichen (XSS, Open Redirect).
+    """
+    v = v.strip()
+    if not v:
+        raise ValueError("Ziel darf nicht leer sein")
+    if v.startswith("//") or "\\" in v:
+        raise ValueError(
+            "Ziel darf weder protokoll-relativ sein noch Backslash enthalten"
+        )
+    if any(ord(c) < 32 or ord(c) == 127 for c in v):
+        raise ValueError("Ziel darf keine Steuerzeichen enthalten")
+    if ":" in v.split("/", 1)[0].split("?", 1)[0]:
+        raise ValueError(
+            "Ziel darf kein Schema tragen (nur interne oder relative Pfade)"
+        )
+    return v
+
+
+class DateiZeileInput(BaseModel):
+    """Eine Zeile der Datei-Liste (Ordner oder Datei), Klassenvertrag `mn-datei-*`."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    name: str = Field(min_length=1)
+    href: str = Field(min_length=1)
+    art: Literal["ordner", "datei"]
+    kennung: str | None = None
+    vorschau_src: str | None = None
+    datum: str | None = None
+    groesse: str | None = None
+    inhalt: str | None = None
+    satz: str | None = None
+    etikett: str | None = None
+    neu: bool = False
+    aktion_label: str | None = None
+
+    @field_validator("href", "vorschau_src")
+    @classmethod
+    def _ziel_sicher(cls, v: str | None) -> str | None:
+        return None if v is None else _sicheres_ziel(v)
+
+
+class PfadZeileInput(BaseModel):
+    """Pfadzeile: Vorfahren eines Ordners als Links, von oben nach unten (Label, href)."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    vorfahren: tuple[tuple[str, str], ...] = ()
+
+    @field_validator("vorfahren")
+    @classmethod
+    def _ziele_sicher(
+        cls, v: tuple[tuple[str, str], ...]
+    ) -> tuple[tuple[str, str], ...]:
+        return tuple((label, _sicheres_ziel(href)) for label, href in v)
 
 
 class FooterLink(BaseModel):
