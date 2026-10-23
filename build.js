@@ -97,6 +97,12 @@ const LATEX_SEMANTIK = [
 const LATEX_TOKEN_GRUPPEN = ["font", "space", "stroke"];
 // Zeichen, die Geist nicht fuehrt und Noto Sans Symbols 2 liefert.
 const LATEX_SYMBOLE = ["✓", "✔", "✗", "✘"];
+// Griechisch im Fliesstext: Geist fuehrt es nicht, xelatex liesse die Zeichen nur mit einer Warnung
+// fallen. Ausweichschrift laut Token font.family.fallback-greek (STIX Two Math).
+const LATEX_GRIECHISCH = [
+  ...Array.from({ length: 0x03a9 - 0x0391 + 1 }, (_, i) => 0x0391 + i).filter((c) => c !== 0x03a2),
+  ...Array.from({ length: 0x03c9 - 0x03b1 + 1 }, (_, i) => 0x03b1 + i),
+].map((c) => String.fromCodePoint(c));
 
 // Paket-Kennung fuer \ProvidesPackage: LaTeX erwartet "JJJJ/MM/TT vX.Y.Z" (ohne Datum bricht das
 // Einbinden mit "Missing = inserted for \ifnum"). Datum aus dem CHANGELOG-Eintrag der Version —
@@ -186,6 +192,8 @@ StyleDictionary.registerFormat({
         " UprightFont=*-Regular, BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]",
       "\\newfontfamily\\mnSymbole{NotoSansSymbols2-Regular}[Path=\\mndsfontdir/noto/, Extension=.ttf]",
       ...LATEX_SYMBOLE.map((z) => `\\newunicodechar{${z}}{{\\mnSymbole ${z}}}`),
+      "\\newfontfamily\\mnGriechisch{STIXTwoMath-Regular}[Path=\\mndsfontdir/stix-two/, Extension=.otf]",
+      ...LATEX_GRIECHISCH.map((z) => `\\newunicodechar{${z}}{{\\mnGriechisch ${z}}}`),
       "% Pandoc setzt fuer Aufgabenlisten $\\square$ / $\\boxtimes$ (sonst aus amssymb, das neben",
       "% unicode-math nicht geladen werden darf). unicode-math belegt die Symbole erst zu Dokumentbeginn.",
       "\\AtBeginDocument{\\providecommand*\\square{\\mdlgwhtsquare}}",
