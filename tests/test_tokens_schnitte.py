@@ -20,6 +20,7 @@ from mn_design_system.helpers import font_family
 from mn_design_system.tokens import TOKENS, get
 
 _DIST = Path(__file__).parent.parent / "dist"
+ROOT_PAKET = Path(__file__).parent.parent / "mn_design_system"
 
 #: Token-Schluessel (ohne ``font.family.``) -> Schriftname.
 _SCHNITTE = {
@@ -105,7 +106,12 @@ def test_css_traegt_die_neuen_variablen():
     assert "--font-family-italic-editorial-bold: SourceSerif4-BoldItalic" in css
 
 
-def test_latex_traegt_die_neuen_makros():
-    tex = (_DIST / "latex" / "tokens.tex").read_text(encoding="utf-8")
-    assert r"\def\mnpkawebtextdisplay{40px}" in tex
-    assert r"\def\mnpkafontfamilymonobold{JetBrainsMono-Bold}" in tex
+def test_latex_traegt_die_neuen_token():
+    tex = (ROOT_PAKET / "latex" / "mn-design.sty").read_text(encoding="utf-8")
+    assert (
+        r"\csname mn@token@font.family.mono-bold\endcsname{JetBrainsMono-Bold}" in tex
+    )
+    assert (
+        r"\csname mn@token@font.family.italic-editorial-bold\endcsname{SourceSerif4-BoldItalic}"
+        in tex
+    )

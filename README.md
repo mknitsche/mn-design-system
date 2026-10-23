@@ -27,7 +27,7 @@ Generiert:
 - `dist/css/tokens.css` — CSS Custom Properties (Web)
 - `dist/python/tokens.py` — Python-Dict (ReportLab)
 - `dist/json/tokens.json` — flach, dotted keys
-- `dist/latex/tokens.tex` — `\def`-Macros (LaTeX)
+- `mn_design_system/latex/mn-design.sty` — das LaTeX-Paket (Farben, `\mnToken`, Schriften per Pfad), im Wheel
 
 ## Architektur
 

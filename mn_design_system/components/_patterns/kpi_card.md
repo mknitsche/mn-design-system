@@ -79,7 +79,7 @@ x Polaritaet. `delta_text()` liefert das deutsch formatierte Delta oder `None`.
 
 - `mn_design_system/components/pdf/kpi_card.py` — ReportLab Paragraphs (5 Flowables)
 - `mn_design_system/components/web/kpi-card.{tsx,css}` — geplant
-- `mn_design_system/components/latex/kpi-card.tex` — geplant
+- `mn_design_system/latex/kpi-card.tex` — geplant
 
 ## Referenzen
 

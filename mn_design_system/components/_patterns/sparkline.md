@@ -53,7 +53,7 @@ Volatilitaet dargestellt.
 
 - `mn_design_system/components/pdf/sparkline.py` — ReportLab `Drawing` mit `PolyLine`
 - `mn_design_system/components/web/sparkline.{tsx,html}` — geplant
-- `mn_design_system/components/latex/sparkline.tex` — geplant (TikZ)
+- `mn_design_system/latex/sparkline.tex` — geplant (TikZ)
 
 ## Referenzen
 

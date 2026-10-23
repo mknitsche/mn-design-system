@@ -26,7 +26,7 @@ SCHICHT 2 — Typografie + Symbole
   Web-Schriftdateien (woff2) unter fonts/web/
         ↑ verweist auf Schluessel aus
 SCHICHT 1 — Tokens (SSoT)
-  tokens/*.json → Style Dictionary v4 → mn_design_system/tokens.py, dist/css, dist/json, dist/latex
+  tokens/*.json → Style Dictionary v4 → mn_design_system/tokens.py, mn_design_system/latex/mn-design.sty, dist/css, dist/json
 ```
 
 Jede Schicht referenziert nur die direkt darunterliegende.
@@ -115,9 +115,17 @@ Web-Komponenten stylen ueber `var(--…)` mit Rueckfall auf den Token-Wert.
 
 - **PDF** (`components/pdf/`): ReportLab-Implementierungen von kpi_card, sparkline und
   wetter_strip. Produktiv, Konsument ist claudeAI (Briefings, Reports).
-- **LaTeX** (`components/latex/`): vorgesehen, **noch ohne Komponenten**; das Paket ist ein
-  leerer Platzhalter. Heute gibt es nur die Token-Ausgabe `dist/latex/tokens.tex`
-  (`\def`-Macros). Komponenten kommen mit dem ersten LaTeX-Konsumenten (Paper).
+- **LaTeX** (`mn_design_system/latex/`, seit 0.21.0): **die eine LaTeX-Schicht** — das Paket
+  `mn-design.sty`, erzeugt aus den Tokens. Es liefert jede Farbe (`mn-<pfad>`) und die
+  semantischen Dokumentfarben (`mnText`, `mnHOne`, `mnHTwo`, `mnAccent` …), alle Druck-Tokens
+  ueber `\mnToken{<pfad>}` (`font.*`, `space.*`, `stroke.*`) und die Schriften **per Pfad aus dem
+  Paket** (Geist, Source Serif 4 Italic, JetBrains Mono, STIX Two Math, Noto Sans Symbols 2) —
+  nie ueber Fontconfig, denn `fonts/web/` enthaelt `.woff2`, die XeTeX nicht einbetten kann.
+  Nutzung: `TEXINPUTS=<mn_design_system.latex.LATEX_DIR>//:` und `\def\mndsfontdir{<FONT_DIR>}`
+  vor `\usepackage{mn-design}`. Konsument: claudeAI `md2pdf` (Pandoc + XeLaTeX). LaTeX-Komponenten
+  (KPI-Karte, Sparkline) kommen, wenn ein Konsument sie braucht, in denselben Ordner.
+  Bis 0.20.0 gab es `dist/latex/tokens.tex` und den Platzhalter `components/latex/` — beide
+  waren unbenutzbar und sind entfernt.
 
 ---
 
@@ -130,7 +138,7 @@ tokens/*.json
 mn_design_system/tokens.py   Python-Lookup, im Package
 dist/css/tokens.css          Web
 dist/json/tokens.json        flach, dotted keys
-dist/latex/tokens.tex        \def-Macros
+mn_design_system/latex/mn-design.sty   LaTeX-Paket (Farben, \mnToken, Schriften), im Package
 ```
 
 `dist/` wird committet (Konsumenten brauchen die Ausgaben); Python-Wheels nicht, sie
