@@ -21,6 +21,7 @@ oder Doku.
     `\mnToken{font.size.body}`); ein unbekannter Pfad bricht laut ab;
   - die Schriften **per Pfad aus dem Paket**, nie ueber Fontconfig: Geist (Kursiv = Source Serif 4
     Italic), JetBrains Mono, STIX Two Math (`unicode-math`), Noto Sans Symbols 2 fuer ✓ ✔ ✗ ✘,
+    Griechisch im Fliesstext ueber `font.family.fallback-greek` (STIX Two Math, kein stiller Wegfall),
     `\mnEditorial`; `\square` fuer Pandoc-Aufgabenlisten.
   - Nutzung: `TEXINPUTS=<LATEX_DIR>//:` und `\def\mndsfontdir{<FONT_DIR>}` vor `\usepackage{mn-design}`;
     fehlt oder ist der Schriftordner leer, bricht das Paket laut ab.

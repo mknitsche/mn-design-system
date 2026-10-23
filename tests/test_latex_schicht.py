@@ -152,11 +152,15 @@ def test_jede_genannte_schriftdatei_existiert() -> None:
 def test_kompiliert_und_bettet_nur_paket_schriften_ein(tmp_path: Path) -> None:
     lauf = _kompiliere(
         tmp_path,
-        r"{\color{mnHOne}\textbf{T}} x \textit{k} \texttt{m} $E=mc^2$ $\square$ $\boxtimes$ ✓ ✗"
+        r"{\color{mnHOne}\textbf{T}} x \textit{k} \texttt{m} $E=mc^2$ $\square$ $\boxtimes$ ✓ ✗ α Ω"
         r" \mnToken{font.size.body}",
         fontdir=str(FONT_DIR),
     )
     assert lauf.returncode == 0, lauf.stdout[-2000:]
+    protokoll = (tmp_path / "probe.log").read_text(encoding="utf-8", errors="replace")
+    assert "Missing character" not in protokoll, (
+        "ein Zeichen fiel still weg (Schrift fuehrt es nicht)"
+    )
     schriften = subprocess.run(
         ["pdffonts", "probe.pdf"],
         cwd=tmp_path,
@@ -191,7 +195,12 @@ def test_ohne_schriftordner_bricht_das_paket_laut(
 ) -> None:
     lauf = _kompiliere(tmp_path, "x", fontdir=fontdir)
     assert lauf.returncode != 0
-    assert "mndsfontdir" in lauf.stdout
+    # Die EIGENE Meldung des Pakets — nicht nur das Wort "mndsfontdir", das auch in einem
+    # "Undefined control sequence" stuende (Mutation Diff-Pruefer cld1-S125).
+    erwartet = "ist nicht gesetzt" if fontdir is None else "ist leer"
+    assert "mndsfontdir ist" in lauf.stdout and erwartet in lauf.stdout, lauf.stdout[
+        -1500:
+    ]
 
 
 @braucht_xelatex
