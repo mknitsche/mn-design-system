@@ -44,16 +44,16 @@ jobs:
 
       - name: Verify tokens.py is synced
         run: |
-          if ! git diff --quiet mn_design_system/tokens.py; then
+          if ! git diff --quiet mn_design_system/tokens.py mn_design_system/latex/mn-design.sty; then
             echo "::error::tokens.py ist nicht synchron mit tokens/*.json."
             echo "::error::Bitte 'npm run build' lokal ausfuehren, committen, dann pushen."
-            git diff mn_design_system/tokens.py
+            git diff mn_design_system/tokens.py mn_design_system/latex/mn-design.sty
             exit 1
           fi
           echo "tokens.py is synced."
 
       - name: Verify dist outputs are synced
-        # dist/python/ ist .gitignore'd. Andere dist/-Outputs (css/json/latex)
+        # dist/python/ ist .gitignore'd. Andere dist/-Outputs (css/json)
         # werden COMMITTED (Konsumenten brauchen sie). Fail-on-diff.
         run: |
           if ! git diff --quiet dist/; then

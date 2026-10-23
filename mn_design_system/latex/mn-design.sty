@@ -1,0 +1,336 @@
+% mn-design.sty — MN PKA Design-System fuer Pandoc/XeLaTeX. Die EINZIGE LaTeX-Schicht.
+% Auto-generiert aus tokens/*.json via Style Dictionary (build.js, Format latex/sty).
+% NICHT MANUELL BEARBEITEN — Aenderungen werden ueberschrieben.
+%
+% Nutzung (Python: mn_design_system.latex.LATEX_DIR / mn_design_system.fonts.FONT_DIR):
+%   TEXINPUTS=<LATEX_DIR>//:   und vor \usepackage{mn-design}:  \def\mndsfontdir{<FONT_DIR>}
+% Bietet: Farben mn-<pfad> (z. B. mn-color-light-h1) und mnText, mnHOne, mnHTwo, mnAccent,
+%   mnAccentSoft, mnSurfaceSubtle, mnGreySeven, mnGreyFive, mnGreyThree, mnBrand, mnStatus*;
+%   \mnToken{<pfad>} fuer font.*, space.*, stroke.* (z. B. \mnToken{font.size.body});
+%   Schriften Geist / Source Serif 4 Italic / JetBrains Mono / STIX Two Math / Noto Sans Symbols 2.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mn-design}[2026/10/23 v0.21.0 MN PKA Design-System]
+\RequirePackage[table]{xcolor}
+\RequirePackage{fontspec}
+\RequirePackage{unicode-math}
+\RequirePackage{newunicodechar}
+
+% --- Farben: jedes color.*-Token -------------------------------------------
+\definecolor{mn-color-indigo-50}{HTML}{EEF2FF}
+\definecolor{mn-color-indigo-100}{HTML}{E0E7FF}
+\definecolor{mn-color-indigo-300}{HTML}{A5B4FC}
+\definecolor{mn-color-indigo-400}{HTML}{818CF8}
+\definecolor{mn-color-indigo-500}{HTML}{6366F1}
+\definecolor{mn-color-indigo-600}{HTML}{4F46E5}
+\definecolor{mn-color-indigo-700}{HTML}{4338CA}
+\definecolor{mn-color-indigo-900}{HTML}{312E81}
+\definecolor{mn-color-indigo-950}{HTML}{1E1B4B}
+\definecolor{mn-color-grey-50}{HTML}{F5F5F5}
+\definecolor{mn-color-grey-100}{HTML}{F3F4F6}
+\definecolor{mn-color-grey-150}{HTML}{EEEEEE}
+\definecolor{mn-color-grey-200}{HTML}{E5E7EB}
+\definecolor{mn-color-grey-300}{HTML}{CBD5E1}
+\definecolor{mn-color-grey-400}{HTML}{9CA3AF}
+\definecolor{mn-color-grey-500}{HTML}{6B7280}
+\definecolor{mn-color-grey-550}{HTML}{666666}
+\definecolor{mn-color-grey-600}{HTML}{999999}
+\definecolor{mn-color-grey-700}{HTML}{374151}
+\definecolor{mn-color-brand}{HTML}{C8102E}
+\definecolor{mn-color-status-success}{HTML}{2E7D32}
+\definecolor{mn-color-status-success-bg}{HTML}{E8F5E9}
+\definecolor{mn-color-status-warning}{HTML}{F59E0B}
+\definecolor{mn-color-status-urgent}{HTML}{E65100}
+\definecolor{mn-color-status-error}{HTML}{D32F2F}
+\definecolor{mn-color-status-error-bg}{HTML}{FFEBEE}
+\definecolor{mn-color-status-warning-bg}{HTML}{FFF3E0}
+\definecolor{mn-color-status-error-tint}{HTML}{FFF8F7}
+\definecolor{mn-color-status-warning-tint}{HTML}{FFFAF5}
+\definecolor{mn-color-status-info-tint}{HTML}{F5F8FF}
+\definecolor{mn-color-severity-high}{HTML}{DC2626}
+\definecolor{mn-color-severity-medium}{HTML}{A16207}
+\definecolor{mn-color-severity-low}{HTML}{6B7280}
+\definecolor{mn-color-severity-high-bg}{HTML}{FEE2E2}
+\definecolor{mn-color-severity-medium-bg}{HTML}{FEF3C7}
+\definecolor{mn-color-severity-low-bg}{HTML}{F3F4F6}
+\definecolor{mn-color-accent-warm-strong}{HTML}{B45309}
+\definecolor{mn-color-accent-warm-amber}{HTML}{D97706}
+\definecolor{mn-color-accent-warm-soft}{HTML}{FEF3C7}
+\definecolor{mn-color-accent-warm-text}{HTML}{78350F}
+\definecolor{mn-color-viz-muted}{HTML}{B0BEC5}
+\definecolor{mn-color-viz-success-soft}{HTML}{90CAF9}
+\definecolor{mn-color-viz-neutral-soft}{HTML}{E0E0E0}
+\definecolor{mn-color-viz-dark-navy}{HTML}{1A237E}
+\definecolor{mn-color-viz-medium-blue}{HTML}{283593}
+\definecolor{mn-color-category-prio-sofort-bg}{HTML}{FFEBEE}
+\definecolor{mn-color-category-prio-sofort-text}{HTML}{DC2626}
+\definecolor{mn-color-category-prio-sofort-header-text}{HTML}{B91C1C}
+\definecolor{mn-color-category-prio-demnaechst-bg}{HTML}{FEF3C7}
+\definecolor{mn-color-category-prio-demnaechst-text}{HTML}{78350F}
+\definecolor{mn-color-category-prio-klaeren-bg}{HTML}{E0E7FF}
+\definecolor{mn-color-category-prio-klaeren-text}{HTML}{4338CA}
+\definecolor{mn-color-category-prio-irgendwann-bg}{HTML}{F5F5F5}
+\definecolor{mn-color-category-prio-irgendwann-text}{HTML}{6B7280}
+\definecolor{mn-color-category-prio-irgendwann-header-text}{HTML}{374151}
+\definecolor{mn-color-category-checkbox}{HTML}{4F46E5}
+\definecolor{mn-color-diagram-crimson-base}{HTML}{EF1E6E}
+\definecolor{mn-color-diagram-crimson-nuance}{HTML}{F8EBED}
+\definecolor{mn-color-diagram-crimson-dark}{HTML}{840C39}
+\definecolor{mn-color-diagram-copper-base}{HTML}{E34B16}
+\definecolor{mn-color-diagram-copper-nuance}{HTML}{F8EBE8}
+\definecolor{mn-color-diagram-copper-dark}{HTML}{7D2507}
+\definecolor{mn-color-diagram-amber-base}{HTML}{B97417}
+\definecolor{mn-color-diagram-amber-nuance}{HTML}{F8ECE1}
+\definecolor{mn-color-diagram-amber-dark}{HTML}{653D07}
+\definecolor{mn-color-diagram-citron-base}{HTML}{9B8517}
+\definecolor{mn-color-diagram-citron-nuance}{HTML}{F7EFCD}
+\definecolor{mn-color-diagram-citron-dark}{HTML}{544708}
+\definecolor{mn-color-diagram-green-base}{HTML}{6D9617}
+\definecolor{mn-color-diagram-green-nuance}{HTML}{E6F5D5}
+\definecolor{mn-color-diagram-green-dark}{HTML}{395108}
+\definecolor{mn-color-diagram-emerald-base}{HTML}{1B9B60}
+\definecolor{mn-color-diagram-emerald-nuance}{HTML}{D8F8E3}
+\definecolor{mn-color-diagram-emerald-dark}{HTML}{0A5633}
+\definecolor{mn-color-diagram-teal-base}{HTML}{1B9A90}
+\definecolor{mn-color-diagram-teal-nuance}{HTML}{D2F8F3}
+\definecolor{mn-color-diagram-teal-dark}{HTML}{0A534E}
+\definecolor{mn-color-diagram-azure-base}{HTML}{1B95AF}
+\definecolor{mn-color-diagram-azure-nuance}{HTML}{E0F2F8}
+\definecolor{mn-color-diagram-azure-dark}{HTML}{0A505F}
+\definecolor{mn-color-diagram-blue-base}{HTML}{198BDD}
+\definecolor{mn-color-diagram-blue-nuance}{HTML}{E7F0F8}
+\definecolor{mn-color-diagram-blue-dark}{HTML}{094B7A}
+\definecolor{mn-color-diagram-indigo-base}{HTML}{6C73F9}
+\definecolor{mn-color-diagram-indigo-nuance}{HTML}{ECEEF8}
+\definecolor{mn-color-diagram-indigo-dark}{HTML}{3812C1}
+\definecolor{mn-color-diagram-violet-base}{HTML}{AF47F9}
+\definecolor{mn-color-diagram-violet-nuance}{HTML}{F1ECF8}
+\definecolor{mn-color-diagram-violet-dark}{HTML}{640E97}
+\definecolor{mn-color-diagram-magenta-base}{HTML}{DD1EBD}
+\definecolor{mn-color-diagram-magenta-nuance}{HTML}{F8EAF3}
+\definecolor{mn-color-diagram-magenta-dark}{HTML}{7A0B67}
+\definecolor{mn-color-light-bg}{HTML}{FDFDFD}
+\definecolor{mn-color-light-surface}{HTML}{FFFFFF}
+\definecolor{mn-color-light-surface-subtle}{HTML}{F6F6F6}
+\definecolor{mn-color-light-surface-elev}{HTML}{F6F6F6}
+\definecolor{mn-color-light-row-alt}{HTML}{F0F4FF}
+\definecolor{mn-color-light-border}{HTML}{CBD5E1}
+\definecolor{mn-color-light-border-subtle}{HTML}{E5E7EB}
+\definecolor{mn-color-light-text}{HTML}{1E1B4B}
+\definecolor{mn-color-light-text-muted}{HTML}{6B7280}
+\definecolor{mn-color-light-text-subtle}{HTML}{9CA3AF}
+\definecolor{mn-color-light-h1}{HTML}{312E81}
+\definecolor{mn-color-light-h2}{HTML}{4338CA}
+\definecolor{mn-color-light-accent}{HTML}{4F46E5}
+\definecolor{mn-color-light-accent-soft}{HTML}{E0E7FF}
+\definecolor{mn-color-dark-bg}{HTML}{0A0A0D}
+\definecolor{mn-color-dark-surface}{HTML}{14141A}
+\definecolor{mn-color-dark-surface-subtle}{HTML}{1A1A22}
+\definecolor{mn-color-dark-surface-elev}{HTML}{1F1F29}
+\definecolor{mn-color-dark-border}{HTML}{2D2D38}
+\definecolor{mn-color-dark-border-subtle}{HTML}{1F1F29}
+\definecolor{mn-color-dark-text}{HTML}{F5F5F7}
+\definecolor{mn-color-dark-text-muted}{HTML}{888894}
+\definecolor{mn-color-dark-text-subtle}{HTML}{555560}
+\definecolor{mn-color-dark-h1}{HTML}{F5F5F7}
+\definecolor{mn-color-dark-h2}{HTML}{A5B4FC}
+\definecolor{mn-color-dark-accent}{HTML}{818CF8}
+\definecolor{mn-color-tier-bibliothek-bg}{HTML}{F0FDF4}
+\definecolor{mn-color-tier-bibliothek-bg-soft}{HTML}{F7FEF9}
+\definecolor{mn-color-tier-bibliothek-border}{HTML}{BBF7D0}
+\definecolor{mn-color-tier-bibliothek-text}{HTML}{166534}
+\definecolor{mn-color-tier-atelier-bg}{HTML}{FFFBEB}
+\definecolor{mn-color-tier-atelier-bg-soft}{HTML}{FFFDF4}
+\definecolor{mn-color-tier-atelier-border}{HTML}{FDE68A}
+\definecolor{mn-color-tier-atelier-text}{HTML}{92400E}
+\definecolor{mn-color-tier-kabinett-bg}{HTML}{FEF2F2}
+\definecolor{mn-color-tier-kabinett-bg-soft}{HTML}{FEF8F8}
+\definecolor{mn-color-tier-kabinett-border}{HTML}{FECACA}
+\definecolor{mn-color-tier-kabinett-text}{HTML}{991B1B}
+\definecolor{mn-color-tier-start-bg}{HTML}{F0FDF4}
+\definecolor{mn-color-tier-start-bg-soft}{HTML}{F7FEF9}
+\definecolor{mn-color-tier-start-border}{HTML}{BBF7D0}
+\definecolor{mn-color-tier-start-text}{HTML}{166534}
+\definecolor{mn-color-tier-observatorium-bg}{HTML}{FFFBEB}
+\definecolor{mn-color-tier-observatorium-bg-soft}{HTML}{FFFDF4}
+\definecolor{mn-color-tier-observatorium-border}{HTML}{FDE68A}
+\definecolor{mn-color-tier-observatorium-text}{HTML}{92400E}
+\definecolor{mn-color-tier-magazin-bg}{HTML}{F5F5F5}
+\definecolor{mn-color-tier-magazin-bg-soft}{HTML}{FAFAFA}
+\definecolor{mn-color-tier-magazin-border}{HTML}{E5E7EB}
+\definecolor{mn-color-tier-magazin-text}{HTML}{374151}
+\definecolor{mn-color-tier-archiv-bg}{HTML}{F5F5F5}
+\definecolor{mn-color-tier-archiv-bg-soft}{HTML}{FAFAFA}
+\definecolor{mn-color-tier-archiv-border}{HTML}{E5E7EB}
+\definecolor{mn-color-tier-archiv-text}{HTML}{374151}
+
+% --- Semantische Dokumentfarben (claudeAI design-standards.md § 1) ---------
+\colorlet{mnText}{mn-color-light-text}
+\colorlet{mnHOne}{mn-color-light-h1}
+\colorlet{mnHTwo}{mn-color-light-h2}
+\colorlet{mnAccent}{mn-color-light-accent}
+\colorlet{mnAccentSoft}{mn-color-light-accent-soft}
+\colorlet{mnSurfaceSubtle}{mn-color-light-surface-subtle}
+\colorlet{mnGreySeven}{mn-color-grey-700}
+\colorlet{mnGreyFive}{mn-color-grey-500}
+\colorlet{mnGreyThree}{mn-color-grey-300}
+\colorlet{mnBrand}{mn-color-brand}
+\colorlet{mnStatusSuccess}{mn-color-status-success}
+\colorlet{mnStatusWarning}{mn-color-status-warning}
+\colorlet{mnStatusError}{mn-color-status-error}
+
+% --- Druck-Tokens: \mnToken{<pfad>} -----------------------------------------
+\newcommand*\mnToken[1]{%
+  \ifcsname mn@token@#1\endcsname\csname mn@token@#1\endcsname
+  \else\PackageError{mn-design}{Unbekanntes Token '#1'}{Pfad wie in tokens/*.json, z. B. font.size.body}\fi}
+\expandafter\def\csname mn@token@space.1\endcsname{4px}
+\expandafter\def\csname mn@token@space.2\endcsname{8px}
+\expandafter\def\csname mn@token@space.3\endcsname{12px}
+\expandafter\def\csname mn@token@space.4\endcsname{16px}
+\expandafter\def\csname mn@token@space.5\endcsname{20px}
+\expandafter\def\csname mn@token@space.6\endcsname{24px}
+\expandafter\def\csname mn@token@space.8\endcsname{32px}
+\expandafter\def\csname mn@token@space.10\endcsname{40px}
+\expandafter\def\csname mn@token@space.12\endcsname{48px}
+\expandafter\def\csname mn@token@space.16\endcsname{64px}
+\expandafter\def\csname mn@token@space.20\endcsname{80px}
+\expandafter\def\csname mn@token@space.semantic.sub-tight\endcsname{2px}
+\expandafter\def\csname mn@token@space.semantic.tight-min\endcsname{4px}
+\expandafter\def\csname mn@token@space.semantic.tight\endcsname{8px}
+\expandafter\def\csname mn@token@space.semantic.default\endcsname{12px}
+\expandafter\def\csname mn@token@space.semantic.wide\endcsname{20px}
+\expandafter\def\csname mn@token@space.semantic.wide-max\endcsname{32px}
+\expandafter\def\csname mn@token@space.semantic.section\endcsname{48px}
+\expandafter\def\csname mn@token@space.semantic.bibel-quelle\endcsname{7px}
+\expandafter\def\csname mn@token@space.semantic.tracker-item\endcsname{6px}
+\expandafter\def\csname mn@token@space.semantic.divider\endcsname{16px}
+\expandafter\def\csname mn@token@space.semantic.between-modules\endcsname{24px}
+\expandafter\def\csname mn@token@space.logo.size\endcsname{18mm}
+\expandafter\def\csname mn@token@space.logo.gap\endcsname{4mm}
+\expandafter\def\csname mn@token@space.logo.size-small\endcsname{14mm}
+\expandafter\def\csname mn@token@space.indent.bullet\endcsname{12px}
+\expandafter\def\csname mn@token@space.indent.subitem\endcsname{24px}
+\expandafter\def\csname mn@token@space.indent.code\endcsname{16px}
+\expandafter\def\csname mn@token@space.page.margin-top\endcsname{22mm}
+\expandafter\def\csname mn@token@space.page.margin-bottom\endcsname{22mm}
+\expandafter\def\csname mn@token@space.page.margin-inner\endcsname{22mm}
+\expandafter\def\csname mn@token@space.page.margin-outer\endcsname{18mm}
+\expandafter\def\csname mn@token@space.page.col-gutter\endcsname{8mm}
+\expandafter\def\csname mn@token@space.kachel.inset\endcsname{4pt}
+\expandafter\def\csname mn@token@space.kachel.radius\endcsname{2pt}
+\expandafter\def\csname mn@token@space.kachel.gap-col\endcsname{3mm}
+\expandafter\def\csname mn@token@space.kachel.gap-row\endcsname{3mm}
+\expandafter\def\csname mn@token@space.kachel.width\endcsname{38mm}
+\expandafter\def\csname mn@token@space.kachel.height\endcsname{32mm}
+\expandafter\def\csname mn@token@stroke.hairline\endcsname{0.4pt}
+\expandafter\def\csname mn@token@stroke.thin\endcsname{0.5pt}
+\expandafter\def\csname mn@token@stroke.default\endcsname{1pt}
+\expandafter\def\csname mn@token@stroke.thick\endcsname{1.5pt}
+\expandafter\def\csname mn@token@stroke.heavy\endcsname{2pt}
+\expandafter\def\csname mn@token@stroke.kachel-marker\endcsname{1.2pt}
+\expandafter\def\csname mn@token@stroke.kachel-trennlinie\endcsname{0.3pt}
+\expandafter\def\csname mn@token@font.family.sans\endcsname{Geist}
+\expandafter\def\csname mn@token@font.family.sans-bold\endcsname{Geist-Bold}
+\expandafter\def\csname mn@token@font.family.sans-medium\endcsname{Geist-Medium}
+\expandafter\def\csname mn@token@font.family.sans-light\endcsname{Geist-Light}
+\expandafter\def\csname mn@token@font.family.italic-editorial\endcsname{SourceSerif4-Italic}
+\expandafter\def\csname mn@token@font.family.italic-editorial-bold\endcsname{SourceSerif4-BoldItalic}
+\expandafter\def\csname mn@token@font.family.italic-ui\endcsname{Geist-MediumItalic}
+\expandafter\def\csname mn@token@font.family.mono\endcsname{JetBrainsMono}
+\expandafter\def\csname mn@token@font.family.mono-bold\endcsname{JetBrainsMono-Bold}
+\expandafter\def\csname mn@token@font.family.math\endcsname{STIXTwoMath}
+\expandafter\def\csname mn@token@font.family.icon\endcsname{Phosphor}
+\expandafter\def\csname mn@token@font.family.fallback-greek\endcsname{STIXTwoMath}
+\expandafter\def\csname mn@token@font.family.table-default\endcsname{Geist}
+\expandafter\def\csname mn@token@font.family.table-data\endcsname{JetBrainsMono}
+\expandafter\def\csname mn@token@font.size.h0\endcsname{26pt}
+\expandafter\def\csname mn@token@font.size.h1\endcsname{24pt}
+\expandafter\def\csname mn@token@font.size.h2\endcsname{15pt}
+\expandafter\def\csname mn@token@font.size.h3\endcsname{13pt}
+\expandafter\def\csname mn@token@font.size.body\endcsname{9.5pt}
+\expandafter\def\csname mn@token@font.size.lead\endcsname{11pt}
+\expandafter\def\csname mn@token@font.size.caption\endcsname{8.5pt}
+\expandafter\def\csname mn@token@font.size.code\endcsname{8.5pt}
+\expandafter\def\csname mn@token@font.size.bibel\endcsname{12pt}
+\expandafter\def\csname mn@token@font.size.math\endcsname{12pt}
+\expandafter\def\csname mn@token@font.size.title-page\endcsname{22pt}
+\expandafter\def\csname mn@token@font.size.footer-page\endcsname{8pt}
+\expandafter\def\csname mn@token@font.size.disclaimer\endcsname{8pt}
+\expandafter\def\csname mn@token@font.size.source\endcsname{8pt}
+\expandafter\def\csname mn@token@font.size.icon-large\endcsname{22pt}
+\expandafter\def\csname mn@token@font.size.icon-medium\endcsname{14pt}
+\expandafter\def\csname mn@token@font.size.icon-small\endcsname{11pt}
+\expandafter\def\csname mn@token@font.size.title-section\endcsname{16pt}
+\expandafter\def\csname mn@token@font.size.news-headline\endcsname{11pt}
+\expandafter\def\csname mn@token@font.size.cover-hero\endcsname{28pt}
+\expandafter\def\csname mn@token@font.size.subsection\endcsname{10.5pt}
+\expandafter\def\csname mn@token@font.size.body-small\endcsname{8.5pt}
+\expandafter\def\csname mn@token@font.size.stat-display\endcsname{20pt}
+\expandafter\def\csname mn@token@font.size.kachel-label\endcsname{7pt}
+\expandafter\def\csname mn@token@font.size.kachel-meta\endcsname{6pt}
+\expandafter\def\csname mn@token@font.size.kachel-diff\endcsname{9pt}
+\expandafter\def\csname mn@token@font.size.kachel-value\endcsname{13pt}
+\expandafter\def\csname mn@token@font.size.kachel-madiff\endcsname{8pt}
+\expandafter\def\csname mn@token@font.leading.h0\endcsname{31pt}
+\expandafter\def\csname mn@token@font.leading.h1\endcsname{28pt}
+\expandafter\def\csname mn@token@font.leading.h2\endcsname{19pt}
+\expandafter\def\csname mn@token@font.leading.h3\endcsname{17pt}
+\expandafter\def\csname mn@token@font.leading.body\endcsname{13.5pt}
+\expandafter\def\csname mn@token@font.leading.lead\endcsname{17pt}
+\expandafter\def\csname mn@token@font.leading.caption\endcsname{11pt}
+\expandafter\def\csname mn@token@font.leading.code\endcsname{11pt}
+\expandafter\def\csname mn@token@font.leading.bibel\endcsname{17pt}
+\expandafter\def\csname mn@token@font.leading.math\endcsname{16pt}
+\expandafter\def\csname mn@token@font.leading.title-page\endcsname{26pt}
+\expandafter\def\csname mn@token@font.leading.footer-page\endcsname{10pt}
+\expandafter\def\csname mn@token@font.leading.disclaimer\endcsname{10pt}
+\expandafter\def\csname mn@token@font.leading.source\endcsname{10pt}
+\expandafter\def\csname mn@token@font.leading.icon-large\endcsname{26pt}
+\expandafter\def\csname mn@token@font.leading.icon-medium\endcsname{18pt}
+\expandafter\def\csname mn@token@font.leading.icon-small\endcsname{13pt}
+\expandafter\def\csname mn@token@font.leading.title-section\endcsname{20pt}
+\expandafter\def\csname mn@token@font.leading.news-headline\endcsname{14pt}
+\expandafter\def\csname mn@token@font.leading.cover-hero\endcsname{34pt}
+\expandafter\def\csname mn@token@font.leading.subsection\endcsname{14pt}
+\expandafter\def\csname mn@token@font.leading.body-small\endcsname{11pt}
+\expandafter\def\csname mn@token@font.leading.stat-display\endcsname{24pt}
+\expandafter\def\csname mn@token@font.leading.kachel-label\endcsname{8.5pt}
+\expandafter\def\csname mn@token@font.leading.kachel-meta\endcsname{7.5pt}
+\expandafter\def\csname mn@token@font.leading.kachel-diff\endcsname{11pt}
+\expandafter\def\csname mn@token@font.leading.kachel-value\endcsname{17pt}
+\expandafter\def\csname mn@token@font.leading.kachel-madiff\endcsname{10pt}
+\expandafter\def\csname mn@token@font.weight.light\endcsname{300}
+\expandafter\def\csname mn@token@font.weight.regular\endcsname{400}
+\expandafter\def\csname mn@token@font.weight.medium\endcsname{500}
+\expandafter\def\csname mn@token@font.weight.bold\endcsname{700}
+\expandafter\def\csname mn@token@font.tracking.tight\endcsname{-0.02em}
+\expandafter\def\csname mn@token@font.tracking.normal\endcsname{0}
+\expandafter\def\csname mn@token@font.tracking.wide\endcsname{0.04em}
+\expandafter\def\csname mn@token@font.tracking.extra\endcsname{0.18em}
+\expandafter\def\csname mn@token@font.hyphenation.enabled\endcsname{true}
+\expandafter\def\csname mn@token@font.hyphenation.lang\endcsname{de\_DE}
+\expandafter\def\csname mn@token@font.hyphenation.min-word-length\endcsname{6}
+\expandafter\def\csname mn@token@font.hyphenation.min-chars-before\endcsname{3}
+\expandafter\def\csname mn@token@font.hyphenation.min-chars-after\endcsname{3}
+
+% --- Schriften: per Pfad aus dem Paket, nie ueber Fontconfig ---------------
+\ifx\mndsfontdir\undefined
+  \PackageError{mn-design}{\string\mndsfontdir\space ist nicht gesetzt}{Vor \string\usepackage{mn-design} den Schriftordner des Pakets setzen: \string\def\string\mndsfontdir{<mn_design_system.fonts.FONT_DIR>}}
+\else\ifx\mndsfontdir\empty
+  \PackageError{mn-design}{\string\mndsfontdir\space ist leer}{Den Schriftordner des Pakets uebergeben (mn_design_system.fonts.FONT_DIR)}
+\fi\fi
+% Grundschrift Geist; Kursiv ist die Editorial-Italic Source Serif 4 (font.family.italic-editorial).
+\setmainfont{Geist}[Path=\mndsfontdir/geist/, Extension=.ttf, UprightFont=*-Regular, BoldFont=*-Bold, ItalicFont=../source-serif/SourceSerif4-Italic, BoldItalicFont=../source-serif/SourceSerif4-BoldItalic]
+\setsansfont{Geist}[Path=\mndsfontdir/geist/, Extension=.ttf, UprightFont=*-Regular, BoldFont=*-Bold, ItalicFont=../source-serif/SourceSerif4-Italic, BoldItalicFont=../source-serif/SourceSerif4-BoldItalic]
+\setmonofont{JetBrainsMono}[Path=\mndsfontdir/jetbrains-mono/, Extension=.ttf, UprightFont=*-Regular, BoldFont=*-Bold, Scale=0.85]
+\setmathfont{STIXTwoMath-Regular}[Path=\mndsfontdir/stix-two/, Extension=.otf]
+\newfontfamily\mnEditorial{SourceSerif4}[Path=\mndsfontdir/source-serif/, Extension=.ttf, UprightFont=*-Regular, BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+\newfontfamily\mnSymbole{NotoSansSymbols2-Regular}[Path=\mndsfontdir/noto/, Extension=.ttf]
+\newunicodechar{✓}{{\mnSymbole ✓}}
+\newunicodechar{✔}{{\mnSymbole ✔}}
+\newunicodechar{✗}{{\mnSymbole ✗}}
+\newunicodechar{✘}{{\mnSymbole ✘}}
+% Pandoc setzt fuer Aufgabenlisten $\square$ / $\boxtimes$ (sonst aus amssymb, das neben
+% unicode-math nicht geladen werden darf). unicode-math belegt die Symbole erst zu Dokumentbeginn.
+\AtBeginDocument{\providecommand*\square{\mdlgwhtsquare}}
+
+\endinput

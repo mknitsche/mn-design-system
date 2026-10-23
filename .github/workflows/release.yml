@@ -43,10 +43,10 @@ jobs:
         # Wenn `npm run build` Diff erzeugt, ist das ein Fehler — der Tag wurde gepusht
         # ohne vorher die Tokens zu builden. release.yml soll keine Tokens "korrigieren".
         run: |
-          if ! git diff --quiet mn_design_system/tokens.py; then
+          if ! git diff --quiet mn_design_system/tokens.py mn_design_system/latex/mn-design.sty; then
             echo "::error::tokens.py ist nicht synchron mit tokens/*.json beim Tag-Commit."
             echo "::error::Bitte 'npm run build' lokal ausfuehren, committen, dann Tag setzen."
-            git diff mn_design_system/tokens.py
+            git diff mn_design_system/tokens.py mn_design_system/latex/mn-design.sty
             exit 1
           fi
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mn-design-system"
-version = "0.20.0"
+version = "0.21.0"
 description = "MN PKA Design-System — Tokens, Fonts, Komponenten fuer Multi-Renderer (PDF/Web/LaTeX)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -42,6 +42,7 @@ exclude = ["tests*", "dist*", "node_modules*"]
 
 [tool.setuptools.package-data]
 mn_design_system = [
+    "latex/*.sty",
     "fonts/**/*.ttf",
     "fonts/**/*.otf",
     "fonts/**/*.woff2",

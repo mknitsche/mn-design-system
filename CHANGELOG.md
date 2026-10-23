@@ -8,6 +8,40 @@ oder Doku.
 
 ---
 
+## [0.21.0] — 2026-10-23
+
+### Neu — EINE LaTeX-Schicht im Paket (claudeAI PDF-Kette)
+
+- **`mn_design_system/latex/mn-design.sty`** (erzeugt von `build.js`, Format `latex/sty`) ist die
+  einzige LaTeX-Ausgabe des Design-Systems:
+  - jede Farbe aus den Tokens als xcolor-Farbe `mn-<pfad>` (z. B. `mn-color-light-h1`) und die
+    semantischen Dokumentfarben `mnText`, `mnHOne`, `mnHTwo`, `mnAccent`, `mnAccentSoft`,
+    `mnSurfaceSubtle`, `mnGreySeven`, `mnGreyFive`, `mnGreyThree`, `mnBrand`, `mnStatusSuccess/Warning/Error`;
+  - alle Druck-Tokens ueber **`\mnToken{<pfad>}`** (`font.*`, `space.*`, `stroke.*`, z. B.
+    `\mnToken{font.size.body}`); ein unbekannter Pfad bricht laut ab;
+  - die Schriften **per Pfad aus dem Paket**, nie ueber Fontconfig: Geist (Kursiv = Source Serif 4
+    Italic), JetBrains Mono, STIX Two Math (`unicode-math`), Noto Sans Symbols 2 fuer ✓ ✔ ✗ ✘,
+    `\mnEditorial`; `\square` fuer Pandoc-Aufgabenlisten.
+  - Nutzung: `TEXINPUTS=<LATEX_DIR>//:` und `\def\mndsfontdir{<FONT_DIR>}` vor `\usepackage{mn-design}`;
+    fehlt oder ist der Schriftordner leer, bricht das Paket laut ab.
+- **`mn_design_system.latex`**: `LATEX_DIR`, `STY`; `latex/*.sty` in den Paketdaten (Wheel).
+- CI (`build-tokens`, `release`) prueft die `.sty` auf Synchronitaet wie `tokens.py`.
+
+### Entfernt
+
+- **`dist/latex/tokens.tex`** — unbenutzbar: `#` in `\def` (das TeX-Parameterzeichen) und Makronamen
+  mit Ziffern (`\mnpkacolorindigo50`), dazu nicht im Wheel. Ersetzt durch `mn-design.sty`.
+- **`mn_design_system/components/latex/`** — leerer Platzhalter; LaTeX lebt an einem Ort
+  (`mn_design_system/latex/`).
+
+### Hintergrund
+
+Seit 0.20.0 liegen unter `fonts/web/` `.woff2`-Dateien. Ein Konsument, der den ganzen Schriftordner
+bei Fontconfig registriert, liess XeTeX die Web-Schrift waehlen; `xdvipdfmx` bettet sie nicht ein
+und bricht ab (claudeAI-PDF-Kette 18.–23.10.). Die neue Schicht umgeht Fontconfig ganz.
+
+---
+
 ## [0.20.0] — 2026-10-18
 
 ### Neu — Tier magazin neben archiv, Listenzeile, Pfadzeile (claudeAI Magazin-Welle 0)

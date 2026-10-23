@@ -74,7 +74,7 @@ Optional: ein Erzaehl-Satz oberhalb (z.B. von Wetterochs-Mail) im Italic-Stil.
 
 - `mn_design_system/components/pdf/wetter_strip.py` — ReportLab `Table`
 - `mn_design_system/components/web/wetter-strip.{tsx,css}` — geplant
-- `mn_design_system/components/latex/wetter-strip.tex` — geplant
+- `mn_design_system/latex/wetter-strip.tex` — geplant
 
 ## Referenzen
 
