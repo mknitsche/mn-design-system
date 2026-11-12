@@ -170,3 +170,37 @@ class TestDeltaText:
 
     def test_ohne_delta_kein_text(self):
         assert _karte(change_pct=1.0).delta_text() is None
+
+
+# --- 0.22.0: Delta als Dauer (Stunden:Minuten) -------------------------------------------------
+
+
+def test_delta_als_dauer_zeigt_stunden_minuten():
+    """Schlaf und andere Dauern in Minuten: das Delta liest sich als H:MM (claudeAI, KT-1 2026-11-13)."""
+    k = _karte(
+        delta_wert=-48, delta_format="dauer", delta_einheit="h", richtung="hoeher"
+    )
+    assert k.delta_text() == f"{MINUS}0:48{NBSP}h"
+    assert (
+        _karte(delta_wert=95.4, delta_format="dauer", delta_einheit="h").delta_text()
+        == f"+1:35{NBSP}h"
+    )
+    assert k.trend_direction().value == "down"
+
+
+def test_delta_als_dauer_auf_ganze_minuten_null_ist_unveraendert():
+    k = _karte(delta_wert=0.4, delta_format="dauer", delta_einheit="h")
+    assert k.delta_text() == "unverändert"
+    assert k.trend_direction().value == "neutral"
+
+
+def test_delta_format_dauer_braucht_ein_delta():
+    with pytest.raises(ValidationError):
+        _karte(delta_format="dauer")
+
+
+def test_ohne_delta_format_bleibt_alles_wie_bisher():
+    assert (
+        _karte(delta_wert=-1.2, delta_einheit="kg").delta_text()
+        == f"{MINUS}1,2{NBSP}kg"
+    )

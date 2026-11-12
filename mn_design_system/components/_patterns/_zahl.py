@@ -68,3 +68,17 @@ def delta_de(wert: float, dezimalstellen: int, einheit: str = "") -> str:
     zahl = format(abs(q), f",.{dezimalstellen}f").translate(_TAUSCH)
     text = f"{'+' if q > 0 else MINUS}{zahl}"
     return f"{text}{NBSP}{einheit}" if einheit else text
+
+
+def dauer_delta_de(minuten: float, einheit: str = "h") -> str:
+    """Delta einer Dauer in Minuten als Stunden:Minuten: „+1:35 h" / „−0:48 h" / „unverändert".
+
+    Gerundet auf ganze Minuten (wie ``delta_de`` mit 0 Stellen); Vorzeichen immer sichtbar (U+2212),
+    die Einheit folgt nach einem geschuetzten Leerzeichen.
+    """
+    q = int(_gerundet(minuten, 0))
+    if q == 0:
+        return "unverändert"
+    m = abs(q)
+    text = f"{'+' if q > 0 else MINUS}{m // 60}:{m % 60:02d}"
+    return f"{text}{NBSP}{einheit}" if einheit else text
