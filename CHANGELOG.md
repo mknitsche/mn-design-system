@@ -8,7 +8,14 @@ oder Doku.
 
 ---
 
-## [0.22.0] — 2026-11-13
+## [0.22.1] — 2026-11-12
+
+### Behoben
+
+- Release-Build: `mn-design.sty` mit der Version neu erzeugt (der Tag `v0.22.0` brach in der CI an der
+  Synchronitaetspruefung ab und hat kein Wheel; Inhalt identisch mit 0.22.0).
+
+## [0.22.0] — 2026-11-12 (Tag ohne Release, siehe 0.22.1)
 
 ### Neu — Delta als Dauer an der KPI-Karte (claudeAI, KT-1)
 
