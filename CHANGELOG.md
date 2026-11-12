@@ -8,6 +8,17 @@ oder Doku.
 
 ---
 
+## [0.22.0] — 2026-11-13
+
+### Neu — Delta als Dauer an der KPI-Karte (claudeAI, KT-1)
+
+- **`KpiCardInput.delta_format`**: `"zahl"` (Default, unveraendert) oder `"dauer"` — `delta_wert` in
+  Minuten, angezeigt als Stunden:Minuten (`−0:48 h`, `+1:35 h`), gerundet auf ganze Minuten; auf null
+  gerundet steht „unverändert“ und die Bewegung gilt als neutral. Braucht `delta_wert` (sonst laut).
+  Anlass: Schlafdauer stand als „7:18 h“, das Delta aber als „−48 min“.
+- **`_zahl.dauer_delta_de(minuten, einheit="h")`**: die Formatierung dazu (Minuszeichen U+2212,
+  geschuetztes Leerzeichen vor der Einheit wie `delta_de`).
+
 ## [0.21.0] — 2026-10-23
 
 ### Neu — EINE LaTeX-Schicht im Paket (claudeAI PDF-Kette)

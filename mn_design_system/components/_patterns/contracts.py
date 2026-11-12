@@ -22,6 +22,7 @@ from mn_design_system.components._patterns._verlauf import (
     zeit_als_berlin,
 )
 from mn_design_system.components._patterns._zahl import (
+    dauer_delta_de,
     delta_de,
     rundet_auf_null,
     zahl_de,
@@ -92,6 +93,10 @@ class KpiCardInput(BaseModel):
     delta_einheit: Einheit hinter dem Delta ("kg"); nur mit delta_wert.
     dezimalstellen: Nachkommastellen des Deltas (0..6, Default 1). Rundet das Delta
         damit auf null, steht "unveraendert" und die Bewegung gilt als neutral.
+
+    Seit 0.22.0:
+    delta_format: "zahl" (Default, wie bisher) oder "dauer" — delta_wert in Minuten, angezeigt
+        als Stunden:Minuten ("−0:48 h"), gerundet auf ganze Minuten; braucht delta_wert.
     """
 
     model_config = {"extra": "forbid", "frozen": True}
@@ -105,6 +110,7 @@ class KpiCardInput(BaseModel):
     delta_wert: float | None = Field(default=None, allow_inf_nan=False)
     delta_einheit: str = ""
     dezimalstellen: int = Field(default=1, ge=0, le=6)
+    delta_format: Literal["zahl", "dauer"] = "zahl"
 
     @model_validator(mode="after")
     def _delta_eindeutig(self) -> KpiCardInput:
@@ -115,6 +121,8 @@ class KpiCardInput(BaseModel):
             )
         if self.delta_einheit and self.delta_wert is None:
             raise ValueError("delta_einheit braucht delta_wert")
+        if self.delta_format == "dauer" and self.delta_wert is None:
+            raise ValueError("delta_format='dauer' braucht delta_wert (Minuten)")
         return self
 
     def trend_direction(self) -> KpiTrendDirection:
@@ -129,7 +137,8 @@ class KpiCardInput(BaseModel):
         Prozent-Schwelle: sie gehoert dem Prozentwert).
         """
         if self.delta_wert is not None:
-            if rundet_auf_null(self.delta_wert, self.dezimalstellen):
+            stellen = 0 if self.delta_format == "dauer" else self.dezimalstellen
+            if rundet_auf_null(self.delta_wert, stellen):
                 return KpiTrendDirection.NEUTRAL
             return (
                 KpiTrendDirection.UP if self.delta_wert > 0 else KpiTrendDirection.DOWN
@@ -154,6 +163,8 @@ class KpiCardInput(BaseModel):
         """Deutsch formatiertes absolutes Delta ("−1,2 kg"), ohne Delta ``None``."""
         if self.delta_wert is None:
             return None
+        if self.delta_format == "dauer":
+            return dauer_delta_de(self.delta_wert, self.delta_einheit)
         return delta_de(self.delta_wert, self.dezimalstellen, self.delta_einheit)
 
 
