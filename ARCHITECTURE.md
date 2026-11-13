@@ -185,6 +185,8 @@ an das GitHub-Release.
    `_patterns/foo.md` und Contract bricht das Pattern-First-Prinzip.
 3. **Hartkodierte Werte in Tests** — Tokens ueber `mn_design_system.tokens.get` lesen.
 4. **Logos im Repo** — proprietaer, gehoeren nicht in den oeffentlichen Teil (siehe NOTICE).
+   Einzige Ausnahme: die zwei MKN-Logos in `mn_design_system/logos/` (Entscheid Matthias
+   Nitsche 2026-11-12) — © Matthias Nitsche, nicht von `LICENSE` gedeckt, mit eigenem `NOTICE`.
 5. **Build-Output ohne Quelle** — `npm run build` ist deterministisch; ein Commit, der nur
    `tokens.py` oder `dist/` aendert, ohne dass sich `tokens/` aendert, ist verdaechtig.
 

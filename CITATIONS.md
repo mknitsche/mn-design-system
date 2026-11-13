@@ -78,4 +78,6 @@ Die Schriftdateien liegen im Paket unter `mn_design_system/fonts/<familie>/`, je
 
 ## Was nicht im Repo lebt
 
-- **Logo-Files** (Matthias-Nitsche-Fotografie + PKA-Brand) sind proprietär.
+- **Logo-Files** (Matthias-Nitsche-Fotografie + PKA-Brand) sind proprietär. Ausnahme: die zwei
+  MKN-Logos liegen in `mn_design_system/logos/` — © Matthias Nitsche, alle Rechte vorbehalten,
+  nicht von `LICENSE` gedeckt (Vermerk `mn_design_system/logos/NOTICE`).
