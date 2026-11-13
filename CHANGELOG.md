@@ -10,6 +10,8 @@ oder Doku.
 
 ## [Unreleased]
 
+## [0.23.0] — 2026-11-13
+
 ### Neu — die zwei MKN-Logos als Paket-Assets (claudeAI, KT-1 2026-11-12)
 
 - **`mn_design_system/logos/`**: `2026-MKN-LogoKopf.svg` (Kopf „MKN“ ohne Text) und
