@@ -44,3 +44,14 @@ def test_package_data_liefert_logos_und_vermerk_aus():
     abgedeckt = {p for m in muster for p in _PAKET.glob(m) if p.is_file()}
     erwartet = {_LOGOS / name for name in _DATEIEN} | {_LOGOS / "NOTICE"}
     assert erwartet <= abgedeckt, sorted(str(p) for p in erwartet - abgedeckt)
+
+
+def test_web_paket_nennt_den_logo_ordner():
+    """Der Konsument kopiert die Logos von hier (wie Schriften und Diagramm-Bibliothek)."""
+    from mn_design_system.components import web
+
+    assert web.logos_dir() == _LOGOS
+    assert web.LOGO_KOPF_DATEI == "2026-MKN-LogoKopf.svg"
+    assert web.LOGO_VOLL_DATEI == "2026-MKN-2ndBrain-Logo.svg"
+    assert (web.logos_dir() / web.LOGO_KOPF_DATEI).is_file()
+    assert (web.logos_dir() / web.LOGO_VOLL_DATEI).is_file()
