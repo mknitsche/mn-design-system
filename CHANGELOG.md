@@ -16,6 +16,8 @@ oder Doku.
   `2026-MKN-2ndBrain-Logo.svg` (volles Logo „MKN 2nd Brain / Personal Assistant“), Vektor, Farben
   `#132943` · `#4D7EA3` · `#BF5A11`; im Wheel ueber `package-data` ausgeliefert. Form und Art sind
   festgelegt — die Dateien werden nicht neu gezeichnet, vereinfacht oder umgefaerbt.
+- **`components.web.logos_dir()`** mit `LOGO_KOPF_DATEI` / `LOGO_VOLL_DATEI`: der Konsument kopiert
+  die Logos von hier, byte-gleich (Muster wie `web_font_dir` und `vendor_js_dir`).
 - **Rechte**: © Matthias Nitsche, alle Rechte vorbehalten — ausdruecklich NICHT von `LICENSE`
   gedeckt (Vermerk `mn_design_system/logos/NOTICE`, dazu `NOTICE` und README › Rechte). Die Lizenz
   des Repositories bleibt unveraendert.

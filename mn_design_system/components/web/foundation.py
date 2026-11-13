@@ -58,6 +58,20 @@ def render_font_face(url_prefix: str) -> str:
     )
 
 
+#: Die zwei MKN-Logos (``logos_dir()``): Kopf „MKN“ ohne Text und volles Logo „MKN 2nd Brain“.
+LOGO_KOPF_DATEI = "2026-MKN-LogoKopf.svg"
+LOGO_VOLL_DATEI = "2026-MKN-2ndBrain-Logo.svg"
+
+
+def logos_dir() -> Path:
+    """Verzeichnis der zwei MKN-Logos im installierten Paket — der Konsument kopiert von hier
+    (wie bei ``web_font_dir``), byte-gleich: Form und Art der Logos sind festgelegt.
+
+    Die Logos sind © Matthias Nitsche und NICHT von ``LICENSE`` gedeckt (``logos/NOTICE``).
+    """
+    return Path(__file__).parents[2] / "logos"
+
+
 def vendor_js_dir() -> Path:
     """Verzeichnis der mitgelieferten Diagramm-Bibliothek (Apache ECharts, 0.17.0).
 
