@@ -8,6 +8,18 @@ oder Doku.
 
 ---
 
+## [Unreleased]
+
+### Neu — die zwei MKN-Logos als Paket-Assets (claudeAI, KT-1 2026-11-12)
+
+- **`mn_design_system/logos/`**: `2026-MKN-LogoKopf.svg` (Kopf „MKN“ ohne Text) und
+  `2026-MKN-2ndBrain-Logo.svg` (volles Logo „MKN 2nd Brain / Personal Assistant“), Vektor, Farben
+  `#132943` · `#4D7EA3` · `#BF5A11`; im Wheel ueber `package-data` ausgeliefert. Form und Art sind
+  festgelegt — die Dateien werden nicht neu gezeichnet, vereinfacht oder umgefaerbt.
+- **Rechte**: © Matthias Nitsche, alle Rechte vorbehalten — ausdruecklich NICHT von `LICENSE`
+  gedeckt (Vermerk `mn_design_system/logos/NOTICE`, dazu `NOTICE` und README › Rechte). Die Lizenz
+  des Repositories bleibt unveraendert.
+
 ## [0.22.1] — 2026-11-12
 
 ### Behoben

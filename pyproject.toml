@@ -53,6 +53,8 @@ mn_design_system = [
     "vendor/**/*.json",
     "vendor/**/LICENSE*",
     "vendor/**/NOTICE*",
+    "logos/*.svg",
+    "logos/NOTICE",
 ]
 
 [tool.ruff]

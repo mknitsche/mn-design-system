@@ -104,7 +104,9 @@ Löst das Blocksatz-Lückenproblem bei Body-Größen ≥10pt.
 > **In short (English):** This repository is public so that it can be **read and
 > used** — not so that it can be changed. It is not open source: the licence
 > withholds the right to modify or redistribute. Bug reports are welcome; pull
-> requests are not accepted. Bundled fonts keep their own (open) licences.
+> requests are not accepted. Bundled fonts keep their own (open) licences. The
+> MKN logos in `mn_design_system/logos/` are © Matthias Nitsche, all rights
+> reserved, and not covered by the licence.
 
 Dieses Repository ist **oeffentlich lesbar, aber nicht offen zur Mitarbeit**.
 Das ist eine bewusste Unterscheidung:
@@ -134,8 +136,11 @@ gewollt.
   Teile von d3.js unter BSD 3-Clause) — **behaelt ihre eigenen, offenen Lizenzen**;
   `LICENSE` schraenkt sie nicht ein. Die Lizenztexte liegen neben der Datei
   (`mn_design_system/vendor/echarts/`: `LICENSE`, `NOTICE`, `licenses/LICENSE-d3`)
-- **Logos** (mkn-fotografie / PKA): proprietaer, keine Markenrechte eingeraeumt
-  — NICHT in diesem Repo, siehe `NOTICE`
+- **Logos**: proprietaer, keine Markenrechte eingeraeumt. Die zwei MKN-Logos
+  (Kopf „MKN“, „MKN 2nd Brain“) liegen in `mn_design_system/logos/` —
+  **© Matthias Nitsche, alle Rechte vorbehalten, ausdruecklich NICHT von
+  `LICENSE` gedeckt** (Vermerk `mn_design_system/logos/NOTICE`); das
+  mkn-fotografie-Logo ist nicht in diesem Repo, siehe `NOTICE`
 
 Quellenangaben + Lizenz-Texte: `CITATIONS.md` · Marken und Fremdbestandteile:
 `NOTICE` · Sicherheitsmeldungen: `SECURITY.md`.
