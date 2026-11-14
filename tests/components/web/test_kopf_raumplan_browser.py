@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from mn_design_system.components._patterns.contracts import (
     MastheadEmblem,
     MastheadInput,
@@ -294,3 +296,58 @@ def test_pfeil_bleibt_bei_schmalen_breiten_nur_der_name_kuerzt(seite_laden):
         m = _raum(seite_laden, breite)
         assert m["pfeilSichtbar"], (breite, m)
         assert not m["seiteBreiter"] and m["profilRechts"], (breite, m)
+
+
+DESKTOP_MESSEN = """() => {
+  const sichtbar = (e) => !!e && getComputedStyle(e).display !== 'none';
+  const pillen = [...document.querySelectorAll('.mn-masthead__pill')];
+  return {
+    pillen: pillen.filter(sichtbar).length,
+    marke: sichtbar(document.querySelector('.mn-masthead__brand')),
+    knopf: sichtbar(document.querySelector('.mn-masthead__raum')),
+    link: sichtbar(document.querySelector('.mn-masthead__raum-link')),
+    blatt: sichtbar(document.querySelector('#raumplan')),
+    zeilen: new Set(pillen.filter(sichtbar).map((p) => Math.round(p.getBoundingClientRect().top))).size,
+  };
+}"""
+
+
+@pytest.mark.parametrize("breite", [800, 1280, 1440])
+def test_desktop_und_tablet_zeigen_die_volle_raumleiste_ohne_schalter(
+    seite_laden, breite
+):
+    # Spec 3.3: Rechner und iPad = sieben Pillen in einer Zeile; „Raum ▾“ ist die Handy-Form
+    ctx, page = seite_laden(_seite(), _css(), breite=breite, hoehe=900)
+    try:
+        m = page.evaluate(DESKTOP_MESSEN)
+    finally:
+        ctx.close()
+    assert m["pillen"] == 7 and m["zeilen"] == 1 and m["marke"], m
+    assert not m["knopf"] and not m["link"], m
+    assert not m["blatt"], m  # mit popover-Unterstuetzung bleibt das Blatt zu
+
+
+def test_desktop_ohne_popover_der_abschnitt_alle_raeume_steht_am_ende(seite_laden):
+    # Browser ohne popover: Attribut inert, :popover-open unbekannt -> sichtbarer Abschnitt;
+    # am Desktop erreicht man die Raeume ueber die Pillen, am Handy ueber den Link darauf.
+    seite = _seite().replace(" popover aria-labelledby", " aria-labelledby")
+    for breite in (1440, 390):
+        ctx, page = seite_laden(
+            seite, _css(fallback_simulieren=True), breite=breite, hoehe=900
+        )
+        try:
+            m = page.evaluate(DESKTOP_MESSEN)
+            if breite == 390:
+                page.click(".mn-masthead__raum-link")
+                im_bild = page.evaluate(
+                    "(() => { const r = document.querySelector('#raumplan').getBoundingClientRect();"
+                    " return r.top >= 0 && r.top < window.innerHeight; })()"
+                )
+        finally:
+            ctx.close()
+        assert m["blatt"], (breite, m)
+        assert not m["knopf"], (breite, m)
+        if breite == 1440:
+            assert m["pillen"] == 7 and not m["link"], m
+        else:
+            assert m["link"] and im_bild, (m, im_bild)
