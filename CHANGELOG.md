@@ -16,8 +16,6 @@ oder Doku.
 
 Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Test `tests/golden/0_23_0.json`); neue Formen gibt es nur ueber neue Felder mit Default, neue Pruefregeln gelten nur in der neuen Form. Rueckbau der Altformen folgt als 0.25.0 nach der Abnahme.
 
-- **Ortszeile** (`OrtszeileInput`, `render_ortszeile_html/_css`): die ganze Kette bis zur Elternseite in einer Zeile,
-  das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von links (das erste zuerst, das vorletzte bleibt voll, solange es reicht). Paare sind `(label, href)` wie bei Pfadzeile und Raumplan; ein Label, das wie ein Ziel aussieht (`/…`, `#…`, `?…`, `://`), wird abgewiesen. `back_link` und `pfad_zeile` unveraendert.
 - **Unterleiste kompakt** (`SubNavInput.form="kompakt"`, `gruppen`, `SubNavGruppe`; `render_sub_nav_css(kompakt=True)`):
   Gruppen mit Namen am Rechner, am Handy ein Gruppen-Schalter und nur die Reiter der aktiven Gruppe in einer Zeile; hoechstens
   fuenf Reiter je Gruppe einschliesslich Uebersicht, genau ein Reiter aktiv, Zielhoehe `web.touch-target`. Klassische Form
