@@ -10,7 +10,11 @@ oder Doku.
 
 ## [Unreleased]
 
-### Neu — 0.24.0 „Rahmen und Foyer“ (claudeAI Welle 1, streng additiv: jede Eingabe von 0.23.0 rendert byte-gleich)
+## [0.24.0] — 2026-11-14
+
+### Neu — „Rahmen und Foyer“ (claudeAI Welle 1)
+
+Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Test `tests/golden/0_23_0.json`); neue Formen gibt es nur ueber neue Felder mit Default, neue Pruefregeln gelten nur in der neuen Form. Rueckbau der Altformen folgt als 0.25.0 nach der Abnahme.
 
 - **Ortszeile** (`OrtszeileInput`, `render_ortszeile_html/_css`): die ganze Kette bis zur Elternseite in einer Zeile,
   das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von vorn. `back_link` und `pfad_zeile` unveraendert.
