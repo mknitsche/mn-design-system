@@ -15,9 +15,9 @@ from mn_design_system.components.web import (
 )
 
 KETTE = (
-    ("/observatorium/", "Observatorium"),
-    ("/observatorium/gesundheit/", "Gesundheit"),
-    ("/observatorium/gesundheit/schlaf/", "Schlaf"),
+    ("Observatorium", "/observatorium/"),
+    ("Gesundheit", "/observatorium/gesundheit/"),
+    ("Schlaf", "/observatorium/gesundheit/schlaf/"),
 )
 
 
@@ -50,14 +50,14 @@ def test_genau_ein_eltern_und_es_ist_das_letzte_glied():
 
 
 def test_ein_glied_ist_zugleich_das_eltern_glied():
-    html = render_ortszeile_html(OrtszeileInput(glieder=(("/start/", "Start"),)))
+    html = render_ortszeile_html(OrtszeileInput(glieder=(("Start", "/start/"),)))
     assert html.count("<li>") == 1
     assert '<a class="mn-ortszeile__eltern" href="/start/">← Start</a>' in html
 
 
 def test_maskiert():
     html = render_ortszeile_html(
-        OrtszeileInput(glieder=(("/a/", "<b>&"), ("/b/", "<i>x</i>")))
+        OrtszeileInput(glieder=(("<b>&", "/a/"), ("<i>x</i>", "/b/")))
     )
     assert "<b>" not in html
     assert "<i>" not in html
@@ -75,12 +75,12 @@ def test_leere_kette_wird_abgewiesen():
 )
 def test_fremde_ziele_werden_abgewiesen(href):
     with pytest.raises(ValueError):
-        OrtszeileInput(glieder=(("/ok/", "ok"), (href, "x")))
+        OrtszeileInput(glieder=(("ok", "/ok/"), ("x", href)))
 
 
 def test_leeres_label_wird_abgewiesen():
     with pytest.raises(ValueError):
-        OrtszeileInput(glieder=(("/a/", ""),))
+        OrtszeileInput(glieder=(("", "/a/"),))
 
 
 def test_css_einzeilig_letztes_glied_schrumpft_nie():
@@ -107,6 +107,26 @@ def test_css_kein_rohwert():
 
 
 def test_inline_css():
-    p = OrtszeileInput(glieder=(("/a/", "a"),))
+    p = OrtszeileInput(glieder=(("a", "/a/"),))
     assert render_ortszeile_html(p, inline_css=True).startswith("<style>")
     assert "<style" not in render_ortszeile_html(p)
+
+
+@pytest.mark.parametrize("label", ["/atelier/", "#anker", "?x=1", "https://x.example/"])
+def test_vertauschte_paare_fallen_auf(label):
+    # (href, label) statt (label, href): das Label sieht wie ein Ziel aus
+    with pytest.raises(ValueError, match="sieht wie ein Ziel aus"):
+        OrtszeileInput(glieder=((label, "Atelier"),))
+
+
+def test_eine_reihenfolge_fuer_ortszeile_raumplan_und_pfadzeile():
+    # alle drei: (label, href)
+    from mn_design_system.components._patterns.contracts import (
+        PfadZeileInput,
+        RaumplanRaum,
+    )
+
+    assert OrtszeileInput(glieder=(("A", "/a/"),)).glieder[0] == ("A", "/a/")
+    assert PfadZeileInput(vorfahren=(("A", "/a/"),)).vorfahren[0] == ("A", "/a/")
+    with pytest.raises(ValueError, match="sieht wie ein Ziel aus"):
+        RaumplanRaum(slug="a", label="A", href="/a/", zweck="z", reiter=[("/a/", "A")])

@@ -30,7 +30,7 @@ def render_kachel_html(input: KachelInput, *, inline_css: bool = False) -> str:
     if input.stand is not None:
         teile.append(f'<p class="mn-kachel__stand">{escape(input.stand)}</p>')
     if input.fuss_link is not None:
-        href, label = input.fuss_link
+        label, href = input.fuss_link
         teile.append(
             f'<a class="mn-kachel__fuss" href="{escape(href, quote=True)}">{escape(label)}</a>'
         )

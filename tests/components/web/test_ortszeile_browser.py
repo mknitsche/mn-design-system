@@ -11,9 +11,9 @@ from mn_design_system.components.web import (
 
 LANG = OrtszeileInput(
     glieder=(
-        ("/observatorium/", "Observatorium und alles, was dazugehoert"),
-        ("/observatorium/gesundheit/", "Gesundheit und Vitalitaet im Ueberblick"),
-        ("/observatorium/gesundheit/schlaf/", "Schlaf"),
+        ("Observatorium und alles, was dazugehoert", "/observatorium/"),
+        ("Gesundheit und Vitalitaet im Ueberblick", "/observatorium/gesundheit/"),
+        ("Schlaf", "/observatorium/gesundheit/schlaf/"),
     )
 )
 
@@ -58,3 +58,33 @@ def test_breit_nichts_gekuerzt(seite_laden):
     m = _messe(seite_laden, 1400)
     assert m["zeilen"] == 1, m
     assert not m["vorneGekuerzt"], m
+
+
+def test_kuerzt_von_links_das_vorletzte_glied_bleibt_voll(seite_laden):
+    # Erstes Glied sehr lang, die uebrigen kurz: es reicht, das erste zu kuerzen.
+    kette = OrtszeileInput(
+        glieder=(
+            (
+                "Observatorium und alles, was dazugehoert, ausfuehrlich beschrieben",
+                "/o/",
+            ),
+            ("Projekte", "/o/p/"),
+            ("Gesundheit", "/o/p/g/"),
+            ("Schlaf", "/o/p/g/s/"),
+        )
+    )
+    for breite in (320, 360, 390):
+        ctx, page = seite_laden(
+            render_ortszeile_html(kette),
+            render_foundation_css() + render_ortszeile_css(),
+            breite=breite,
+        )
+        try:
+            m = page.evaluate(
+                """() => [...document.querySelectorAll('.mn-ortszeile li > a')]
+                  .map((a) => [a.scrollWidth > a.clientWidth, Math.round(a.clientWidth)])"""
+            )
+        finally:
+            ctx.close()
+        gekuerzt = [g for g, _ in m]
+        assert gekuerzt == [True, False, False, False], (breite, m)

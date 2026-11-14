@@ -362,6 +362,8 @@ def _kompakt_css() -> str:
   }}
   .mn-sub-nav--kompakt .mn-sub-nav__inner {{
     flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
     padding-inline: var(--web-layout-page-inset, 16px);
   }}
   .mn-sub-nav--kompakt .mn-sub-nav__tab {{

@@ -342,6 +342,7 @@ def _kompakt_css() -> str:
   .mn-masthead--kompakt .mn-masthead__pill {{
     box-sizing: border-box;
     display: inline-flex;
+    flex: none;
     align-items: center;
     min-height: var(--web-touch-target, 44px);
     white-space: nowrap;
@@ -358,6 +359,9 @@ def _kompakt_css() -> str:
     font-size: var(--web-text-ui, 14px);
     font-weight: 500;
     white-space: nowrap;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--color-dark-text, #f5f5f7);
     text-decoration: none;
     background: transparent;

@@ -4,8 +4,8 @@
 
 ## API-Contract
 
-`OrtszeileInput(glieder=((href, label), ...))` (Pydantic, frozen, `extra="forbid"`), mindestens ein Glied; `href`: interner
-oder relativer Pfad, kein Schema; `label` nicht leer. Das **letzte** Glied ist die Elternseite.
+`OrtszeileInput(glieder=((label, href), ...))` (Pydantic, frozen, `extra="forbid"`), mindestens ein Glied; `href`: interner
+oder relativer Pfad, kein Schema; `label` nicht leer. Das **letzte** Glied ist die Elternseite. Die Reihenfolge `(label, href)` gilt wie bei `pfad_zeile` und `raumplan`; ein Label, das wie ein Ziel aussieht, wird abgewiesen. Kuerzung von links: das erste Glied schrumpft zuerst, das vorletzte bleibt voll, solange es reicht.
 `render_ortszeile_html(o, *, inline_css=False)` liefert `<nav class="mn-ortszeile" aria-label="Ort"><ol>` mit `<li><a>` je
 Glied; das letzte `<a class="mn-ortszeile__eltern">` beginnt mit „← “. `render_ortszeile_css()`.
 

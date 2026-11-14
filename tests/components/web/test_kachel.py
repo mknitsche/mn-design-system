@@ -52,7 +52,7 @@ class TestKachel:
                 titel_id="k-aufgaben",
                 display_zahl="12",
                 inhalt_html="<p>drei fällig</p>",
-                fuss_link=("/atelier/aufgaben/", "Alle Aufgaben"),
+                fuss_link=("Alle Aufgaben", "/atelier/aufgaben/"),
                 stand="Aktualisiert 14.11. 06:05",
             )
         )
@@ -81,7 +81,7 @@ class TestKachel:
                 titel_id="k",
                 display_zahl="<i>1</i>",
                 inhalt_html="<strong>fett</strong>",
-                fuss_link=("/x/", "<u>mehr</u>"),
+                fuss_link=("<u>mehr</u>", "/x/"),
                 stand="<s>stand</s>",
             )
         )
@@ -100,7 +100,7 @@ class TestKachel:
     )
     def test_fremde_ziele_werden_abgewiesen(self, href):
         with pytest.raises(ValidationError):
-            KachelInput(kicker="K", titel_id="k", fuss_link=(href, "x"))
+            KachelInput(kicker="K", titel_id="k", fuss_link=("x", href))
 
     def test_raster_zwei_spalten_ab_bp_tablet_darunter_eine(self):
         css = render_kachel_css()
@@ -169,30 +169,51 @@ class TestStatusPunkt:
 
 class TestFortschritt:
     def test_progressbar_mit_aria_valuenow(self):
-        html = render_fortschritt_html(FortschrittInput(anteil=0.375, label="Woche"))
+        html = render_fortschritt_html(
+            FortschrittInput(anteil=0.375, label="Woche", label_id="f1")
+        )
         assert 'role="progressbar"' in html
         assert 'aria-valuemin="0"' in html and 'aria-valuemax="100"' in html
         assert 'aria-valuenow="38"' in html
-        assert 'aria-label="Woche"' in html
+        assert 'aria-labelledby="f1"' in html
+        assert '<span id="f1" class="mn-fortschritt__label">Woche</span>' in html
+        assert "aria-label=" not in html  # kein doppelter Name
 
     @pytest.mark.parametrize("anteil", [0, 0.0, 1, 1.0])
     def test_grenzen_sind_erlaubt(self, anteil):
-        render_fortschritt_html(FortschrittInput(anteil=anteil, label="x"))
+        render_fortschritt_html(
+            FortschrittInput(anteil=anteil, label="x", label_id="f1")
+        )
 
     @pytest.mark.parametrize("anteil", [-0.01, 1.01, 2, float("nan")])
     def test_ausserhalb_null_bis_eins_wird_abgewiesen(self, anteil):
         with pytest.raises(ValidationError):
-            FortschrittInput(anteil=anteil, label="x")
+            FortschrittInput(anteil=anteil, label="x", label_id="f1")
 
     def test_fuellung_ohne_inline_style(self):
         # die Seite darf eine CSP ohne style-src 'unsafe-inline' haben: Breite als SVG-Mass
-        html = render_fortschritt_html(FortschrittInput(anteil=0.25, label="x"))
+        html = render_fortschritt_html(
+            FortschrittInput(anteil=0.25, label="x", label_id="f1")
+        )
         assert "style=" not in html
         assert re.search(r'<rect class="mn-fortschritt__fuellung"[^>]*width="25"', html)
 
     def test_label_maskiert(self):
-        html = render_fortschritt_html(FortschrittInput(anteil=0.5, label='<b>"x"'))
+        html = render_fortschritt_html(
+            FortschrittInput(anteil=0.5, label='<b>"x"', label_id="f1")
+        )
         assert "<b>" not in html
 
     def test_css_kein_rohwert(self):
         _kein_rohwert(render_fortschritt_css())
+
+
+def test_fusslink_vertauscht_faellt_auf():
+    with pytest.raises(ValidationError, match="sieht wie ein Ziel aus"):
+        KachelInput(kicker="K", titel_id="k", fuss_link=("/x/", "Mehr"))
+
+
+def test_fortschritt_label_id_muss_eine_id_sein():
+    for kaputt in ("", "1a", 'a"b'):
+        with pytest.raises(ValidationError):
+            FortschrittInput(anteil=0.5, label="x", label_id=kaputt)

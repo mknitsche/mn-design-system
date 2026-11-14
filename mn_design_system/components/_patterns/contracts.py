@@ -455,8 +455,20 @@ class PfadZeileInput(BaseModel):
         return tuple((label, _sicheres_ziel(href)) for label, href in v)
 
 
+def _label_gueltig(label: str) -> str:
+    """Ein Label ist Text, kein Ziel: leer oder wie ein Pfad/eine Adresse aussehend wird abgewiesen.
+    Faengt vertauschte `(label, href)`-Paare, die `_sicheres_ziel` sonst durchliesse."""
+    if not label.strip():
+        raise ValueError("Label darf nicht leer sein")
+    if label.lstrip().startswith(("/", "#", "?")) or "://" in label:
+        raise ValueError(
+            f"Label {label!r} sieht wie ein Ziel aus - Reihenfolge ist (label, href)"
+        )
+    return label
+
+
 class OrtszeileInput(BaseModel):
-    """Ortszeile (0.24.0): die Kette vom Raum bis zur Elternseite als Links, (href, label).
+    """Ortszeile (0.24.0): die Kette vom Raum bis zur Elternseite als Links, (label, href).
 
     Das LETZTE Glied ist die Elternseite und traegt den Pfeil; die Vorfahren davor sind
     gewoehnliche Links. Mindestens ein Glied. `href`: interner oder relativer Pfad, kein
@@ -472,10 +484,7 @@ class OrtszeileInput(BaseModel):
     def _glieder_gueltig(
         cls, v: tuple[tuple[str, str], ...]
     ) -> tuple[tuple[str, str], ...]:
-        for _, label in v:
-            if not label.strip():
-                raise ValueError("Label eines Glieds darf nicht leer sein")
-        return tuple((_sicheres_ziel(href), label) for href, label in v)
+        return tuple((_label_gueltig(label), _sicheres_ziel(href)) for label, href in v)
 
 
 _ID_MUSTER = re.compile(r"^[A-Za-z][A-Za-z0-9_:.-]*$")
@@ -488,7 +497,7 @@ class KachelInput(BaseModel):
     inhalt_html: Markup anderer DS-Renderer — wird NICHT escapt. Der Konsument setzt jeden Text
         darin mit `html.escape(text, quote=True)` ein; Werte aus Owner-Daten gehoeren nie hierher
         (Regel P11).
-    fuss_link: `(href, label)`, `href` intern oder relativ, kein Schema.
+    fuss_link: `(label, href)`, `href` intern oder relativ, kein Schema.
     stand: Text der Stand-Zeile der Kachel (z. B. "Aktualisiert 14.11. 06:05").
     """
 
@@ -515,10 +524,8 @@ class KachelInput(BaseModel):
     def _fuss_sicher(cls, v: tuple[str, str] | None) -> tuple[str, str] | None:
         if v is None:
             return None
-        href, label = v
-        if not label.strip():
-            raise ValueError("Label des Fusslinks darf nicht leer sein")
-        return (_sicheres_ziel(href), label)
+        label, href = v
+        return (_label_gueltig(label), _sicheres_ziel(href))
 
 
 class StatusPunktInput(BaseModel):
@@ -537,6 +544,16 @@ class FortschrittInput(BaseModel):
 
     anteil: float = Field(ge=0, le=1)
     label: str = Field(min_length=1)
+    label_id: str
+    """id des sichtbaren Label-Spans; der Fortschrittsbalken verweist per `aria-labelledby` darauf
+    (eindeutig je Seite, gueltige HTML-id)."""
+
+    @field_validator("label_id")
+    @classmethod
+    def _id_gueltig(cls, v: str) -> str:
+        if not _ID_MUSTER.match(v):
+            raise ValueError("label_id muss eine gueltige HTML-id sein")
+        return v
 
 
 class StandZeileInput(BaseModel):
@@ -764,10 +781,13 @@ class RaumplanRaum(BaseModel):
     @model_validator(mode="after")
     def _ziele_sicher(self) -> RaumplanRaum:
         _sicheres_ziel(self.href)
-        for _, href in self.reiter:
+        for label, href in self.reiter:
+            _label_gueltig(label)
             _sicheres_ziel(href)
-        for _, reiter in self.gruppen or []:
-            for _, href in reiter:
+        for name, reiter in self.gruppen or []:
+            _label_gueltig(name)
+            for label, href in reiter:
+                _label_gueltig(label)
                 _sicheres_ziel(href)
         return self
 
