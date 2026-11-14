@@ -624,6 +624,68 @@ class MastheadInput(BaseModel):
     user_chip_label: str = "…"
     """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
 
+    form: Literal["klassisch", "kompakt"] = "klassisch"
+    """Seit 0.24.0. "kompakt": am Handy EINE Zeile `[Marke] Blicke · [Raum ▾] … [Profil]`;
+    Markenzeile (Wortmarke, Datum) und Raum-Pillen sind dort verborgen."""
+    blicke: int = 0
+    """Seit 0.24.0, nur kompakt: die ersten `blicke` Eintraege von `tier_items` sind die
+    Blicke (Start, Heute); danach steht ein Trenner, die uebrigen sind Raum-Pillen."""
+    raum_schalter: str | None = None
+    """Seit 0.24.0, nur kompakt: Text des Raum-Schalters am Handy (Name des aktiven Raums
+    oder "Räume"). Er steht doppelt im HTML — Knopf fuer `#raumplan` (popover) und
+    Rueckfall-Link auf `#raumplan`."""
+
+    @model_validator(mode="after")
+    def _kompakte_felder(self) -> MastheadInput:
+        if self.form == "klassisch":
+            if self.blicke != 0 or self.raum_schalter is not None:
+                raise ValueError(
+                    'blicke und raum_schalter gibt es nur mit form="kompakt"'
+                )
+        elif not 0 <= self.blicke <= len(self.tier_items):
+            raise ValueError(
+                "blicke muss zwischen 0 und der Zahl der tier_items liegen"
+            )
+        if self.raum_schalter is not None and not self.raum_schalter.strip():
+            raise ValueError("raum_schalter darf nicht leer sein")
+        return self
+
+
+class RaumplanRaum(BaseModel):
+    """Ein Raum im Raumplan (0.24.0): Name, Zweck, Reiter und optional Gruppen.
+
+    `reiter` und die Reiter der `gruppen` sind `(label, href)`-Paare; `gruppen` ist eine Liste
+    `(gruppenname, [(label, href), ...])`. Alle `href`: interner oder relativer Pfad, kein Schema.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    slug: str = Field(min_length=1)
+    label: str = Field(min_length=1)
+    href: str
+    zweck: str
+    reiter: list[tuple[str, str]]
+    gruppen: list[tuple[str, list[tuple[str, str]]]] | None = None
+
+    @model_validator(mode="after")
+    def _ziele_sicher(self) -> RaumplanRaum:
+        _sicheres_ziel(self.href)
+        for _, href in self.reiter:
+            _sicheres_ziel(href)
+        for _, reiter in self.gruppen or []:
+            for _, href in reiter:
+                _sicheres_ziel(href)
+        return self
+
+
+class RaumplanInput(BaseModel):
+    """Raumplan (0.24.0): die Handy-Form der Raumleiste — Raeume mit Zweck und Reitern."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    raeume: list[RaumplanRaum] = Field(min_length=1)
+    titel: str = Field(default="Alle Räume", min_length=1)
+
 
 # ---------------------------------------------------------------------------
 # Verlauf-Chart (0.17.0) — Zeitreihen-Diagramm auf Apache ECharts

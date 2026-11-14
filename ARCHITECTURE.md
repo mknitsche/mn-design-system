@@ -94,6 +94,7 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `datei_zeile` | Listenzeile fuer Ordner und Dateien (Kennung/Vorschau, Name, Meta, Aktion; ein- und zweizeilig) |
 | `pfad_zeile` | Pfadzeile: Vorfahren eines Ordners als Links |
 | `ortszeile` | Ortszeile (0.24.0): ganze Kette bis zur Elternseite, einzeilig, vorn gekuerzt |
+| `raumplan` | Raumplan (0.24.0): Blatt mit allen Raeumen; kompakter Kopf (`masthead` kompakt) mit Raum-Schalter und Rueckfall-Link |
 | `page_header` | Seitenkopf mit H1 und optionalem Lead |
 | `footer` | Einzeilige Fusszeile mit Identitaets-Segmenten und Rechtslinks |
 | `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |
