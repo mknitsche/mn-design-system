@@ -21,11 +21,21 @@ Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Tes
   fuenf Reiter je Gruppe einschliesslich Uebersicht, genau ein Reiter aktiv, Zielhoehe `web.touch-target`. Klassische Form
   unveraendert.
 - **Kompakter Kopf** (`MastheadInput.form="kompakt"`, `blicke`, `raum_schalter`; `render_masthead_css(kompakt=True)`): am Handy eine
-  44-px-Zeile `[Marke] Blicke · [Raum ▾] … [Profil]` ohne Markenzeile und Raum-Pillen, Trenner nach den Blicken; der Raum-Schalter
-  steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`)); der Pfeil ist ein eigenes Element, nur der Name kuerzt mit Auslassung. Das erste Glied der Ortszeile behaelt mindestens `space.4`, damit „…“ sichtbar bleibt.
+  44-px-Zeile `[Marke] Blicke · [Raum ▾] … [Profil]` ohne Markenzeile und Raum-Pillen, ohne Trenner; `blicke` bestimmt nur, welche Pillen am Handy
+  sichtbar bleiben. Der Raum-Schalter steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`); der Pfeil ist ein eigenes Element, nur der Name
+  kuerzt mit Auslassung. Am Rechner bleibt die klassische Ansicht mit Markenzeile, Datum, Pillen und Chip.
+- **Profil-Knopf und Profil-Menue** (`MastheadInput.profil: ProfilMenueInput | None`, `ProfilMenueInput(profil_href, titel="Darstellung")`,
+  `render_profilmenue_html/_css`): ein Knopf im Kontext-Slot (Rechner und Handy; `popovertarget="profilmenue"`, Rueckfall-Link `#profilmenue`) oeffnet
+  `<div id="profilmenue" popover>` mit „Darstellung“ (Automatisch · Hell · Dunkel, `data-schema-wahl`, `aria-pressed`) und dem Link „Profil ansehen“
+  (`profil_href` nur ein interner Pfad). Am Handy sind die Chips dann verborgen. Ohne `popover`-Unterstuetzung steht das Menue als sichtbarer Abschnitt am Seitenende.
+- **Schema-Skript** (`render_schema_js()`, parameterlos): setzt `data-schema` auf `<html>` vor dem ersten Zeichnen aus `localStorage` (`mn-schema`: auto, hell, dunkel;
+  ohne Wahl folgt es der Systemeinstellung) und bedient die drei Knoepfe. Loest `mn-schema.js` der Connector-Seiten ab.
+- **Eckenregel** (`render_ecken_css()`): Rollen-Variablen `--mn-r-flaeche|innen|bedien|leiste` ueber `radius-card|round|none`; Flaechen klein gerundet,
+  Innen = aussen − Innenabstand (nie unter 0), Anklickbares und Etiketten rund, Leisten gerade. Additiv.
 - **Raumplan** (`RaumplanInput`, `RaumplanRaum`, `render_raumplan_html/_css`): `<section id="raumplan" popover>` mit je einem
   `<li data-bereich>`; Blatt nur unter `@supports selector(:popover-open)`, sonst sichtbarer Abschnitt „Alle Räume“.
-- **Kachel** (`KachelInput`, `render_kachel_html/_css`) mit Raster `mn-kachel-raster` (eine Spalte, ab `web.layout.bp-tablet` zwei);
+- **Kachel, streng** (`KachelInput(kicker, aussage, link, titel_id, zahl, stand, status)`, `render_kachel_html/_css`): Aussage, hoechstens eine Zahl, genau ein
+  interner Link (die ganze Kachel ist ueber ihn klickbar), kein freies HTML; mit Raster `mn-kachel-raster` (eine Spalte, ab `web.layout.bp-tablet` zwei);
   **Status-Punkt** (`StatusPunktInput`: Symbol und Wort, nie Farbe allein); **Fortschritt** (`FortschrittInput`, `role="progressbar"`,
   Fuellung als SVG statt `style`, Name per `aria-labelledby` auf `label_id`); **Stand-Zeile** (`StandZeileInput`, `data-stand`/`data-takt-min`, TLP-Etikett) mit
   `render_stand_zeile_js()` fuer „· veraltet“ ab dem Doppelten des Takts.
