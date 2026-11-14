@@ -17,7 +17,7 @@ oder Doku.
 Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Test `tests/golden/0_23_0.json`); neue Formen gibt es nur ueber neue Felder mit Default, neue Pruefregeln gelten nur in der neuen Form. Rueckbau der Altformen folgt als 0.25.0 nach der Abnahme.
 
 - **Ortszeile** (`OrtszeileInput`, `render_ortszeile_html/_css`): die ganze Kette bis zur Elternseite in einer Zeile,
-  das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von vorn. `back_link` und `pfad_zeile` unveraendert.
+  das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von links (das erste zuerst, das vorletzte bleibt voll, solange es reicht). Paare sind `(label, href)` wie bei Pfadzeile und Raumplan; ein Label, das wie ein Ziel aussieht (`/…`, `#…`, `?…`, `://`), wird abgewiesen. `back_link` und `pfad_zeile` unveraendert.
 - **Unterleiste kompakt** (`SubNavInput.form="kompakt"`, `gruppen`, `SubNavGruppe`; `render_sub_nav_css(kompakt=True)`):
   Gruppen mit Namen am Rechner, am Handy ein Gruppen-Schalter und nur die Reiter der aktiven Gruppe in einer Zeile; hoechstens
   fuenf Reiter je Gruppe einschliesslich Uebersicht, genau ein Reiter aktiv, Zielhoehe `web.touch-target`. Klassische Form
@@ -29,7 +29,7 @@ Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Tes
   `<li data-bereich>`; Blatt nur unter `@supports selector(:popover-open)`, sonst sichtbarer Abschnitt „Alle Räume“.
 - **Kachel** (`KachelInput`, `render_kachel_html/_css`) mit Raster `mn-kachel-raster` (eine Spalte, ab `web.layout.bp-tablet` zwei);
   **Status-Punkt** (`StatusPunktInput`: Symbol und Wort, nie Farbe allein); **Fortschritt** (`FortschrittInput`, `role="progressbar"`,
-  Fuellung als SVG statt `style`); **Stand-Zeile** (`StandZeileInput`, `data-stand`/`data-takt-min`, TLP-Etikett) mit
+  Fuellung als SVG statt `style`, Name per `aria-labelledby` auf `label_id`); **Stand-Zeile** (`StandZeileInput`, `data-stand`/`data-takt-min`, TLP-Etikett) mit
   `render_stand_zeile_js()` fuer „· veraltet“ ab dem Doppelten des Takts.
 - **`render_font_face(url_prefix, *, dateien=None, nur=None)`**: `dateien` bildet den Klarnamen auf den ausgelieferten Namen ab
   (Fingerprint), `nur` beschraenkt auf Klarnamen; ein unbekannter Name oder ein fehlender Eintrag fuer eine gewaehlte Schrift bricht laut

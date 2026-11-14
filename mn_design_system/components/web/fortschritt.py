@@ -18,11 +18,11 @@ def render_fortschritt_html(
     """Fortschritt als `<div class="mn-fortschritt" role="progressbar" …>`."""
     prozent = input.anteil * 100
     breite = f"{prozent:.2f}".rstrip("0").rstrip(".")
-    label = escape(input.label, quote=True)
+    lid = escape(input.label_id, quote=True)
     html = (
         f'<div class="mn-fortschritt" role="progressbar" aria-valuemin="0" '
-        f'aria-valuemax="100" aria-valuenow="{round(prozent)}" aria-label="{label}">'
-        f'<span class="mn-fortschritt__label">{escape(input.label)}</span>'
+        f'aria-valuemax="100" aria-valuenow="{round(prozent)}" aria-labelledby="{lid}">'
+        f'<span id="{lid}" class="mn-fortschritt__label">{escape(input.label)}</span>'
         '<svg class="mn-fortschritt__balken" viewBox="0 0 100 1" '
         'preserveAspectRatio="none" aria-hidden="true" focusable="false">'
         '<rect class="mn-fortschritt__spur" width="100" height="1"/>'

@@ -252,3 +252,9 @@ def test_rueckfall_link_und_sichtbarer_abschnitt_ohne_popover_unterstuetzung(
         assert page.evaluate("location.hash") == "#raumplan"
     finally:
         ctx.close()
+
+
+def test_schmal_kein_seitlicher_seitenscroll(seite_laden):
+    for breite in (320, 360):
+        m = _messe(seite_laden, breite, gruppen=True)
+        assert not m["seiteBreiter"] and m["profilRechts"], (breite, m)

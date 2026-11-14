@@ -19,7 +19,7 @@ def render_ortszeile_html(input: OrtszeileInput, *, inline_css: bool = False) ->
     """Ortszeile als <nav><ol><li><a>…; das letzte Glied traegt `mn-ortszeile__eltern`."""
     letztes = len(input.glieder) - 1
     items = []
-    for i, (href, label) in enumerate(input.glieder):
+    for i, (label, href) in enumerate(input.glieder):
         ziel = escape(href, quote=True)
         if i == letztes:
             items.append(
@@ -35,7 +35,7 @@ def render_ortszeile_html(input: OrtszeileInput, *, inline_css: bool = False) ->
 
 
 def render_ortszeile_css() -> str:
-    """Komponenten-CSS — einzeilig, Kuerzung von vorn, letztes Glied unkuerzbar."""
+    """Komponenten-CSS — einzeilig, Kuerzung von links (erstes Glied zuerst), letztes Glied unkuerzbar."""
     return """
 .mn-ortszeile {
   font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
@@ -64,6 +64,21 @@ def render_ortszeile_css() -> str:
 }
 .mn-ortszeile li:last-child {
   flex: none;
+}
+/* Kuerzung von links: je weiter vorn, desto groesser der Schrumpffaktor (Faktor 1000 je
+   Glied), so dass das erste Glied zuerst und fast allein schrumpft; das vorletzte bleibt
+   voll, solange die vorderen Platz hergeben. */
+.mn-ortszeile li:nth-last-child(2) {
+  flex-shrink: 1;
+}
+.mn-ortszeile li:nth-last-child(3) {
+  flex-shrink: 1000;
+}
+.mn-ortszeile li:nth-last-child(4) {
+  flex-shrink: 1000000;
+}
+.mn-ortszeile li:nth-last-child(n + 5):not(:last-child) {
+  flex-shrink: 1000000000;
 }
 .mn-ortszeile li + li::before {
   content: "›" / "";

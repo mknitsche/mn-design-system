@@ -110,3 +110,11 @@ def test_unterleiste_am_handy_hoehe(seite_laden):
     m = _messe(seite_laden, "Übersicht", 390)
     # Schalter + Reiterzeile; der Kopf kommt in T5 dazu (Budget Observatorium <= 140 px)
     assert m["navHoehe"] <= 96, m
+
+
+@pytest.mark.parametrize("breite", [320, 360])
+@pytest.mark.parametrize("aktiv", ["Übersicht", "Briefing-Lauf"])
+def test_schmal_kein_seitlicher_seitenscroll(seite_laden, aktiv, breite):
+    # Netz: passt die Zeile nicht, scrollt nur die Leiste, nie das Dokument
+    m = _messe(seite_laden, aktiv, breite)
+    assert not m["seiteBreiter"], (breite, m)
