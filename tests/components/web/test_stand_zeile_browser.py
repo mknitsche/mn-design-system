@@ -93,7 +93,13 @@ def test_zweimal_laufen_haengt_nur_einmal_an(seite_laden):
 def test_kachel_raster_eine_spalte_unten_zwei_ab_bp_tablet(seite_laden):
     kacheln = "".join(
         render_kachel_html(
-            KachelInput(kicker=f"K{i}", titel_id=f"k{i}", display_zahl=str(i))
+            KachelInput(
+                kicker=f"K{i}",
+                titel_id=f"k{i}",
+                aussage="Satz.",
+                link=("Mehr", "/x/"),
+                zahl=str(i),
+            )
         )
         for i in range(4)
     )

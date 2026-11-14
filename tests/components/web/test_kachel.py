@@ -50,10 +50,11 @@ class TestKachel:
             KachelInput(
                 kicker="Aufgaben",
                 titel_id="k-aufgaben",
-                display_zahl="12",
-                inhalt_html="<p>drei fällig</p>",
-                fuss_link=("Alle Aufgaben", "/atelier/aufgaben/"),
+                aussage="Drei Aufgaben sind fällig.",
+                zahl="12",
+                link=("Alle Aufgaben", "/atelier/aufgaben/"),
                 stand="Aktualisiert 14.11. 06:05",
+                status=StatusPunktInput(stufe="ok", wort="alles gut"),
             )
         )
         assert html.startswith(
@@ -61,46 +62,93 @@ class TestKachel:
         )
         assert '<h3 id="k-aufgaben" class="mn-kachel__kicker">Aufgaben</h3>' in html
         assert '<p class="mn-kachel__zahl">12</p>' in html
-        assert '<div class="mn-kachel__inhalt"><p>drei fällig</p></div>' in html
+        assert '<p class="mn-kachel__aussage">Drei Aufgaben sind fällig.</p>' in html
         assert (
-            '<a class="mn-kachel__fuss" href="/atelier/aufgaben/">Alle Aufgaben</a>'
+            '<a class="mn-kachel__link" href="/atelier/aufgaben/">Alle Aufgaben</a>'
             in html
         )
         assert '<p class="mn-kachel__stand">Aktualisiert 14.11. 06:05</p>' in html
+        assert 'class="mn-status mn-status--ok"' in html
 
-    def test_minimal_ohne_optionales(self):
-        html = render_kachel_html(KachelInput(kicker="K", titel_id="k"))
-        for fehlt in ("mn-kachel__zahl", "mn-kachel__fuss", "mn-kachel__stand"):
+    def test_kachel_ohne_zahl_zeigt_keine(self):
+        html = render_kachel_html(
+            KachelInput(kicker="K", titel_id="k", aussage="Satz.", link=("Mehr", "/x/"))
+        )
+        for fehlt in ("mn-kachel__zahl", "mn-kachel__stand", "mn-status"):
             assert fehlt not in html
 
-    def test_inhalt_html_wird_nicht_escapt_alles_andere_schon(self):
-        # Regel P11: inhalt_html ist Markup aus anderen DS-Renderern, der Konsument escapt
+    def test_kachel_hat_kein_freies_html(self):
+        # strenge Kachel: kein inhalt_html, kein fuss_link, kein display_zahl mehr
+        felder = set(KachelInput.model_fields)
+        assert felder == {
+            "kicker",
+            "aussage",
+            "link",
+            "titel_id",
+            "zahl",
+            "stand",
+            "status",
+        }
+        with pytest.raises(ValidationError):
+            KachelInput(
+                kicker="K",
+                titel_id="k",
+                aussage="a",
+                link=("x", "/x/"),
+                inhalt_html="<b>x</b>",
+            )
+        # alles, was hineingegeben wird, kommt maskiert heraus
         html = render_kachel_html(
             KachelInput(
                 kicker="<b>K</b>",
                 titel_id="k",
-                display_zahl="<i>1</i>",
-                inhalt_html="<strong>fett</strong>",
-                fuss_link=("<u>mehr</u>", "/x/"),
-                stand="<s>stand</s>",
+                aussage="<i>a</i>",
+                zahl="<u>1</u>",
+                link=("<s>mehr</s>", "/x/"),
+                stand="<em>stand</em>",
+                status=StatusPunktInput(stufe="ok", wort="<q>w</q>"),
             )
         )
-        assert "<strong>fett</strong>" in html
-        for roh in ("<b>", "<i>", "<u>", "<s>"):
+        for roh in ("<b>", "<i>", "<u>", "<s>", "<em>", "<q>"):
             assert roh not in html
         assert "&lt;b&gt;K&lt;/b&gt;" in html
+
+    def test_kachel_genau_ein_link_und_nur_intern(self):
+        html = render_kachel_html(
+            KachelInput(
+                kicker="K", titel_id="k", aussage="a", link=("Mehr", "/x/?a=1#b")
+            )
+        )
+        assert html.count("<a ") == 1 and html.count("href=") == 1
+        # die ganze Kachel ist das Ziel: Pseudo-Element des einen Links, kein zweiter Link
+        css = render_kachel_css()
+        assert re.search(r"\.mn-kachel__link::after\s*\{[^}]*position:\s*absolute", css)
+        assert re.search(r"\.mn-kachel\s*\{[^}]*position:\s*relative", css)
+        for href in (
+            "javascript:x",
+            "//evil.example/",
+            "https://x.example/",
+            "x/relativ/",
+            "/\\host",
+            "/a\tb",
+            "",
+            "#anker",
+        ):
+            with pytest.raises(ValidationError):
+                KachelInput(kicker="K", titel_id="k", aussage="a", link=("x", href))
 
     @pytest.mark.parametrize("titel_id", ["", "1a", "a b", 'a"b', "a>b"])
     def test_titel_id_muss_ein_id_sein(self, titel_id):
         with pytest.raises(ValidationError):
-            KachelInput(kicker="K", titel_id=titel_id)
+            KachelInput(kicker="K", titel_id=titel_id, aussage="a", link=("x", "/x/"))
 
-    @pytest.mark.parametrize(
-        "href", ["javascript:x", "//evil.example/", "https://x.example/"]
-    )
-    def test_fremde_ziele_werden_abgewiesen(self, href):
+    def test_aussage_und_link_sind_pflicht(self):
         with pytest.raises(ValidationError):
-            KachelInput(kicker="K", titel_id="k", fuss_link=("x", href))
+            KachelInput(kicker="K", titel_id="k", link=("x", "/x/"))
+        with pytest.raises(ValidationError):
+            KachelInput(kicker="K", titel_id="k", aussage="a")
+        with pytest.raises(ValidationError):
+            KachelInput(kicker="K", titel_id="k", aussage=" ", link=("x", "/x/"))
 
     def test_raster_zwei_spalten_ab_bp_tablet_darunter_eine(self):
         css = render_kachel_css()
@@ -119,7 +167,7 @@ class TestKachel:
         _kein_rohwert(render_kachel_css())
 
     def test_inline_css(self):
-        k = KachelInput(kicker="K", titel_id="k")
+        k = KachelInput(kicker="K", titel_id="k", aussage="a", link=("x", "/x/"))
         assert render_kachel_html(k, inline_css=True).startswith("<style>")
         assert "<style" not in render_kachel_html(k)
 
@@ -208,9 +256,9 @@ class TestFortschritt:
         _kein_rohwert(render_fortschritt_css())
 
 
-def test_fusslink_vertauscht_faellt_auf():
+def test_link_vertauscht_faellt_auf():
     with pytest.raises(ValidationError, match="sieht wie ein Ziel aus"):
-        KachelInput(kicker="K", titel_id="k", fuss_link=("/x/", "Mehr"))
+        KachelInput(kicker="K", titel_id="k", aussage="a", link=("/x/", "/mehr/"))
 
 
 def test_fortschritt_label_id_muss_eine_id_sein():

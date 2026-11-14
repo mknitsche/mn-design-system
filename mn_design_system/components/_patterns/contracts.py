@@ -470,25 +470,57 @@ def _label_gueltig(label: str) -> str:
 _ID_MUSTER = re.compile(r"^[A-Za-z][A-Za-z0-9_:.-]*$")
 
 
+class StatusPunktInput(BaseModel):
+    """Status-Punkt (0.24.0): Symbol UND Wort, nie Farbe allein."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    stufe: Literal["ok", "warn", "alarm", "unbekannt"]
+    wort: str = Field(min_length=1)
+
+
+def _interner_pfad(v: str) -> str:
+    """Nur ein interner absoluter Pfad: genau ein fuehrendes `/`, kein `//`, kein Backslash, keine
+    Steuer- oder Leerzeichen. Schema-Ziele, Anker und relative Pfade fallen heraus."""
+    v = v.strip()
+    if not v.startswith("/") or v.startswith("//"):
+        raise ValueError("href muss ein interner Pfad sein (genau ein fuehrendes '/')")
+    if "\\" in v or any(ord(c) <= 32 or ord(c) == 127 for c in v):
+        raise ValueError(
+            "href darf weder Backslash noch Leer- oder Steuerzeichen enthalten"
+        )
+    return v
+
+
 class KachelInput(BaseModel):
-    """Kachel (0.24.0): Kicker (zugleich Ueberschrift), optional grosse Zahl, Inhalt, Fusslink, Stand.
+    """Kachel (0.24.0, streng): Kicker, EINE Aussage, hoechstens eine Zahl, genau ein Link.
+
+    Die ganze Kachel ist ueber den einen Link klickbar. Dazu koennen Stand und Status-Punkt
+    kommen, sonst nichts: kein freies HTML, keine Liste, keine Tabelle. Jedes Feld wird escapt.
 
     titel_id: id der Ueberschrift; die Kachel verweist per `aria-labelledby` darauf.
-    inhalt_html: Markup anderer DS-Renderer — wird NICHT escapt. Der Konsument setzt jeden Text
-        darin mit `html.escape(text, quote=True)` ein; Werte aus Owner-Daten gehoeren nie hierher
-        (Regel P11).
-    fuss_link: `(label, href)`, `href` intern oder relativ, kein Schema.
+    aussage: ein Satz (vom Konsumenten nach Regeln gebildet).
+    link: `(label, href)`; `href` nur interner absoluter Pfad.
+    zahl: die eine grosse Zahl; ohne Zahl zeigt die Kachel keine.
     stand: Text der Stand-Zeile der Kachel (z. B. "Aktualisiert 14.11. 06:05").
     """
 
     model_config = {"extra": "forbid", "frozen": True}
 
     kicker: str = Field(min_length=1)
+    aussage: str = Field(min_length=1)
+    link: tuple[str, str]
     titel_id: str
-    display_zahl: str | None = None
-    inhalt_html: str = ""
-    fuss_link: tuple[str, str] | None = None
+    zahl: str | None = None
     stand: str | None = None
+    status: StatusPunktInput | None = None
+
+    @field_validator("aussage")
+    @classmethod
+    def _aussage_nicht_leer(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("aussage darf nicht leer sein")
+        return v
 
     @field_validator("titel_id")
     @classmethod
@@ -499,22 +531,11 @@ class KachelInput(BaseModel):
             )
         return v
 
-    @field_validator("fuss_link")
+    @field_validator("link")
     @classmethod
-    def _fuss_sicher(cls, v: tuple[str, str] | None) -> tuple[str, str] | None:
-        if v is None:
-            return None
+    def _link_intern(cls, v: tuple[str, str]) -> tuple[str, str]:
         label, href = v
-        return (_label_gueltig(label), _sicheres_ziel(href))
-
-
-class StatusPunktInput(BaseModel):
-    """Status-Punkt (0.24.0): Symbol UND Wort, nie Farbe allein."""
-
-    model_config = {"extra": "forbid", "frozen": True}
-
-    stufe: Literal["ok", "warn", "alarm", "unbekannt"]
-    wort: str = Field(min_length=1)
+        return (_label_gueltig(label), _interner_pfad(href))
 
 
 class FortschrittInput(BaseModel):
