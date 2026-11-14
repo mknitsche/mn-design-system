@@ -10,6 +10,13 @@ oder Doku.
 
 ## [Unreleased]
 
+### Neu — 0.24.0 „Rahmen und Foyer“ (claudeAI Welle 1, streng additiv: jede Eingabe von 0.23.0 rendert byte-gleich)
+
+- **Ortszeile** (`OrtszeileInput`, `render_ortszeile_html/_css`): die ganze Kette bis zur Elternseite in einer Zeile,
+  das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von vorn. `back_link` und `pfad_zeile` unveraendert.
+- Additivitaetsbeweis: `tests/golden/0_23_0.json` haelt die Ausgabe von 0.23.0, je Komponente prueft
+  `test_alte_eingaben_rendern_wie_0_23_0` byte-gleich dagegen.
+
 ## [0.23.0] — 2026-11-13
 
 ### Neu — die zwei MKN-Logos als Paket-Assets (claudeAI, KT-1 2026-11-12)
