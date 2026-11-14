@@ -93,7 +93,6 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `back_link` | Die eine Zurueck-Zeile unterhalb einer Reiterseite (nur interner Pfad) |
 | `datei_zeile` | Listenzeile fuer Ordner und Dateien (Kennung/Vorschau, Name, Meta, Aktion; ein- und zweizeilig) |
 | `pfad_zeile` | Pfadzeile: Vorfahren eines Ordners als Links |
-| `ortszeile` | Ortszeile (0.24.0): ganze Kette bis zur Elternseite, einzeilig, von links gekuerzt |
 | `raumplan` | Raumplan (0.24.0): Blatt mit allen Raeumen; kompakter Kopf (`masthead` kompakt) mit Raum-Schalter und Rueckfall-Link |
 | `kachel` | Kachel (0.24.0) mit Raster `mn-kachel-raster` (zwei Spalten ab `bp-tablet`) |
 | `status_punkt` | Status-Punkt (0.24.0): Symbol und Wort, nie Farbe allein |
