@@ -406,6 +406,29 @@ class PfadZeileInput(BaseModel):
         return tuple((label, _sicheres_ziel(href)) for label, href in v)
 
 
+class OrtszeileInput(BaseModel):
+    """Ortszeile (0.24.0): die Kette vom Raum bis zur Elternseite als Links, (href, label).
+
+    Das LETZTE Glied ist die Elternseite und traegt den Pfeil; die Vorfahren davor sind
+    gewoehnliche Links. Mindestens ein Glied. `href`: interner oder relativer Pfad, kein
+    Schema (wie bei der Pfadzeile).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    glieder: tuple[tuple[str, str], ...] = Field(min_length=1)
+
+    @field_validator("glieder")
+    @classmethod
+    def _glieder_gueltig(
+        cls, v: tuple[tuple[str, str], ...]
+    ) -> tuple[tuple[str, str], ...]:
+        for _, label in v:
+            if not label.strip():
+                raise ValueError("Label eines Glieds darf nicht leer sein")
+        return tuple((_sicheres_ziel(href), label) for href, label in v)
+
+
 class FooterLink(BaseModel):
     """Ein Link im rechten Cluster der Footer-Schlusszeile."""
 

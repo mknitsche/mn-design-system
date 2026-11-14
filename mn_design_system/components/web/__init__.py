@@ -65,6 +65,10 @@ from mn_design_system.components.web.masthead import (
     render_masthead_css,
     render_masthead_html,
 )
+from mn_design_system.components.web.ortszeile import (
+    render_ortszeile_css,
+    render_ortszeile_html,
+)
 from mn_design_system.components.web.page_header import (
     render_page_header_css,
     render_page_header_html,
@@ -128,6 +132,8 @@ __all__ = [
     "render_kpi_card_html",
     "render_masthead_css",
     "render_masthead_html",
+    "render_ortszeile_css",
+    "render_ortszeile_html",
     "render_page_header_css",
     "render_page_header_html",
     "render_pfad_zeile_css",
