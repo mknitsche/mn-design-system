@@ -35,6 +35,7 @@ from mn_design_system.components.web.datei_zeile import (
     render_datei_zeile_css,
     render_datei_zeile_html,
 )
+from mn_design_system.components.web.ecken import render_ecken_css
 from mn_design_system.components.web.empty_state import (
     render_empty_state_css,
     render_empty_state_html,
@@ -143,6 +144,7 @@ __all__ = [
     "render_datei_liste_html",
     "render_datei_zeile_css",
     "render_datei_zeile_html",
+    "render_ecken_css",
     "render_empty_state_css",
     "render_empty_state_html",
     "render_font_face",
