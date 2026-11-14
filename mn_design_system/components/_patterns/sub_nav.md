@@ -33,6 +33,23 @@ weiss (Barrierefreiheit). Der aktive Tab sieht aus wie ein Tier-Chip.
 | `href` | `str` | min_length=1, Ziel-URL |
 | `active` | `bool` | Default False — genau einer sollte True sein |
 
+## Kompakte Form mit Gruppen (0.24.0, additiv)
+
+`SubNavInput` bekommt `form: Literal["klassisch", "kompakt"] = "klassisch"` und `gruppen: list[SubNavGruppe] | None = None`
+(`SubNavGruppe(label, tabs)`). Ohne die neuen Felder rendert die Sub-Nav byte-gleich zu 0.23.0 (Golden-Test); die Regeln gelten
+**nur in der kompakten Form** (`render_sub_nav_css(kompakt=True)` haengt ihre Regeln an, ohne Argument bleibt das CSS gleich):
+
+- `tabs` sind die Reiter **vor** den Gruppen (die Uebersicht); je Gruppe `len(tabs) + len(g.tabs) <= 5`; genau ein Reiter ist
+  aktiv. Die klassische Form darf weiter beliebig viele Reiter tragen; `gruppen` ohne `form="kompakt"` wird abgewiesen.
+- Aussehen: Text mit Unterstreichung (aktiv: Tier-Text, hover: Tier-Rand), Zielhoehe `web.touch-target`.
+- Rechner: eine Zeile, vor jeder Gruppe ein `<span class="mn-sub-nav__gruppe">` mit dem Gruppennamen.
+- Handy (bis `web.layout.bp-mobile`): im selben `<nav>` ein Schalter `<div class="mn-sub-nav__schalter" role="group">` mit je einem
+  Link auf den **ersten Reiter** jeder Gruppe; genau ein Feld ist aktiv (`is-active`): die Gruppe des aktiven Reiters, auf der
+  Uebersicht die erste. Darunter stehen nur die Uebersicht und die Reiter der aktiven Gruppe — jeder Reiter und jede Gruppenmarke
+  traegt `data-gruppe-aktiv="true|false"`, reines CSS blendet `false` aus. Eine Zeile ohne Scrollen: die Reiter nutzen am Handy
+  `web.text.caption` und `space.1` Innenabstand, damit fuenf Reiter bei 390 px in eine Zeile passen (im Browser bewiesen,
+  mit Geist).
+
 ## Verwendete Tokens
 
 - `color.tier.<tier>.bg` — Hintergrund des aktiven Tabs

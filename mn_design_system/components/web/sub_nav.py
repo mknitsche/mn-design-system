@@ -45,8 +45,13 @@ from __future__ import annotations
 
 from html import escape
 
-from mn_design_system.components._patterns.contracts import SubNavInput, WebTier
+from mn_design_system.components._patterns.contracts import (
+    SubNavInput,
+    SubNavTab,
+    WebTier,
+)
 from mn_design_system.components.web.foundation import media_max_width_below
+from mn_design_system.tokens import get
 
 _TIERS: tuple[WebTier, ...] = (
     WebTier.BIBLIOTHEK,
@@ -78,6 +83,8 @@ def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
     inline_css=True hangt das Komponenten-CSS in einem <style>-Block an —
     fuer Single-Snippet-Embeds.
     """
+    if input.form == "kompakt":
+        return _render_kompakt_html(input, inline_css=inline_css)
     parts = []
     if inline_css:
         parts.append(f"<style>{render_sub_nav_css()}</style>")
@@ -104,8 +111,77 @@ def render_sub_nav_html(input: SubNavInput, *, inline_css: bool = False) -> str:
     return "".join(parts)
 
 
-def render_sub_nav_css() -> str:
+def _tab_html(tab: SubNavTab, *, gruppe_aktiv: bool | None = None) -> str:
+    classes = ["mn-sub-nav__tab"]
+    aria_current = ""
+    if tab.active:
+        classes.append("is-active")
+        aria_current = ' aria-current="page"'
+    marke = "" if gruppe_aktiv is None else _gruppe_aktiv_attr(gruppe_aktiv)
+    return (
+        f'<a class="{" ".join(classes)}" href="{escape(tab.href, quote=True)}"'
+        f"{aria_current}{marke}>{escape(tab.label)}</a>"
+    )
+
+
+def _gruppe_aktiv_attr(aktiv: bool) -> str:
+    return f' data-gruppe-aktiv="{"true" if aktiv else "false"}"'
+
+
+def _aktive_gruppe(input: SubNavInput) -> int:
+    """Index der Gruppe des aktiven Reiters; auf einem Reiter vor den Gruppen (der
+    Uebersicht) die erste."""
+    for i, g in enumerate(input.gruppen or []):
+        if any(t.active for t in g.tabs):
+            return i
+    return 0
+
+
+def _render_kompakt_html(input: SubNavInput, *, inline_css: bool) -> str:
+    """Kompakte Form (0.24.0): Reiter vor den Gruppen, dann je Gruppe Name und Reiter in
+    EINER Zeile (Rechner); am Handy zeigt der Schalter die Gruppen, darunter stehen nur
+    die Reiter vor den Gruppen und die der aktiven Gruppe (`data-gruppe-aktiv`)."""
+    gruppen = input.gruppen or []
+    aktiv = _aktive_gruppe(input)
+    parts = []
+    if inline_css:
+        parts.append(f"<style>{render_sub_nav_css(kompakt=True)}</style>")
+    aria_label = escape(input.aria_label, quote=True)
+    parts.append(
+        f'<nav class="mn-sub-nav mn-sub-nav--{input.tier.value} mn-sub-nav--kompakt" '
+        f'aria-label="{aria_label}">'
+    )
+    if gruppen:
+        felder = []
+        for i, g in enumerate(gruppen):
+            klasse = "mn-sub-nav__feld" + (" is-active" if i == aktiv else "")
+            current = ' aria-current="true"' if i == aktiv else ""
+            felder.append(
+                f'<a class="{klasse}" href="{escape(g.tabs[0].href, quote=True)}"'
+                f"{current}>{escape(g.label)}</a>"
+            )
+        parts.append(
+            f'<div class="mn-sub-nav__schalter" role="group" aria-label="Gruppe">'
+            f"{''.join(felder)}</div>"
+        )
+    parts.append('<div class="mn-sub-nav__inner">')
+    parts.extend(_tab_html(t) for t in input.tabs)
+    for i, g in enumerate(gruppen):
+        marke = _gruppe_aktiv_attr(i == aktiv)
+        parts.append(
+            f'<span class="mn-sub-nav__gruppe"{marke}>{escape(g.label)}</span>'
+        )
+        parts.extend(_tab_html(t, gruppe_aktiv=i == aktiv) for t in g.tabs)
+    parts.append("</div>")
+    parts.append("</nav>")
+    return "".join(parts)
+
+
+def render_sub_nav_css(*, kompakt: bool = False) -> str:
     """Komponenten-CSS — Layout + 6 Tier-Modifier, Token-Werte via Custom Properties.
+
+    ``kompakt=True`` (0.24.0) haengt die Regeln der kompakten Form an; ohne das Argument
+    ist die Ausgabe byte-gleich zu 0.23.0.
 
     Konsument muss `dist/css/tokens.css` einbinden, damit
     `var(--color-tier-bibliothek-bg)` etc. greift.
@@ -189,7 +265,119 @@ def render_sub_nav_css() -> str:
             f"  color: var(--color-tier-{t}-text, {fb_text});\n"
             f"}}"
         )
+    if kompakt:
+        rules.append(_kompakt_css())
     return "\n".join(rules)
+
+
+def _kompakt_css() -> str:
+    """Regeln der kompakten Form (0.24.0); kommen NACH dem Basis-CSS und gewinnen bei
+    gleicher Spezifitaet. Am Handy (bis `web.layout.bp-mobile`) EINE Zeile ohne Scrollen."""
+    bp_mobile = get("web.layout.bp-mobile")
+    regeln = [
+        """
+.mn-sub-nav__schalter {
+  display: none;
+}
+.mn-sub-nav--kompakt .mn-sub-nav__inner {
+  flex-wrap: wrap;
+  gap: 0;
+  padding-block: 0;
+}
+.mn-sub-nav--kompakt .mn-sub-nav__tab {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--web-touch-target, 44px);
+  padding: 0 var(--space-3, 12px);
+  border-radius: 0;
+  border-bottom: var(--web-stroke-line-strong, 2px) solid transparent;
+  background: transparent;
+}
+.mn-sub-nav--kompakt .mn-sub-nav__gruppe {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--web-touch-target, 44px);
+  padding-inline: var(--space-3, 12px);
+  font-size: var(--web-text-caption, 12px);
+  line-height: var(--web-leading-caption, 1.4);
+  color: var(--color-light-text-muted, #6b7280);
+}"""
+    ]
+    for tier in _TIERS:
+        t = tier.value
+        fb_bg, fb_border, fb_text = _TIER_FALLBACK[tier]
+        regeln.append(
+            f".mn-sub-nav--kompakt.mn-sub-nav--{t} .mn-sub-nav__tab:not(.is-active):hover {{\n"
+            f"  background: transparent;\n"
+            f"  border-bottom-color: var(--color-tier-{t}-border, {fb_border});\n"
+            f"}}"
+        )
+        regeln.append(
+            f".mn-sub-nav--kompakt.mn-sub-nav--{t} .mn-sub-nav__tab.is-active {{\n"
+            f"  background: transparent;\n"
+            f"  border-bottom-color: var(--color-tier-{t}-text, {fb_text});\n"
+            f"  color: var(--color-tier-{t}-text, {fb_text});\n"
+            f"}}"
+        )
+        regeln.append(
+            f".mn-sub-nav--kompakt.mn-sub-nav--{t} .mn-sub-nav__feld.is-active {{\n"
+            f"  background: var(--color-tier-{t}-bg, {fb_bg});\n"
+            f"  color: var(--color-tier-{t}-text, {fb_text});\n"
+            f"}}"
+        )
+    # Unter bp-tablet loest die Basis die Zeile in eine scrollbare Leiste auf; die kompakte
+    # Form bricht stattdessen um (Tablet) bzw. bleibt am Handy einzeilig.
+    regeln.append(
+        f"""
+@media ({media_max_width_below("web.layout.bp-tablet")}) {{
+  .mn-sub-nav--kompakt .mn-sub-nav__inner {{
+    overflow-x: visible;
+    background-image: none;
+  }}
+}}
+@media (max-width: {bp_mobile}) {{
+  .mn-sub-nav--kompakt .mn-sub-nav__schalter {{
+    display: flex;
+    gap: var(--space-1, 4px);
+    padding: var(--space-1, 4px) var(--web-layout-page-inset, 16px) 0;
+  }}
+  .mn-sub-nav--kompakt .mn-sub-nav__feld {{
+    box-sizing: border-box;
+    flex: 1 1 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--web-touch-target, 44px);
+    border: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
+    border-radius: var(--radius-subtle, 2px);
+    font-size: var(--web-text-ui, 14px);
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-light-text, #1e1b4b);
+  }}
+  .mn-sub-nav--kompakt .mn-sub-nav__feld:focus-visible {{
+    outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
+    outline-offset: var(--space-1, 4px);
+  }}
+  .mn-sub-nav--kompakt .mn-sub-nav__inner {{
+    flex-wrap: nowrap;
+    padding-inline: var(--web-layout-page-inset, 16px);
+  }}
+  .mn-sub-nav--kompakt .mn-sub-nav__tab {{
+    flex: 1 1 auto;
+    justify-content: center;
+    padding-inline: var(--space-1, 4px);
+    font-size: var(--web-text-caption, 12px);
+    line-height: var(--web-leading-caption, 1.4);
+  }}
+  .mn-sub-nav--kompakt .mn-sub-nav__gruppe,
+  .mn-sub-nav--kompakt [data-gruppe-aktiv="false"] {{
+    display: none;
+  }}
+}}""".strip()
+    )
+    return "\n".join(regeln)
 
 
 # Rueckfall fuer Browser ohne `scroll-initial-target` (Safari, Firefox): rollt die
