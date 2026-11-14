@@ -88,7 +88,7 @@ def render_raumplan_css() -> str:
 }
 .mn-raumplan__titel {
   margin: 0;
-  font-size: var(--web-text-h3, 21px);
+  font-size: var(--web-text-h3, 23px);
 }
 .mn-raumplan__raeume,
 .mn-raumplan__reiter {

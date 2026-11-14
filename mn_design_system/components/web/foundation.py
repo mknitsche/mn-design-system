@@ -13,6 +13,7 @@ etc. nutzen, automatisch responsiv. Eine Override-Stelle, kein Drift.
 from __future__ import annotations
 
 import json
+from collections.abc import Collection, Mapping
 from pathlib import Path
 
 from mn_design_system.fonts import FONT_DIR
@@ -40,21 +41,52 @@ def web_font_dir() -> Path:
     return FONT_DIR / "web"
 
 
-def render_font_face(url_prefix: str) -> str:
-    """@font-face-Bloecke fuer alle Web-Schriften; ``url_prefix`` ist der Auslieferpfad
-    des Konsumenten (z. B. ``"/assets/fonts/"``). ``font-display: swap`` verhindert FOIT."""
+def render_font_face(
+    url_prefix: str,
+    *,
+    dateien: Mapping[str, str] | None = None,
+    nur: Collection[str] | None = None,
+) -> str:
+    """@font-face-Bloecke fuer die Web-Schriften; ``url_prefix`` ist der Auslieferpfad
+    des Konsumenten (z. B. ``"/assets/fonts/"``). ``font-display: swap`` verhindert FOIT.
+
+    Seit 0.24.0, beide Argumente optional und additiv (ohne sie byte-gleich zu 0.23.0):
+
+    - ``dateien`` bildet den Klarnamen (``WEB_SCHRIFTEN``, z. B. ``"Geist-Regular.woff2"``)
+      auf den ausgelieferten Namen ab, etwa mit Fingerprint
+      (``"Geist-Regular.1a2b3c4d.woff2"``). Fuer jede gewaehlte Schrift muss ein Eintrag
+      da sein.
+    - ``nur`` beschraenkt auf die genannten Klarnamen; die Reihenfolge bleibt die der
+      Liste ``WEB_SCHRIFTEN``. Eine leere Auswahl liefert ``""``.
+
+    Raises:
+        KeyError: ein Name in ``nur`` oder ``dateien`` ist keine Web-Schrift, oder fuer eine
+            gewaehlte Schrift fehlt der Eintrag in ``dateien`` (kein stiller Rueckfall auf
+            einen Namen, der nicht ausgeliefert wird).
+    """
     praefix = (
         url_prefix if not url_prefix or url_prefix.endswith("/") else url_prefix + "/"
     )
+    bekannt = {datei for *_, datei in WEB_SCHRIFTEN}
+    for name in (*(nur or ()), *(dateien or ())):
+        if name not in bekannt:
+            raise KeyError(
+                f"Unbekannte Web-Schrift {name!r} (erlaubt: {sorted(bekannt)})"
+            )
+    auswahl = [eintrag for eintrag in WEB_SCHRIFTEN if nur is None or eintrag[3] in nur]
+    if dateien is not None:
+        fehlt = [datei for *_, datei in auswahl if datei not in dateien]
+        if fehlt:
+            raise KeyError(f"Kein ausgelieferter Name in dateien fuer {fehlt}")
     return "\n".join(
         "@font-face {\n"
         f'  font-family: "{familie}";\n'
         f"  font-weight: {gewicht};\n"
         f"  font-style: {stil};\n"
         "  font-display: swap;\n"
-        f'  src: url("{praefix}{datei}") format("woff2");\n'
+        f'  src: url("{praefix}{(dateien or {}).get(datei, datei)}") format("woff2");\n'
         "}"
-        for familie, gewicht, stil, datei in WEB_SCHRIFTEN
+        for familie, gewicht, stil, datei in auswahl
     )
 
 

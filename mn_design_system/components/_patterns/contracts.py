@@ -10,6 +10,7 @@ zwischen Spec und Implementation.
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime
 from enum import Enum
 from typing import Literal
@@ -475,6 +476,99 @@ class OrtszeileInput(BaseModel):
             if not label.strip():
                 raise ValueError("Label eines Glieds darf nicht leer sein")
         return tuple((_sicheres_ziel(href), label) for href, label in v)
+
+
+_ID_MUSTER = re.compile(r"^[A-Za-z][A-Za-z0-9_:.-]*$")
+
+
+class KachelInput(BaseModel):
+    """Kachel (0.24.0): Kicker (zugleich Ueberschrift), optional grosse Zahl, Inhalt, Fusslink, Stand.
+
+    titel_id: id der Ueberschrift; die Kachel verweist per `aria-labelledby` darauf.
+    inhalt_html: Markup anderer DS-Renderer — wird NICHT escapt. Der Konsument setzt jeden Text
+        darin mit `html.escape(text, quote=True)` ein; Werte aus Owner-Daten gehoeren nie hierher
+        (Regel P11).
+    fuss_link: `(href, label)`, `href` intern oder relativ, kein Schema.
+    stand: Text der Stand-Zeile der Kachel (z. B. "Aktualisiert 14.11. 06:05").
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    kicker: str = Field(min_length=1)
+    titel_id: str
+    display_zahl: str | None = None
+    inhalt_html: str = ""
+    fuss_link: tuple[str, str] | None = None
+    stand: str | None = None
+
+    @field_validator("titel_id")
+    @classmethod
+    def _id_gueltig(cls, v: str) -> str:
+        if not _ID_MUSTER.match(v):
+            raise ValueError(
+                "titel_id muss eine gueltige HTML-id sein (Buchstabe, dann [A-Za-z0-9_:.-])"
+            )
+        return v
+
+    @field_validator("fuss_link")
+    @classmethod
+    def _fuss_sicher(cls, v: tuple[str, str] | None) -> tuple[str, str] | None:
+        if v is None:
+            return None
+        href, label = v
+        if not label.strip():
+            raise ValueError("Label des Fusslinks darf nicht leer sein")
+        return (_sicheres_ziel(href), label)
+
+
+class StatusPunktInput(BaseModel):
+    """Status-Punkt (0.24.0): Symbol UND Wort, nie Farbe allein."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    stufe: Literal["ok", "warn", "alarm", "unbekannt"]
+    wort: str = Field(min_length=1)
+
+
+class FortschrittInput(BaseModel):
+    """Fortschritt (0.24.0): Anteil 0..1 als `role="progressbar"` mit Label."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    anteil: float = Field(ge=0, le=1)
+    label: str = Field(min_length=1)
+
+
+class StandZeileInput(BaseModel):
+    """Stand-Zeile (0.24.0): "Aktualisiert 14.11. 06:05 · AMBER", optional mit "· veraltet".
+
+    text: der fertige Stand-Text (der Konsument formatiert das Datum).
+    tlp: Etikett hinter dem Text (z. B. "AMBER").
+    stand_iso + takt_minuten: nur zusammen. Das DS-Skript haengt "· veraltet" an, wenn der Stand
+        (ISO-8601 MIT Zone) aelter ist als das Doppelte des Takts.
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    text: str = Field(min_length=1)
+    tlp: str | None = Field(default=None, min_length=1)
+    stand_iso: str | None = None
+    takt_minuten: int | None = Field(default=None, gt=0)
+
+    @model_validator(mode="after")
+    def _stand_und_takt(self) -> StandZeileInput:
+        if (self.stand_iso is None) != (self.takt_minuten is None):
+            raise ValueError("stand_iso und takt_minuten gibt es nur zusammen")
+        if self.stand_iso is not None:
+            try:
+                moment = datetime.fromisoformat(self.stand_iso)
+            except ValueError as exc:
+                raise ValueError(
+                    f"stand_iso ist kein ISO-8601-Zeitpunkt: {exc}"
+                ) from exc
+            if moment.tzinfo is None:
+                raise ValueError("stand_iso braucht eine Zeitzone (z. B. +01:00)")
+        return self
 
 
 class FooterLink(BaseModel):
