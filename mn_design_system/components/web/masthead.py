@@ -57,11 +57,12 @@ def render_masthead_html(input: MastheadInput, *, inline_css: bool = False) -> s
         parts.append(f"<style>{render_masthead_css()}</style>")
 
     kompakt = input.form == "kompakt"
-    parts.append(
-        '<header class="mn-masthead mn-masthead--kompakt">'
-        if kompakt
-        else '<header class="mn-masthead">'
-    )
+    klassen = ["mn-masthead"]
+    if kompakt:
+        klassen.append("mn-masthead--kompakt")
+    if input.profil is not None:
+        klassen.append("mn-masthead--profil")
+    parts.append(f'<header class="{" ".join(klassen)}">')
 
     # Reihe 1 — Identitaet
     emblem = input.emblem
@@ -102,14 +103,6 @@ def render_masthead_html(input: MastheadInput, *, inline_css: bool = False) -> s
             f'href="{escape(item.href, quote=True)}"{aria_current}>'
             f"{escape(item.label)}</a>"
         )
-        if (
-            kompakt
-            and 0 < input.blicke < len(input.tier_items)
-            and idx + 1 == input.blicke
-        ):
-            parts.append(
-                '<span class="mn-masthead__trenner" aria-hidden="true"></span>'
-            )
     if kompakt and input.raum_schalter is not None:
         parts.append(_raum_schalter_html(input.raum_schalter))
     parts.append("</div>")  # __pills
@@ -127,12 +120,33 @@ def render_masthead_html(input: MastheadInput, *, inline_css: bool = False) -> s
             f'class="mn-masthead__chip mn-masthead__chip--loading">'
             f"{escape(input.user_chip_label)}</span>"
         )
+    if input.profil is not None:
+        parts.append(_profil_knopf_html())
     parts.append("</div>")  # __context
     parts.append("</div>")  # __tiers-inner
     parts.append("</nav>")  # __tiers
 
     parts.append("</header>")
     return "".join(parts)
+
+
+_PROFIL_SYMBOL = (
+    '<svg class="mn-masthead__profil-symbol" viewBox="0 0 24 24" width="20" height="20" '
+    'aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" fill="none" '
+    'stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" '
+    'fill="none" stroke="currentColor" stroke-width="2"/></svg>'
+)
+
+
+def _profil_knopf_html() -> str:
+    """Der Profil-Knopf steht doppelt wie der Raum-Schalter: Knopf fuer das Menue
+    (`popovertarget`) und Rueckfall-Link auf `#profilmenue`; das CSS zeigt genau einen."""
+    return (
+        '<button class="mn-masthead__profil" type="button" popovertarget="profilmenue" '
+        f'aria-label="Profil und Darstellung">{_PROFIL_SYMBOL}</button>'
+        '<a class="mn-masthead__profil-link" href="#profilmenue" '
+        f'aria-label="Profil und Darstellung">{_PROFIL_SYMBOL}</a>'
+    )
 
 
 def _raum_schalter_html(label: str) -> str:
@@ -290,16 +304,10 @@ def render_masthead_css(*, kompakt: bool = False) -> str:
 
 
 def _kompakt_css() -> str:
-    """Regeln der kompakten Form (0.24.0): nach dem Basis-CSS. Der Trenner steht ueberall; am
+    """Regeln der kompakten Form (0.24.0): nach dem Basis-CSS. Am
     Handy (bis `web.layout.bp-mobile`) ist es EINE Zeile ohne Markenzeile und Raum-Pillen."""
     bp_mobile = get("web.layout.bp-mobile")
     return f"""
-.mn-masthead__trenner {{
-  align-self: stretch;
-  width: var(--web-stroke-line, 1px);
-  margin-block: var(--space-1, 4px);
-  background: var(--web-color-separator-on-dark, rgba(255, 255, 255, 0.16));
-}}
 .mn-masthead__raum,
 .mn-masthead__raum-link {{
   display: none;

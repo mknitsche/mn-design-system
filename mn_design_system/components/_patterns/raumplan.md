@@ -15,8 +15,8 @@ Argumente sind HTML und CSS byte-gleich zu 0.23.0 (Golden-Test).
 
 ## Regel (Verwendung)
 
-- **Rechner und iPad:** wie bisher zwei Reihen; neu steht ein Trenner zwischen den ersten `blicke` Pillen (Start, Heute) und den Raeumen.
-- **Handy (bis `web.layout.bp-mobile`):** EINE Zeile `[Marke] Start · Heute · [Raum ▾] … [Profil]`. Markenzeile (Wortmarke, Datum) und
+- **Rechner und iPad:** wie bisher zwei Reihen, ohne Trenner. `blicke` bestimmt nur, welche Pillen am Handy sichtbar bleiben (die ersten `blicke`, z. B. Start).
+- **Handy (bis `web.layout.bp-mobile`):** EINE Zeile `[Marke] Start · [Raum ▾] … [Profil]`. Markenzeile (Wortmarke, Datum) und
   Raum-Pillen (`mn-masthead__pill--raum`) sind verborgen. Die Zeile ist 44 px hoch (`web.touch-target`); Kopf + Unterleiste belegen bei 390 px
   weniger als 100 px, mit Gruppen-Schalter weniger als 140 px (im Browser belegt).
 - **Raum-Schalter** steht doppelt im HTML: `<button popovertarget="raumplan">` und `<a href="#raumplan">`; `@supports selector(:popover-open)` zeigt den
@@ -29,5 +29,5 @@ Argumente sind HTML und CSS byte-gleich zu 0.23.0 (Golden-Test).
 ## Verwendete Tokens
 
 `web.text.ui`, `web.text.caption`, `web.text.h3`, `web.leading.ui`, `web.touch-target`, `web.stroke.line`, `web.stroke.line-strong`,
-`web.stroke.focus`, `web.color.separator`, `web.color.separator-on-dark` (Trenner), `web.color.focus-ring`, `color.light.*`, `color.dark.*`,
+`web.stroke.focus`, `web.color.separator`, `web.color.separator-on-dark`, `web.color.focus-ring`, `color.light.*`, `color.dark.*`,
 `radius.subtle`, `radius.round`, `space.1`–`space.4`, `web.layout.page-inset`, `web.layout.bp-mobile`.

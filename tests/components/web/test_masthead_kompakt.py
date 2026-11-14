@@ -90,14 +90,6 @@ def test_kompakt_traegt_knopf_und_rueckfall_link():
     assert 'aria-controls="raumplan"' in html or "popovertarget" in html
 
 
-def test_trenner_nach_den_blicken():
-    html = render_masthead_html(_kompakt())
-    teile = re.split(r'<span class="mn-masthead__trenner"[^>]*></span>', html)
-    assert len(teile) == 2
-    assert "Start" in teile[0] and "Heute" in teile[0] and "Atelier" not in teile[0]
-    assert "Atelier" in teile[1] and "Kabinett" in teile[1]
-
-
 def test_raum_pillen_tragen_ihre_klasse_blicke_nicht():
     html = render_masthead_html(_kompakt())
     pillen = re.findall(
@@ -111,11 +103,6 @@ def test_raum_pillen_tragen_ihre_klasse_blicke_nicht():
 def test_ohne_raum_schalter_kein_knopf():
     html = render_masthead_html(_eingabe(form="kompakt", blicke=2))
     assert "popovertarget" not in html and "#raumplan" not in html
-
-
-def test_ohne_blicke_kein_trenner():
-    html = render_masthead_html(_eingabe(form="kompakt"))
-    assert "mn-masthead__trenner" not in html
 
 
 def test_aktiver_raum_bleibt_genau_einmal_aktiv():

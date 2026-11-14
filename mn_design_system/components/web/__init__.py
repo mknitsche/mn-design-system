@@ -43,6 +43,10 @@ from mn_design_system.components.web.footer import (
     render_footer_css,
     render_footer_html,
 )
+from mn_design_system.components.web.fortschritt import (
+    render_fortschritt_css,
+    render_fortschritt_html,
+)
 from mn_design_system.components.web.foundation import (
     ECHARTS_DATEI,
     ECHARTS_VERSION,
@@ -50,16 +54,12 @@ from mn_design_system.components.web.foundation import (
     LOGO_VOLL_DATEI,
     WEB_SCHRIFTEN,
     css_font_stack,
+    logos_dir,
     render_font_face,
     render_foundation_css,
-    logos_dir,
     render_initiale_css,
     vendor_js_dir,
     web_font_dir,
-)
-from mn_design_system.components.web.fortschritt import (
-    render_fortschritt_css,
-    render_fortschritt_html,
 )
 from mn_design_system.components.web.kachel import (
     render_kachel_css,
@@ -81,10 +81,15 @@ from mn_design_system.components.web.pfad_zeile import (
     render_pfad_zeile_css,
     render_pfad_zeile_html,
 )
+from mn_design_system.components.web.profilmenue import (
+    render_profilmenue_css,
+    render_profilmenue_html,
+)
 from mn_design_system.components.web.raumplan import (
     render_raumplan_css,
     render_raumplan_html,
 )
+from mn_design_system.components.web.schema import render_schema_js
 from mn_design_system.components.web.sparkline import render_sparkline_svg
 from mn_design_system.components.web.stand_zeile import (
     render_stand_zeile_css,
@@ -157,8 +162,11 @@ __all__ = [
     "render_page_header_html",
     "render_pfad_zeile_css",
     "render_pfad_zeile_html",
+    "render_profilmenue_css",
+    "render_profilmenue_html",
     "render_raumplan_css",
     "render_raumplan_html",
+    "render_schema_js",
     "render_sparkline_svg",
     "render_stand_zeile_css",
     "render_stand_zeile_html",
