@@ -24,7 +24,7 @@ Streng additiv: jede Eingabe, die 0.23.0 kannte, rendert byte-gleich (Golden-Tes
   unveraendert.
 - **Kompakter Kopf** (`MastheadInput.form="kompakt"`, `blicke`, `raum_schalter`; `render_masthead_css(kompakt=True)`): am Handy eine
   44-px-Zeile `[Marke] Blicke · [Raum ▾] … [Profil]` ohne Markenzeile und Raum-Pillen, Trenner nach den Blicken; der Raum-Schalter
-  steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`).
+  steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`)); der Pfeil ist ein eigenes Element, nur der Name kuerzt mit Auslassung. Das erste Glied der Ortszeile behaelt mindestens `space.4`, damit „…“ sichtbar bleibt.
 - **Raumplan** (`RaumplanInput`, `RaumplanRaum`, `render_raumplan_html/_css`): `<section id="raumplan" popover>` mit je einem
   `<li data-bereich>`; Blatt nur unter `@supports selector(:popover-open)`, sonst sichtbarer Abschnitt „Alle Räume“.
 - **Kachel** (`KachelInput`, `render_kachel_html/_css`) mit Raster `mn-kachel-raster` (eine Spalte, ab `web.layout.bp-tablet` zwei);

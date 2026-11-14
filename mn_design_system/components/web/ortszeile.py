@@ -65,6 +65,11 @@ def render_ortszeile_css() -> str:
 .mn-ortszeile li:last-child {
   flex: none;
 }
+/* Das erste Glied schrumpft nie unter eine Auslassung: so bleibt „…“ sichtbar und der Link hat
+   eine Flaeche. */
+.mn-ortszeile li:first-child:not(:last-child) {
+  min-width: var(--space-4, 16px);
+}
 /* Kuerzung von links: je weiter vorn, desto groesser der Schrumpffaktor (Faktor 1000 je
    Glied), so dass das erste Glied zuerst und fast allein schrumpft; das vorletzte bleibt
    voll, solange die vorderen Platz hergeben. */

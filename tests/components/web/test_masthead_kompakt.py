@@ -78,7 +78,14 @@ def test_kompakt_traegt_knopf_und_rueckfall_link():
     link = re.findall(r'<a [^>]*href="#raumplan"[^>]*>(.*?)</a>', html)
     assert len(knopf) == 1 and len(link) == 1
     for inhalt in (knopf[0], link[0]):
-        assert inhalt.startswith("Atelier") and "▾" in inhalt
+        text = re.sub(r"<[^>]+>", "", inhalt)
+        assert text.startswith("Atelier") and text.endswith("▾")
+        # nur der Name kuerzt, der Pfeil ist ein eigenes Element
+        assert '<span class="mn-masthead__raum-name">Atelier</span>' in inhalt
+        assert (
+            '<span class="mn-masthead__raum-pfeil" aria-hidden="true">▾</span>'
+            in inhalt
+        )
     assert 'type="button"' in html
     assert 'aria-controls="raumplan"' in html or "popovertarget" in html
 
