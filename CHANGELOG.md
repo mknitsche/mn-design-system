@@ -23,6 +23,13 @@ oder Doku.
   steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`).
 - **Raumplan** (`RaumplanInput`, `RaumplanRaum`, `render_raumplan_html/_css`): `<section id="raumplan" popover>` mit je einem
   `<li data-bereich>`; Blatt nur unter `@supports selector(:popover-open)`, sonst sichtbarer Abschnitt „Alle Räume“.
+- **Kachel** (`KachelInput`, `render_kachel_html/_css`) mit Raster `mn-kachel-raster` (eine Spalte, ab `web.layout.bp-tablet` zwei);
+  **Status-Punkt** (`StatusPunktInput`: Symbol und Wort, nie Farbe allein); **Fortschritt** (`FortschrittInput`, `role="progressbar"`,
+  Fuellung als SVG statt `style`); **Stand-Zeile** (`StandZeileInput`, `data-stand`/`data-takt-min`, TLP-Etikett) mit
+  `render_stand_zeile_js()` fuer „· veraltet“ ab dem Doppelten des Takts.
+- **`render_font_face(url_prefix, *, dateien=None, nur=None)`**: `dateien` bildet den Klarnamen auf den ausgelieferten Namen ab
+  (Fingerprint), `nur` beschraenkt auf Klarnamen; ein unbekannter Name oder ein fehlender Eintrag fuer eine gewaehlte Schrift bricht laut
+  (`KeyError`). Ohne die Argumente byte-gleich zu 0.23.0.
 - Additivitaetsbeweis: `tests/golden/0_23_0.json` haelt die Ausgabe von 0.23.0, je Komponente prueft
   `test_alte_eingaben_rendern_wie_0_23_0` byte-gleich dagegen.
 

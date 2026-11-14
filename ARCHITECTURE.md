@@ -95,6 +95,10 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `pfad_zeile` | Pfadzeile: Vorfahren eines Ordners als Links |
 | `ortszeile` | Ortszeile (0.24.0): ganze Kette bis zur Elternseite, einzeilig, vorn gekuerzt |
 | `raumplan` | Raumplan (0.24.0): Blatt mit allen Raeumen; kompakter Kopf (`masthead` kompakt) mit Raum-Schalter und Rueckfall-Link |
+| `kachel` | Kachel (0.24.0) mit Raster `mn-kachel-raster` (zwei Spalten ab `bp-tablet`) |
+| `status_punkt` | Status-Punkt (0.24.0): Symbol und Wort, nie Farbe allein |
+| `fortschritt` | Fortschritt (0.24.0): `role="progressbar"`, Fuellung als SVG |
+| `stand_zeile` | Stand-Zeile (0.24.0) mit TLP-Etikett und Skript fuer „· veraltet“ |
 | `page_header` | Seitenkopf mit H1 und optionalem Lead |
 | `footer` | Einzeilige Fusszeile mit Identitaets-Segmenten und Rechtslinks |
 | `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |
