@@ -711,6 +711,23 @@ class MastheadChip(BaseModel):
     label: str = Field(min_length=1)
 
 
+class ProfilMenueInput(BaseModel):
+    """Profil-Menue (0.24.0): „Darstellung“ (Automatisch · Hell · Dunkel) und der Link „Profil ansehen“.
+
+    profil_href: nur ein interner absoluter Pfad (kein Schema, kein `//`, kein Backslash).
+    """
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    profil_href: str
+    titel: str = Field(default="Darstellung", min_length=1)
+
+    @field_validator("profil_href")
+    @classmethod
+    def _href_intern(cls, v: str) -> str:
+        return _interner_pfad(v)
+
+
 class MastheadInput(BaseModel):
     """Editorialer Masthead (Design §10) — dunkler Kopf, zwei Reihen.
 
@@ -736,12 +753,17 @@ class MastheadInput(BaseModel):
     user_chip_label: str = "…"
     """Server-gerenderter Pre-Hydration-Text des Lade-Chips."""
 
+    profil: ProfilMenueInput | None = None
+    """Seit 0.24.0. Gesetzt → ein Profil-Knopf steht im Kontext-Slot (Rechner und Handy) und
+    oeffnet `#profilmenue` (`render_profilmenue_html`, vom Konsumenten am Seitenende platziert).
+    In der kompakten Form sind die Chips am Handy dann verborgen."""
+
     form: Literal["klassisch", "kompakt"] = "klassisch"
     """Seit 0.24.0. "kompakt": am Handy EINE Zeile `[Marke] Blicke · [Raum ▾] … [Profil]`;
     Markenzeile (Wortmarke, Datum) und Raum-Pillen sind dort verborgen."""
     blicke: int = 0
     """Seit 0.24.0, nur kompakt: die ersten `blicke` Eintraege von `tier_items` sind die
-    Blicke (Start, Heute); danach steht ein Trenner, die uebrigen sind Raum-Pillen."""
+    Blicke (Start, Heute); die uebrigen sind Raum-Pillen (am Handy verborgen)."""
     raum_schalter: str | None = None
     """Seit 0.24.0, nur kompakt: Text des Raum-Schalters am Handy (Name des aktiven Raums
     oder "Räume"). Er steht doppelt im HTML — Knopf fuer `#raumplan` (popover) und

@@ -156,7 +156,6 @@ MESSEN = """() => {
     knopfHoehe: sichtbar(q('.mn-masthead__raum')) ? r(q('.mn-masthead__raum')).height : 0,
     profil: sichtbar(q('#profil')),
     profilRechts: r(q('#profil')).right <= window.innerWidth,
-    trenner: sichtbar(q('.mn-masthead__trenner')),
     seiteBreiter: document.documentElement.scrollWidth > window.innerWidth,
     raumplanSichtbar: sichtbar(q('#raumplan')),
   };
@@ -178,7 +177,6 @@ def test_handy_eine_zeile_mit_blicken_und_raum_schalter(seite_laden):
     assert m["knopf"] and not m["link"], m
     assert m["profil"] and m["profilRechts"] and not m["seiteBreiter"], m
     assert m["pillenHoehe"] >= 44 and m["knopfHoehe"] >= 44, m
-    assert m["trenner"], m
 
 
 def test_handy_kopf_plus_unterleiste_im_budget(seite_laden):
@@ -189,12 +187,11 @@ def test_handy_kopf_plus_unterleiste_im_budget(seite_laden):
     assert m["kopfUnterleiste"] <= 140, m
 
 
-def test_rechner_klassische_zeilen_mit_trenner(seite_laden):
+def test_rechner_klassische_zeilen(seite_laden):
     m = _messe(seite_laden, 1400)
     assert len(m["sichtbarePillen"]) == 7, m
     assert m["marke"], m
     assert not m["knopf"] and not m["link"], m
-    assert m["trenner"], m
 
 
 def test_knopf_oeffnet_blatt_esc_schliesst_fokus_kehrt_zurueck(seite_laden):

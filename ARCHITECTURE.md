@@ -94,7 +94,10 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `datei_zeile` | Listenzeile fuer Ordner und Dateien (Kennung/Vorschau, Name, Meta, Aktion; ein- und zweizeilig) |
 | `pfad_zeile` | Pfadzeile: Vorfahren eines Ordners als Links |
 | `raumplan` | Raumplan (0.24.0): Blatt mit allen Raeumen; kompakter Kopf (`masthead` kompakt) mit Raum-Schalter und Rueckfall-Link |
-| `kachel` | Kachel (0.24.0) mit Raster `mn-kachel-raster` (zwei Spalten ab `bp-tablet`) |
+| `kachel` | Kachel (0.24.0, streng: Aussage, Zahl, ein interner Link, kein freies HTML) mit Raster `mn-kachel-raster` (zwei Spalten ab `bp-tablet`) |
+| `profilmenue` | Profil-Menue (0.24.0): Darstellung Automatisch · Hell · Dunkel und Link „Profil ansehen“; Profil-Knopf im Kopf (`MastheadInput.profil`) |
+| `schema` | Schema-Skript (0.24.0): `render_schema_js()` setzt `data-schema` vor dem ersten Zeichnen, Wahl nur im Browser |
+| `ecken` | Eckenregel (0.24.0): `render_ecken_css()` — Rollen-Variablen und Regeln ueber den vorhandenen Radius-Tokens |
 | `status_punkt` | Status-Punkt (0.24.0): Symbol und Wort, nie Farbe allein |
 | `fortschritt` | Fortschritt (0.24.0): `role="progressbar"`, Fuellung als SVG |
 | `stand_zeile` | Stand-Zeile (0.24.0) mit TLP-Etikett und Skript fuer „· veraltet“ |
