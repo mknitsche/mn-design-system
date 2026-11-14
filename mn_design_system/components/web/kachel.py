@@ -1,11 +1,11 @@
-"""Web-Renderer Kachel — HTML + CSS, 0.24.0 (Welle 1 „Rahmen und Foyer“).
+"""Web-Renderer Kachel — HTML + CSS, 0.24.0 (Welle 1 „Rahmen und Foyer“), streng.
 
-Konsumiert KachelInput aus `_patterns.contracts`: Kicker (zugleich Ueberschrift, `<h3>`),
-optional grosse Zahl, Inhalt, Stand-Zeile und Fusslink. Das Raster `mn-kachel-raster` hat eine
-Spalte und ab `web.layout.bp-tablet` zwei; es loest das feste `900px` der heutigen Startseite ab.
+Konsumiert KachelInput aus `_patterns.contracts`: Kicker (zugleich Ueberschrift, `<h3>`), optional
+Status-Punkt, optional eine Zahl, EINE Aussage, optional Stand und genau ein Link. Es gibt kein
+freies HTML: jedes Feld wird escapt. Die ganze Kachel ist ueber den einen `<a>` klickbar (dessen
+Pseudo-Element deckt die Kachel ab, es gibt keinen zweiten Link im DOM).
 
-`inhalt_html` wird NICHT escapt (Markup aus anderen DS-Renderern, Regel P11): der Konsument setzt
-jeden Text darin mit `html.escape(text, quote=True)` ein. Alle anderen Felder escapt der Renderer.
+Das Raster `mn-kachel-raster` hat eine Spalte und ab `web.layout.bp-tablet` zwei.
 CSS-Strategie: nur var(--…) mit Rueckfall, keine Literalfarbe, keine rohen Masse.
 """
 
@@ -14,26 +14,28 @@ from __future__ import annotations
 from html import escape
 
 from mn_design_system.components._patterns.contracts import KachelInput
+from mn_design_system.components.web.status_punkt import render_status_punkt_html
 from mn_design_system.tokens import get
 
 
 def render_kachel_html(input: KachelInput, *, inline_css: bool = False) -> str:
-    """Kachel als `<section class="mn-kachel" aria-labelledby=…>`."""
+    """Kachel als `<section class="mn-kachel" aria-labelledby=…>` mit genau einem Link."""
     titel_id = escape(input.titel_id, quote=True)
+    label, href = input.link
     teile = [
         f'<section class="mn-kachel" aria-labelledby="{titel_id}">',
         f'<h3 id="{titel_id}" class="mn-kachel__kicker">{escape(input.kicker)}</h3>',
     ]
-    if input.display_zahl is not None:
-        teile.append(f'<p class="mn-kachel__zahl">{escape(input.display_zahl)}</p>')
-    teile.append(f'<div class="mn-kachel__inhalt">{input.inhalt_html}</div>')
+    if input.status is not None:
+        teile.append(render_status_punkt_html(input.status))
+    if input.zahl is not None:
+        teile.append(f'<p class="mn-kachel__zahl">{escape(input.zahl)}</p>')
+    teile.append(f'<p class="mn-kachel__aussage">{escape(input.aussage)}</p>')
     if input.stand is not None:
         teile.append(f'<p class="mn-kachel__stand">{escape(input.stand)}</p>')
-    if input.fuss_link is not None:
-        label, href = input.fuss_link
-        teile.append(
-            f'<a class="mn-kachel__fuss" href="{escape(href, quote=True)}">{escape(label)}</a>'
-        )
+    teile.append(
+        f'<a class="mn-kachel__link" href="{escape(href, quote=True)}">{escape(label)}</a>'
+    )
     teile.append("</section>")
     html = "".join(teile)
     if inline_css:
@@ -56,6 +58,7 @@ def render_kachel_css() -> str:
   }}
 }}
 .mn-kachel {{
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-2, 8px);
@@ -67,7 +70,7 @@ def render_kachel_css() -> str:
   color: var(--color-light-text, #1e1b4b);
   background: var(--color-light-surface, #ffffff);
   border: var(--web-stroke-line, 1px) solid var(--web-color-separator, #b4bcc8);
-  border-radius: var(--radius-subtle, 2px);
+  border-radius: var(--radius-card, 4px);
 }}
 .mn-kachel__kicker {{
   margin: 0;
@@ -84,7 +87,8 @@ def render_kachel_css() -> str:
   font-weight: 600;
   color: var(--color-light-h1, #312e81);
 }}
-.mn-kachel__inhalt {{
+.mn-kachel__aussage {{
+  margin: 0;
   min-width: 0;
 }}
 .mn-kachel__stand {{
@@ -92,7 +96,7 @@ def render_kachel_css() -> str:
   font-size: var(--web-text-caption, 12px);
   color: var(--color-light-text-muted, #6b7280);
 }}
-.mn-kachel__fuss {{
+.mn-kachel__link {{
   margin-top: auto;
   display: inline-flex;
   align-items: center;
@@ -100,10 +104,19 @@ def render_kachel_css() -> str:
   color: var(--color-light-accent, #4F46E5);
   text-decoration: none;
 }}
-.mn-kachel__fuss:hover {{
+.mn-kachel__link::after {{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card, 4px);
+}}
+.mn-kachel:hover .mn-kachel__link {{
   text-decoration: underline;
 }}
-.mn-kachel__fuss:focus-visible {{
+.mn-kachel__link:focus-visible {{
+  outline: none;
+}}
+.mn-kachel__link:focus-visible::after {{
   outline: var(--web-stroke-focus, 2px) solid var(--web-color-focus-ring, #4F46E5);
   outline-offset: var(--space-1, 4px);
 }}
