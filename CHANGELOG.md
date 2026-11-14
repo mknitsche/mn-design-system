@@ -18,6 +18,11 @@ oder Doku.
   Gruppen mit Namen am Rechner, am Handy ein Gruppen-Schalter und nur die Reiter der aktiven Gruppe in einer Zeile; hoechstens
   fuenf Reiter je Gruppe einschliesslich Uebersicht, genau ein Reiter aktiv, Zielhoehe `web.touch-target`. Klassische Form
   unveraendert.
+- **Kompakter Kopf** (`MastheadInput.form="kompakt"`, `blicke`, `raum_schalter`; `render_masthead_css(kompakt=True)`): am Handy eine
+  44-px-Zeile `[Marke] Blicke · [Raum ▾] … [Profil]` ohne Markenzeile und Raum-Pillen, Trenner nach den Blicken; der Raum-Schalter
+  steht doppelt (Knopf `popovertarget` und Rueckfall-Link `#raumplan`).
+- **Raumplan** (`RaumplanInput`, `RaumplanRaum`, `render_raumplan_html/_css`): `<section id="raumplan" popover>` mit je einem
+  `<li data-bereich>`; Blatt nur unter `@supports selector(:popover-open)`, sonst sichtbarer Abschnitt „Alle Räume“.
 - Additivitaetsbeweis: `tests/golden/0_23_0.json` haelt die Ausgabe von 0.23.0, je Komponente prueft
   `test_alte_eingaben_rendern_wie_0_23_0` byte-gleich dagegen.
 
