@@ -258,3 +258,39 @@ def test_schmal_kein_seitlicher_seitenscroll(seite_laden):
     for breite in (320, 360):
         m = _messe(seite_laden, breite, gruppen=True)
         assert not m["seiteBreiter"] and m["profilRechts"], (breite, m)
+
+
+RAUM_MESSEN = """() => {
+  const r = (e) => e.getBoundingClientRect();
+  const k = document.querySelector('.mn-masthead__raum');
+  const n = k.querySelector('.mn-masthead__raum-name');
+  const p = k.querySelector('.mn-masthead__raum-pfeil');
+  return {
+    nameVoll: n.scrollWidth <= n.clientWidth,
+    nameBreite: Math.round(n.clientWidth), nameNatuerlich: n.scrollWidth,
+    pfeilSichtbar: r(p).width > 0 && r(p).right <= r(k).right + 1 && r(p).right <= window.innerWidth,
+    seiteBreiter: document.documentElement.scrollWidth > window.innerWidth,
+    profilRechts: r(document.querySelector('#profil')).right <= window.innerWidth,
+  };
+}"""
+
+
+def _raum(seite_laden, breite):
+    ctx, page = seite_laden(_seite(), _css(), breite=breite, hoehe=844)
+    try:
+        return page.evaluate(RAUM_MESSEN)
+    finally:
+        ctx.close()
+
+
+def test_laengster_raumname_bei_390_voll_sichtbar(seite_laden):
+    m = _raum(seite_laden, 390)  # „Observatorium“ ist der laengste Raumname
+    assert m["nameVoll"] and m["pfeilSichtbar"] and not m["seiteBreiter"], m
+    assert m["profilRechts"], m
+
+
+def test_pfeil_bleibt_bei_schmalen_breiten_nur_der_name_kuerzt(seite_laden):
+    for breite in (320, 360):
+        m = _raum(seite_laden, breite)
+        assert m["pfeilSichtbar"], (breite, m)
+        assert not m["seiteBreiter"] and m["profilRechts"], (breite, m)

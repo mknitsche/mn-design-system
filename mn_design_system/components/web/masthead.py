@@ -138,7 +138,10 @@ def render_masthead_html(input: MastheadInput, *, inline_css: bool = False) -> s
 def _raum_schalter_html(label: str) -> str:
     """Der Raum-Schalter steht doppelt: Knopf fuer das Raumplan-Blatt (`popovertarget`) und ein
     Rueckfall-Link auf `#raumplan`; das CSS zeigt genau einen von beiden."""
-    inhalt = f'{escape(label)} <span aria-hidden="true">▾</span>'
+    inhalt = (
+        f'<span class="mn-masthead__raum-name">{escape(label)}</span>'
+        '<span class="mn-masthead__raum-pfeil" aria-hidden="true">▾</span>'
+    )
     return (
         '<button type="button" class="mn-masthead__raum" popovertarget="raumplan" '
         f'aria-controls="raumplan">{inhalt}</button>'
@@ -345,6 +348,7 @@ def _kompakt_css() -> str:
     flex: none;
     align-items: center;
     min-height: var(--web-touch-target, 44px);
+    padding-inline: var(--space-2, 8px);
     white-space: nowrap;
   }}
   .mn-masthead--kompakt .mn-masthead__pill--raum {{
@@ -354,14 +358,13 @@ def _kompakt_css() -> str:
   .mn-masthead--kompakt .mn-masthead__raum {{
     align-items: center;
     min-height: var(--web-touch-target, 44px);
-    padding: 0 var(--space-3, 12px);
+    padding: 0 var(--space-2, 8px);
     font: inherit;
     font-size: var(--web-text-ui, 14px);
     font-weight: 500;
     white-space: nowrap;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    gap: var(--space-1, 4px);
     color: var(--color-dark-text, #f5f5f7);
     text-decoration: none;
     background: transparent;
@@ -370,6 +373,14 @@ def _kompakt_css() -> str:
   }}
   .mn-masthead--kompakt .mn-masthead__raum-link {{
     display: inline-flex;
+  }}
+  .mn-masthead--kompakt .mn-masthead__raum-name {{
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }}
+  .mn-masthead--kompakt .mn-masthead__raum-pfeil {{
+    flex: none;
   }}
   .mn-masthead--kompakt .mn-masthead__raum:focus-visible,
   .mn-masthead--kompakt .mn-masthead__raum-link:focus-visible {{

@@ -88,3 +88,32 @@ def test_kuerzt_von_links_das_vorletzte_glied_bleibt_voll(seite_laden):
             ctx.close()
         gekuerzt = [g for g, _ in m]
         assert gekuerzt == [True, False, False, False], (breite, m)
+
+
+def test_erstes_glied_bleibt_als_auslassung_sichtbar(seite_laden):
+    kette = OrtszeileInput(
+        glieder=(
+            ("Atelier", "/a/"),
+            ("Projekte", "/a/p/"),
+            ("My Way to Marathon", "/a/p/m/"),
+            ("Tagebuch", "/a/p/m/t/"),
+        )
+    )
+    for breite in (320, 360, 390):
+        ctx, page = seite_laden(
+            render_ortszeile_html(kette),
+            render_foundation_css() + render_ortszeile_css(),
+            breite=breite,
+        )
+        try:
+            m = page.evaluate(
+                """() => {
+                  const a = document.querySelector('.mn-ortszeile li:first-child > a');
+                  return {breite: a.clientWidth, schrift: parseFloat(getComputedStyle(a).fontSize),
+                          gekuerzt: a.scrollWidth > a.clientWidth};
+                }"""
+            )
+        finally:
+            ctx.close()
+        # nie 0 px: mindestens 1em, sonst bliebe ein Link ohne sichtbare „…“
+        assert m["breite"] >= m["schrift"], (breite, m)
