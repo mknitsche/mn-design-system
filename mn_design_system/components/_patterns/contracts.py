@@ -258,6 +258,19 @@ class SubNavTab(BaseModel):
     active: bool = False
 
 
+#: Obergrenze der kompakten Unterleiste: Reiter vor den Gruppen plus Reiter einer Gruppe.
+SUBNAV_MAX_JE_GRUPPE = 5
+
+
+class SubNavGruppe(BaseModel):
+    """Eine Gruppe der kompakten Unterleiste (0.24.0): Name und ihre Reiter."""
+
+    model_config = {"extra": "forbid", "frozen": True}
+
+    label: str = Field(min_length=1)
+    tabs: list[SubNavTab] = Field(min_length=1)
+
+
 class SubNavInput(BaseModel):
     """L3 — Auswahl-Navigation INNERHALB eines Tiers (Spec §A5/A6).
 
@@ -267,6 +280,13 @@ class SubNavInput(BaseModel):
                 Mehrere <nav> pro Seite (L1 Top-Nav + L3 Sub-Nav) muessen
                 unterscheidbar sein — der Konsument kann ein praeziseres
                 Label setzen (z.B. "Bibliothek-Bereiche").
+
+    Seit 0.24.0 (beide optional, ohne sie aendert sich nichts):
+    form: "klassisch" (Default, wie bisher) oder "kompakt" — Text mit Unterstreichung,
+          Zielhoehe aus `web.touch-target`; nur dort gelten die Regeln unten.
+    gruppen: nur mit form="kompakt". `tabs` sind dann die Reiter VOR den Gruppen
+          (die Uebersicht); je Gruppe hoechstens fuenf Reiter einschliesslich dieser,
+          genau ein Reiter ist aktiv (ueber `tabs` und alle Gruppen).
     """
 
     model_config = {"extra": "forbid", "frozen": True}
@@ -274,6 +294,34 @@ class SubNavInput(BaseModel):
     tier: WebTier
     tabs: list[SubNavTab] = Field(min_length=1)
     aria_label: str = Field(default="Bereichs-Navigation", min_length=1)
+    form: Literal["klassisch", "kompakt"] = "klassisch"
+    gruppen: list[SubNavGruppe] | None = None
+
+    @model_validator(mode="after")
+    def _kompakte_form(self) -> SubNavInput:
+        """Seit 0.24.0. Die klassische Form bleibt, wie sie war (auch zehn Reiter); die
+        Regeln gelten NUR in der kompakten Form."""
+        if self.form == "klassisch":
+            if self.gruppen is not None:
+                raise ValueError('gruppen gibt es nur mit form="kompakt"')
+            return self
+        gruppen = self.gruppen or []
+        for g in gruppen or [None]:
+            anzahl = len(self.tabs) + (len(g.tabs) if g else 0)
+            if anzahl > SUBNAV_MAX_JE_GRUPPE:
+                wo = f"Gruppe {g.label!r}" if g else "die Reiterzeile"
+                raise ValueError(
+                    f"hoechstens fuenf Reiter je Gruppe einschliesslich der Reiter vor "
+                    f"den Gruppen; {wo} hat {anzahl}"
+                )
+        aktiv = sum(t.active for t in self.tabs) + sum(
+            t.active for g in gruppen for t in g.tabs
+        )
+        if aktiv != 1:
+            raise ValueError(
+                f"in der kompakten Form ist genau ein Reiter aktiv, gefunden: {aktiv}"
+            )
+        return self
 
 
 class ZeitraumOption(BaseModel):

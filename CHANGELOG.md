@@ -14,6 +14,10 @@ oder Doku.
 
 - **Ortszeile** (`OrtszeileInput`, `render_ortszeile_html/_css`): die ganze Kette bis zur Elternseite in einer Zeile,
   das letzte Glied „← …“ unkuerzbar, die vorderen kuerzen von vorn. `back_link` und `pfad_zeile` unveraendert.
+- **Unterleiste kompakt** (`SubNavInput.form="kompakt"`, `gruppen`, `SubNavGruppe`; `render_sub_nav_css(kompakt=True)`):
+  Gruppen mit Namen am Rechner, am Handy ein Gruppen-Schalter und nur die Reiter der aktiven Gruppe in einer Zeile; hoechstens
+  fuenf Reiter je Gruppe einschliesslich Uebersicht, genau ein Reiter aktiv, Zielhoehe `web.touch-target`. Klassische Form
+  unveraendert.
 - Additivitaetsbeweis: `tests/golden/0_23_0.json` haelt die Ausgabe von 0.23.0, je Komponente prueft
   `test_alte_eingaben_rendern_wie_0_23_0` byte-gleich dagegen.
 
