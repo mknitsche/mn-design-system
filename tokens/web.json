@@ -39,7 +39,8 @@
     "stroke": {
       "line":        { "value": "1px", "comment": "Trennlinie auf hellem Grund — ganze Pixel, blurfrei" },
       "line-strong": { "value": "2px", "comment": "Trennlinie auf dunklem Grund (Masthead)" },
-      "focus":       { "value": "2px", "comment": "Tastatur-Fokus-Ring" }
+      "focus":       { "value": "2px", "comment": "Tastatur-Fokus-Ring" },
+      "status-edge": { "value": "4px", "comment": "0.25.0 Rand links der Statusflaeche (hell); dunkel schmal = line-strong 2px"}
     },
     "color": {
       "separator":         { "value": "#b4bcc8", "comment": "Trennlinien-Grau auf hellem Grund — kraeftiger als color.light.border, sichtbar bei 1px" },

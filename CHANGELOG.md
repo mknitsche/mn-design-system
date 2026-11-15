@@ -10,6 +10,60 @@ oder Doku.
 
 ## [Unreleased]
 
+## [0.25.0] — 2026-11-15
+
+### Neu — Statusflaeche (claudeAI, KT-1 2026-11-15; Herkunft mkn-desk #1972)
+
+Streng additiv: jede Eingabe aus 0.24.0 rendert byte-gleich (Golden `tests/golden/0_23_0.json` gruen,
+`render_kpi_card_css()` ohne Argument unveraendert). Der in 0.24.0 angekuendigte Rueckbau der Altformen
+folgt in einer spaeteren Version (nicht 0.25.0).
+
+**Regel (hell und dunkel).** Eine Kennzahl zeigt ihre vorhandene Bewertung als Kasten. **Hell:** dezente
+Toenung, farbiger Rand links (4 px), Haupttext unveraendert; jede Nebenschrift auf der Toenung (gedaempft,
+Delta) ist 30 % zur Textfarbe `grey.700` gezogen, damit sie 4,5:1 haelt. **Dunkel: keine Flaeche** — der
+Kasten bleibt grau wie jede Karte, schmaler Rand (2 px) und nur die Aussage-Schrift (der Wert) in der
+Statusfarbe. Die Farbe steht nie allein (Wort und Zeichen bleiben).
+
+- **Tokens** `color.status.{success,warning,error}-surface` (Aliase: `success-bg`, `accent.warm.soft`,
+  `error-bg`), `color.status.{success,warning,error}-edge` (Aliase: `status.success`,
+  `accent.warm.strong` — `status.warning` laege auf der Toenung unter 3:1 —, `status.error`),
+  `color.status.text-muted-on-surface` `#5b6372` (grey.500 70 % + grey.700 30 %),
+  `color.status.success-on-surface` `#316b3b`, `color.status.error-on-surface` `#a43439` (je 70 % Ton +
+  30 % grey.700), `color.dark.status-{success,warning,error}` `#5cb68d` · `#e19d4e` · `#f15f97`
+  (emerald.base · accent.warm.amber · crimson.base je 70 % + 30 % `dark.text`), `web.stroke.status-edge` 4px.
+  Werte = was mkn-desk bis 0.24.0 per `color-mix` selbst ableitete.
+- **KPI-Karte** `KpiCardInput.status` ∈ `ok | warn | bad | neutral` (Default `neutral` = heutiges Aussehen,
+  HTML byte-gleich); Klasse `mn-kpi-card--<status>`. CSS ueber `render_kpi_card_css(status=True)`
+  (Praezedenz `kompakt=True` aus 0.24.0). Dunkel ueber den Schema-Vertrag aus 0.24.0, zwei Wurzeln wie der
+  Dunkelblock von mkn-desk: `:root[data-schema="dunkel"]` und `@media (prefers-color-scheme: dark)` mit
+  `:root:not([data-schema="hell"])`. Ein Konsument ohne Dunkelmodus setzt `data-schema="hell"`. Der
+  PDF-Renderer ignoriert `status`.
+- `scripts/validate-tokens.js` prueft alle neuen Paare (32/32 bestanden).
+
+**Kontrast (WCAG 2.1, aus den Token-Werten; Schrift ≥ 4,5, Rand als Grafik ≥ 3):**
+
+| Paar | ok | warn | bad |
+|---|---|---|---|
+| hell: `light.text` auf Toenung | 14,21 | 14,36 | 13,98 |
+| hell: `light.h1` (Wert) auf Toenung | 10,15 | 10,26 | 9,99 |
+| hell: `grey.700` auf Toenung | 9,16 | 9,26 | 9,02 |
+| hell: `text-muted-on-surface` | 5,38 | 5,43 | 5,29 |
+| hell: `success-on-surface` (Delta) | 5,66 | 5,72 | 5,57 |
+| hell: `error-on-surface` (Delta) | 5,97 | 6,03 | 5,87 |
+| hell: Rand (Grafik) | 4,56 | 4,51 | 4,36 |
+| hell roh, darum die Anhebung: `text-muted` / `status.error` | 4,30 / 4,43 | 4,34 / 4,47 | 4,23 / 4,36 |
+| dunkel: `dark.status-*` auf `dark.surface` | 7,45 | 7,98 | 5,96 |
+| dunkel: `dark.status-*` auf `dark.surface-subtle` | 7,02 | 7,52 | 5,62 |
+
+Beweis: `tests/test_tokens_status_surface.py` (Ableitung + Kontrast), `tests/components/web/test_kpi_card.py`
+(`TestStatus`), `test_kpi_zeitraum_browser.py::TestKpiStatusflaeche` (berechnete Farben in Chromium: hell,
+dunkel gewaehlt, dunkel automatisch, Wahl hell bei dunklem System, neutral).
+
+### Geaendert
+
+- **Stand-Zeile `mn-stand`** 14 px (`web.text.ui`, Zeilenhoehe `web.leading.ui`) statt 12 px — die
+  Mindestgroesse der Kacheln (claudeAI TODO-1060).
+
 ## [0.24.0] — 2026-11-14
 
 ### Neu — „Rahmen und Foyer“ (claudeAI Welle 1)

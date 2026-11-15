@@ -82,8 +82,17 @@ def test_css_kein_rohwert():
     ohne = re.sub(r"var\([^()]*\)", "", css)
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b", ohne)
     assert not re.search(r"(?<![\w.-])\d+(\.\d+)?(px|rem|em)\b", ohne)
-    assert "var(--web-text-caption" in css
+    assert "var(--web-text-ui" in css  # TODO-1060: 14 px statt caption
 
 
 def test_foundation_css_unveraendert_durch_stand_zeile():
     assert "mn-stand" not in render_foundation_css()
+
+
+def test_stand_zeile_14px_wie_in_den_kacheln():
+    """TODO-1060: Mindestgroesse 14 px (web.text.ui), nicht mehr die 12-px-Feinzeile."""
+    css = render_stand_zeile_css()
+    regel = css.split(".mn-stand {", 1)[1].split("}", 1)[0]
+    assert "font-size: var(--web-text-ui, 14px);" in regel
+    assert "line-height: var(--web-leading-ui, 1.35);" in regel
+    assert "caption" not in regel

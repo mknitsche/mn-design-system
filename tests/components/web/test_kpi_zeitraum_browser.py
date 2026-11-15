@@ -306,3 +306,81 @@ class TestTierChipFallback:
         finally:
             ctx.close()
         assert bg == _rgb(f"color.tier.{tier}.bg"), (tier, bg)
+
+
+class TestKpiStatusflaeche:
+    """0.25.0: was der Browser aus ``status`` macht — hell Toenung + 4-px-Rand + angehobene
+    Nebenschrift, dunkel (gewaehlt oder automatisch) keine Toenung, 2-px-Rand, Wert in Statusfarbe."""
+
+    def _stil(self, browser, tmp_path, status, schema=None, system="light", **kw):
+        html = render_kpi_card_html(
+            KpiCardInput(
+                label="Ruhepuls", value="52", caption="7 Tage", status=status, **kw
+            )
+        )
+        seite = _seite(html, render_kpi_card_css(status=True))
+        if schema:
+            seite = seite.replace("<html ", f'<html data-schema="{schema}" ', 1)
+        ctx = browser.new_context(color_scheme=system)
+        page = ctx.new_page()
+        datei = tmp_path / "status.html"
+        datei.write_text(seite, encoding="utf-8")
+        try:
+            page.goto(datei.as_uri())
+            return page.evaluate(
+                """() => { const k = document.querySelector('.mn-kpi-card');
+                const s = getComputedStyle(k);
+                const c = (q) => { const e = k.querySelector(q); return e && getComputedStyle(e).color; };
+                return {bild: s.backgroundImage, rand: s.borderLeftWidth, randfarbe: s.borderLeftColor,
+                        wert: c('.mn-kpi-card__value'), label: c('.mn-kpi-card__label'),
+                        caption: c('.mn-kpi-card__caption'), delta: c('.mn-kpi-card__change')}; }"""
+            )
+        finally:
+            ctx.close()
+
+    @pytest.mark.parametrize(
+        ("status", "tok", "rand"),
+        [
+            ("ok", "success", "success-edge"),
+            ("warn", "warning", "warning-edge"),
+            ("bad", "error", "error-edge"),
+        ],
+    )
+    def test_hell(self, browser, tmp_path, status, tok, rand):
+        s = self._stil(browser, tmp_path, status, change_pct=-3.0)
+        assert _rgb(f"color.status.{tok}-surface") in s["bild"]
+        assert s["rand"] == "4px"
+        assert s["randfarbe"] == _rgb(f"color.status.{rand}")
+        assert s["label"] == _rgb("color.status.text-muted-on-surface")
+        assert s["caption"] == _rgb("color.status.text-muted-on-surface")
+        assert s["delta"] == _rgb("color.status.error-on-surface")
+        assert s["wert"] == _rgb("color.light.h1")
+
+    @pytest.mark.parametrize(
+        ("schema", "system"), [("dunkel", "light"), (None, "dark"), ("dunkel", "dark")]
+    )
+    @pytest.mark.parametrize(("status", "tok"), [("ok", "success"), ("bad", "error")])
+    def test_dunkel_keine_flaeche_nur_schrift(
+        self, browser, tmp_path, schema, system, status, tok
+    ):
+        s = self._stil(
+            browser, tmp_path, status, schema=schema, system=system, change_pct=-3.0
+        )
+        assert s["bild"] == "none"
+        assert s["rand"] == "2px"
+        assert s["randfarbe"] == _rgb(f"color.dark.status-{tok}")
+        assert s["wert"] == _rgb(f"color.dark.status-{tok}")
+        # Nebenschrift zurueck auf die Basis (der Konsument belegt sie im Dunkeln um)
+        assert s["label"] == _rgb("color.light.text-muted")
+        assert s["delta"] == _rgb("color.status.error")
+
+    def test_wahl_hell_schlaegt_dunkles_system(self, browser, tmp_path):
+        s = self._stil(browser, tmp_path, "ok", schema="hell", system="dark")
+        assert _rgb("color.status.success-surface") in s["bild"]
+        assert s["rand"] == "4px"
+
+    def test_neutral_unveraendert(self, browser, tmp_path):
+        s = self._stil(browser, tmp_path, "neutral", change_pct=-3.0)
+        assert s["bild"] == "none"
+        assert s["rand"] == "1px"
+        assert s["label"] == _rgb("color.light.text-muted")

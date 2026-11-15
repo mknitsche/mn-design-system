@@ -22,6 +22,7 @@ from mn_design_system.components._patterns.contracts import (
     SparklineInput,
 )
 from mn_design_system.components.web.sparkline import render_sparkline_svg
+from mn_design_system.tokens import get
 
 _TREND_GLYPH = {
     KpiTrendDirection.UP: "▲",
@@ -62,7 +63,10 @@ def render_kpi_card_html(input: KpiCardInput, *, inline_css: bool = False) -> st
     if inline_css:
         parts.append(f"<style>{render_kpi_card_css()}</style>")
 
-    parts.append('<article class="mn-kpi-card">')
+    if input.status == "neutral":
+        parts.append('<article class="mn-kpi-card">')
+    else:
+        parts.append(f'<article class="mn-kpi-card mn-kpi-card--{input.status}">')
     parts.append(f'<div class="mn-kpi-card__label">{label}</div>')
     parts.append(f'<div class="mn-kpi-card__value">{value}</div>')
 
@@ -98,7 +102,7 @@ def render_kpi_card_html(input: KpiCardInput, *, inline_css: bool = False) -> st
     return "".join(parts)
 
 
-def render_kpi_card_css() -> str:
+def render_kpi_card_css(*, status: bool = False) -> str:
     """Komponenten-CSS — Layout-only, Token-Werte via CSS Custom Properties.
 
     Konsument muss `dist/css/tokens.css` in seinen Build-Output einbinden,
@@ -107,8 +111,15 @@ def render_kpi_card_css() -> str:
     0.18.0: `is-gut` / `is-schlecht` / `is-ungewertet` stehen NACH `is-up` / `is-down` /
     `is-neutral` und haben dieselbe Spezifitaet — die spaetere Regel gewinnt. So wird
     bei `richtung="niedriger"` aus einem Rueckgang (`is-down`) ein gruenes Delta.
+
+    0.25.0: ``status=True`` haengt die Regeln der Statusflaeche an (`_status_css`); ohne das
+    Argument ist die Ausgabe byte-gleich zu 0.24.0.
     """
-    return """
+    basis = _BASIS_CSS
+    return f"{basis}\n{_status_css()}" if status else basis
+
+
+_BASIS_CSS = """
 .mn-kpi-card {
   display: grid;
   gap: var(--space-1, 4px);
@@ -167,3 +178,99 @@ def render_kpi_card_css() -> str:
   color: var(--color-light-text-muted, #6b7280);
 }
 """.strip()
+
+#: Stufe der Karte -> Token-Stamm der Statusflaeche.
+_STATUS_TOKEN = {"ok": "success", "warn": "warning", "bad": "error"}
+
+#: Delta-Klassen in der Reihenfolge des Basis-CSS: die Wertung steht NACH der Bewegung und
+#: gewinnt bei gleicher Spezifitaet — die Statusregeln halten dieselbe Reihenfolge ein.
+_DELTA_FARBE = (
+    ("is-up", "success"),
+    ("is-down", "error"),
+    ("is-neutral", None),
+    ("is-gut", "success"),
+    ("is-schlecht", "error"),
+    ("is-ungewertet", None),
+)
+
+#: Die zwei Wurzeln des Dunkelmodus — derselbe Vertrag wie das Schema-Skript (0.24.0) und der
+#: Dunkelblock von mkn-desk: gewaehlt dunkel, oder Systemeinstellung dunkel ohne Wahl hell.
+_DUNKEL_GEWAEHLT = ':root[data-schema="dunkel"]'
+_DUNKEL_AUTOMATISCH = ':root:not([data-schema="hell"])'
+
+
+def _v(name: str, token: str) -> str:
+    return f"var(--{name}, {get(token)})"
+
+
+def _status_css() -> str:
+    """Statusflaeche der Karte (0.25.0, KT-1 2026-11-15, Optik wie mkn-desk #1972).
+
+    Hell: Toenung als ``background-image`` UEBER der eigenen Flaeche, Rand links
+    ``web.stroke.status-edge``; Label, Caption und Delta in den *-on-surface-Toenen (die rohen
+    Toene laegen auf der Toenung unter 4,5:1). Dunkel: keine Toenung (die graue Karte bleibt),
+    Rand ``web.stroke.line-strong`` und nur der Wert in ``color.dark.status-*``; Label, Caption und
+    Delta zurueck auf die Basis-Variablen (der Konsument belegt sie im Dunkeln um).
+    """
+    alle = ", ".join(f".mn-kpi-card--{s}" for s in _STATUS_TOKEN)
+    gedaempft_hell = _v(
+        "color-status-text-muted-on-surface", "color.status.text-muted-on-surface"
+    )
+    regeln: list[str] = []
+    for stufe, tok in _STATUS_TOKEN.items():
+        flaeche = _v(f"color-status-{tok}-surface", f"color.status.{tok}-surface")
+        rand = _v(f"color-status-{tok}-edge", f"color.status.{tok}-edge")
+        regeln.append(
+            f".mn-kpi-card--{stufe} {{\n"
+            f"  background-image: linear-gradient({flaeche}, {flaeche});\n"
+            f"  border-left: var(--web-stroke-status-edge, 4px) solid {rand};\n}}"
+        )
+    regeln.append(
+        f":is({alle}) .mn-kpi-card__label, :is({alle}) .mn-kpi-card__caption {{\n"
+        f"  color: {gedaempft_hell};\n}}"
+    )
+    for klasse, tok in _DELTA_FARBE:
+        farbe = (
+            _v(f"color-status-{tok}-on-surface", f"color.status.{tok}-on-surface")
+            if tok
+            else gedaempft_hell
+        )
+        regeln.append(
+            f":is({alle}) .mn-kpi-card__change.{klasse} {{\n  color: {farbe};\n}}"
+        )
+
+    def dunkel(wurzel: str) -> list[str]:
+        r: list[str] = []
+        for stufe, tok in _STATUS_TOKEN.items():
+            schrift = _v(f"color-dark-status-{tok}", f"color.dark.status-{tok}")
+            r.append(
+                f"{wurzel} .mn-kpi-card--{stufe} {{\n"
+                f"  background-image: none;\n"
+                f"  border-left: var(--web-stroke-line-strong, 2px) solid {schrift};\n}}"
+            )
+            r.append(
+                f"{wurzel} .mn-kpi-card--{stufe} .mn-kpi-card__value {{\n"
+                f"  color: {schrift};\n}}"
+            )
+        basis_gedaempft = "var(--color-light-text-muted, #6b7280)"
+        r.append(
+            f"{wurzel} :is({alle}) .mn-kpi-card__label, "
+            f"{wurzel} :is({alle}) .mn-kpi-card__caption {{\n"
+            f"  color: {basis_gedaempft};\n}}"
+        )
+        basis = {
+            "success": "var(--color-status-success, #2e7d32)",
+            "error": "var(--color-status-error, #d32f2f)",
+            None: basis_gedaempft,
+        }
+        for klasse, tok in _DELTA_FARBE:
+            r.append(
+                f"{wurzel} :is({alle}) .mn-kpi-card__change.{klasse} {{\n"
+                f"  color: {basis[tok]};\n}}"
+            )
+        return r
+
+    regeln += dunkel(_DUNKEL_GEWAEHLT)
+    innen = "\n".join(dunkel(_DUNKEL_AUTOMATISCH))
+    regeln.append(f"@media (prefers-color-scheme: dark) {{\n{innen}\n}}")
+    return "\n".join(regeln)

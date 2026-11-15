@@ -60,7 +60,7 @@ Quellen unter `tokens/` (Style Dictionary v4 baut daraus eine flache Lookup-Tabe
 
 | Datei | Inhalt |
 |---|---|
-| `colors.json` | Farbpalette: Grau-/Indigo-Skala, Status-, Viz-, Kategorie- und Diagramm-Farben, Tier-Farben `color.tier.<tier>.*` |
+| `colors.json` | Farbpalette: Grau-/Indigo-Skala, Status- (mit Statusflaeche `*-surface`/`*-edge`/`*-on-surface`, dunkel `color.dark.status-*`, 0.25.0), Viz-, Kategorie- und Diagramm-Farben, Tier-Farben `color.tier.<tier>.*` |
 | `typography.json` | `font.family.*` (inkl. Schnitte wie `sans-bold`), `font.size`, `font.leading`, `font.weight`, `font.tracking`, `font.hyphenation` |
 | `spacing.json` | `space.*` (Abstands-Skala) |
 | `radii.json` | `radius.*` |
@@ -100,13 +100,13 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `ecken` | Eckenregel (0.24.0): `render_ecken_css()` — Rollen-Variablen und Regeln ueber den vorhandenen Radius-Tokens |
 | `status_punkt` | Status-Punkt (0.24.0): Symbol und Wort, nie Farbe allein |
 | `fortschritt` | Fortschritt (0.24.0): `role="progressbar"`, Fuellung als SVG |
-| `stand_zeile` | Stand-Zeile (0.24.0) mit TLP-Etikett und Skript fuer „· veraltet“ |
+| `stand_zeile` | Stand-Zeile (0.24.0, 14 px seit 0.25.0) mit TLP-Etikett und Skript fuer „· veraltet“ |
 | `page_header` | Seitenkopf mit H1 und optionalem Lead |
 | `footer` | Einzeilige Fusszeile mit Identitaets-Segmenten und Rechtslinks |
 | `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |
 | `tier_chip` | Kleines tier-getoentes Etikett |
 | `empty_state` | Ruhiger Leer-Zustand |
-| `kpi_card` | Kennzahl-Karte (Wert, Veraenderung, Sparkline) |
+| `kpi_card` | Kennzahl-Karte (Wert, Veraenderung, Sparkline); `status` ok/warn/bad (0.25.0): hell Toenung + Rand, dunkel keine Flaeche, nur Wert in Statusfarbe — CSS `render_kpi_card_css(status=True)` |
 | `sparkline` | Kleines Verlaufs-SVG |
 | `wetter_strip` | Wetter-Tabelle mit Phosphor-Icons |
 | `zeitraum_leiste` | Segment-Leiste aus Links (`?tage=30\|90\|365`), ohne Skript |
