@@ -37,11 +37,11 @@
   --color-status-warning-surface: #fef3c7; /** Statusflaeche warn, nur hell (amber-100; NICHT status.warning-bg). Im Dunkeln keine Flaeche (KT-1: dunkel nicht faerben, nur Schrift in Statusfarbe). */
   --color-status-error-surface: #ffebee; /** Statusflaeche bad, nur hell. Im Dunkeln keine Flaeche (KT-1: dunkel nicht faerben, nur Schrift in Statusfarbe). */
   --color-status-success-edge: #2e7d32; /** Rand links der Statusflaeche ok (Grafik >= 3:1 auf success-surface: 4,56). */
-  --color-status-warning-edge: #b45309; /** Rand links der Statusflaeche warn: Copper-800, weil status.warning auf der Toenung unter 3:1 laege (4,51). */
-  --color-status-error-edge: #D32F2F; /** Rand links der Statusflaeche bad (4,36). */
+  --color-status-warning-edge: #b45309; /** Rand links der Statusflaeche warn: Copper-800, weil status.warning auf der Toenung unter 3:1 laege; der Kupfer-Rand erreicht 4,51:1 auf warning-surface. */
+  --color-status-error-edge: #D32F2F; /** Rand links der Statusflaeche bad (Grafik >= 3:1 auf error-surface: 4,36). */
   --color-status-text-muted-on-surface: #5b6372; /** Gedaempfter Text auf jeder Statusflaeche: grey.500 70 % + grey.700 30 % (roh grey.500 nur 4,23-4,34:1, so >= 5,29:1). */
-  --color-status-success-on-surface: #316b3b; /** Erfolgsschrift (Delta) auf jeder Statusflaeche: status.success 70 % + grey.700 30 % (>= 5,57:1). */
-  --color-status-error-on-surface: #a43439; /** Fehlerschrift (Delta) auf jeder Statusflaeche: status.error 70 % + grey.700 30 % (roh 4,36:1, so >= 5,87:1). */
+  --color-status-success-on-surface: #316b3b; /** Erfolgsschrift (Delta) auf jeder Statusflaeche, neu im DS: status.success 70 % + grey.700 30 % (roh 4,49-4,60:1, so >= 5,57:1). */
+  --color-status-error-on-surface: #a43439; /** Fehlerschrift (Delta) auf jeder Statusflaeche, neu im DS: status.error 70 % + grey.700 30 % (roh 4,36:1, so >= 5,87:1). */
   --color-severity-high: #dc2626; /** red-600 (leuchtender als red-700/status.error). Klare Signal-Stufe oben. */
   --color-severity-medium: #a16207; /** amber-800 (dunkler-warm). Klar abgesetzt von HOCH, immer noch warm-erdig (Kupfer-Ton). */
   --color-severity-low: #6b7280; /** Alias auf grey-500 / text-muted. Niedrige Severity = unauffaellig. */

@@ -61,7 +61,9 @@ def render_kpi_card_html(input: KpiCardInput, *, inline_css: bool = False) -> st
 
     parts = []
     if inline_css:
-        parts.append(f"<style>{render_kpi_card_css()}</style>")
+        # neutral: byte-gleich zu 0.24.0; mit Status die Regeln der Statusflaeche dazu
+        css = render_kpi_card_css(status=input.status != "neutral")
+        parts.append(f"<style>{css}</style>")
 
     if input.status == "neutral":
         parts.append('<article class="mn-kpi-card">')
@@ -113,7 +115,10 @@ def render_kpi_card_css(*, status: bool = False) -> str:
     bei `richtung="niedriger"` aus einem Rueckgang (`is-down`) ein gruenes Delta.
 
     0.25.0: ``status=True`` haengt die Regeln der Statusflaeche an (`_status_css`); ohne das
-    Argument ist die Ausgabe byte-gleich zu 0.24.0.
+    Argument ist die Ausgabe byte-gleich zu 0.24.0. Die Dunkelregeln folgen dem Schema-Vertrag
+    (``data-schema="dunkel"`` oder dunkle Systemeinstellung ohne ``data-schema="hell"``). Ein
+    Konsument OHNE Dunkelmodus muss ``data-schema="hell"`` auf ``<html>`` setzen — sonst bekommt
+    eine Statuskarte bei dunkler Systemeinstellung die dunkle Statusschrift auf weisser Karte.
     """
     basis = _BASIS_CSS
     return f"{basis}\n{_status_css()}" if status else basis
@@ -221,7 +226,9 @@ def _status_css() -> str:
         flaeche = _v(f"color-status-{tok}-surface", f"color.status.{tok}-surface")
         rand = _v(f"color-status-{tok}-edge", f"color.status.{tok}-edge")
         regeln.append(
-            f".mn-kpi-card--{stufe} {{\n"
+            # 0,2,0: schlaegt `.mn-kpi-card` (0,1,0) unabhaengig von der Reihenfolge der
+            # Stylesheets — dessen `background`/`border`-Kurzformen setzten sonst zurueck.
+            f".mn-kpi-card.mn-kpi-card--{stufe} {{\n"
             f"  background-image: linear-gradient({flaeche}, {flaeche});\n"
             f"  border-left: var(--web-stroke-status-edge, 4px) solid {rand};\n}}"
         )
