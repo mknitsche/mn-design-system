@@ -98,6 +98,13 @@ class KpiCardInput(BaseModel):
     Seit 0.22.0:
     delta_format: "zahl" (Default, wie bisher) oder "dauer" — delta_wert in Minuten, angezeigt
         als Stunden:Minuten ("−0:48 h"), gerundet auf ganze Minuten; braucht delta_wert.
+
+    Seit 0.25.0 (nur Web; der PDF-Renderer ignoriert es):
+    status: die vorhandene Bewertung der Kennzahl als Statusflaeche — "ok", "warn", "bad"
+        oder "neutral" (Default: heutiges Aussehen, HTML byte-gleich). Hell getoente Flaeche
+        plus Rand links, dunkel keine Flaeche, nur schmaler Rand und der Wert in der
+        Statusfarbe. Das CSS dazu liefert ``render_kpi_card_css(status=True)``. Die Farbe steht
+        nie allein: Label, Wert und Delta tragen die Aussage weiter in Wort und Zeichen.
     """
 
     model_config = {"extra": "forbid", "frozen": True}
@@ -112,6 +119,7 @@ class KpiCardInput(BaseModel):
     delta_einheit: str = ""
     dezimalstellen: int = Field(default=1, ge=0, le=6)
     delta_format: Literal["zahl", "dauer"] = "zahl"
+    status: Literal["ok", "warn", "bad", "neutral"] = "neutral"
 
     @model_validator(mode="after")
     def _delta_eindeutig(self) -> KpiCardInput:

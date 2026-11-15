@@ -37,13 +37,13 @@ def render_stand_zeile_html(input: StandZeileInput, *, inline_css: bool = False)
 
 
 def render_stand_zeile_css() -> str:
-    """Komponenten-CSS — Feinzeile in `web.text.caption`, „veraltet“ in der Warnfarbe."""
+    """Komponenten-CSS — Zeile in `web.text.ui` (14 px, 0.25.0; bis 0.24.0 12 px), „veraltet“ in der Warnfarbe."""
     return """
 .mn-stand {
   margin: 0;
   font-family: var(--web-font-sans, "Geist"), system-ui, sans-serif;
-  font-size: var(--web-text-caption, 12px);
-  line-height: var(--web-leading-caption, 1.4);
+  font-size: var(--web-text-ui, 14px);
+  line-height: var(--web-leading-ui, 1.35);
   color: var(--color-light-text-muted, #6b7280);
 }
 .mn-stand__tlp {

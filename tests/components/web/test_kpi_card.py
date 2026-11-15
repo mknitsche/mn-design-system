@@ -396,3 +396,53 @@ class TestCssWertungsklassen:
         assert f"var(--color-status-success, {get('color.status.success')})" in css
         assert f"var(--color-status-error, {get('color.status.error').lower()})" in css
         assert f"var(--color-light-text-muted, {get('color.light.text-muted')})" in css
+
+
+class TestStatus:
+    """0.25.0: optionales Feld ``status`` — hell Flaeche + Rand, dunkel nur Schrift + schmaler Rand."""
+
+    def test_vorgabe_neutral_rendert_wie_bisher(self):
+        alt = render_kpi_card_html(KpiCardInput(label="X", value="1"))
+        neu = render_kpi_card_html(KpiCardInput(label="X", value="1", status="neutral"))
+        assert alt == neu
+        assert '<article class="mn-kpi-card">' in neu
+
+    @pytest.mark.parametrize("status", ["ok", "warn", "bad"])
+    def test_status_setzt_die_klasse(self, status):
+        html = render_kpi_card_html(KpiCardInput(label="X", value="1", status=status))
+        assert f'<article class="mn-kpi-card mn-kpi-card--{status}">' in html
+
+    def test_unbekannter_status_bricht_laut(self):
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            KpiCardInput(label="X", value="1", status="gruen")
+
+    def test_css_ohne_argument_unveraendert(self):
+        assert "mn-kpi-card--" not in render_kpi_card_css()
+
+    def test_css_status_hell_flaeche_und_rand(self):
+        css = render_kpi_card_css(status=True)
+        for stufe, s in (("ok", "success"), ("warn", "warning"), ("bad", "error")):
+            flaeche = (
+                f"var(--color-status-{s}-surface, {get(f'color.status.{s}-surface')})"
+            )
+            rand = f"var(--color-status-{s}-edge, {get(f'color.status.{s}-edge')})"
+            assert f".mn-kpi-card--{stufe} {{" in css
+            assert f"background-image: linear-gradient({flaeche}, {flaeche});" in css
+            assert (
+                f"border-left: var(--web-stroke-status-edge, 4px) solid {rand};" in css
+            )
+
+    def test_css_status_dunkel_beide_wurzeln_ohne_flaeche(self):
+        css = render_kpi_card_css(status=True)
+        assert css.count(':root[data-schema="dunkel"] .mn-kpi-card--ok {') == 1
+        assert "@media (prefers-color-scheme: dark)" in css
+        assert ':root:not([data-schema="hell"]) .mn-kpi-card--ok {' in css
+        assert "background-image: none;" in css
+        dunkel = f"var(--color-dark-status-success, {get('color.dark.status-success')})"
+        assert f"border-left: var(--web-stroke-line-strong, 2px) solid {dunkel};" in css
+        assert (
+            f':root[data-schema="dunkel"] .mn-kpi-card--ok .mn-kpi-card__value {{\n'
+            f"  color: {dunkel};\n}}"
+        ) in css
