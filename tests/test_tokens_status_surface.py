@@ -1,10 +1,12 @@
 """0.25.0: Status-Flaechen-Tokens — Toenung, Rand, Schrift auf der Toenung, Statusschrift im Dunkeln.
 
-Herkunft: mkn-desk leitete die Werte bis 0.24.0 selbst ab (claudeAI PR #1972,
-``statusfarbe.py`` / ``farbschema.py``): hell eine dezente Flaeche plus farbiger Rand links,
-dunkel KEINE Flaeche, nur die Aussage-Schrift in der Statusfarbe (KT-1 2026-11-15).
-Dieser Test beweist, dass die Token-Werte genau diese Ableitung sind und jedes Paar
-WCAG AA erreicht (Schrift 4,5:1, Rand als Grafik 3:1).
+Herkunft (Optik wie mkn-desk, claudeAI PR #1972; KT-1 2026-11-15: hell eine dezente Flaeche
+plus farbiger Rand links, dunkel KEINE Flaeche, nur die Aussage-Schrift in der Statusfarbe):
+Flaechen und Raender sind Aliase auf die Tokens, die mkn-desk direkt nutzt;
+``text-muted-on-surface`` und ``color.dark.status-*`` sind die Toene, die mkn-desk per
+``color-mix`` ableitet; ``success-/error-on-surface`` sind neu im DS (Delta der KPI-Karte).
+Dieser Test beweist die Ableitung und dass jedes Paar WCAG AA erreicht (Schrift 4,5:1,
+Rand als Grafik 3:1).
 """
 
 from __future__ import annotations

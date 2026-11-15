@@ -14,8 +14,8 @@ oder Doku.
 
 ### Neu — Statusflaeche (claudeAI, KT-1 2026-11-15; Herkunft mkn-desk #1972)
 
-Streng additiv: jede Eingabe aus 0.24.0 rendert byte-gleich (Golden `tests/golden/0_23_0.json` gruen,
-`render_kpi_card_css()` ohne Argument unveraendert). Der in 0.24.0 angekuendigte Rueckbau der Altformen
+Streng additiv: jede Eingabe aus 0.24.0 rendert byte-gleich — bis auf die Stand-Zeile (siehe Geaendert)
+(Golden `tests/golden/0_23_0.json` gruen, `render_kpi_card_css()` ohne Argument unveraendert). Der in 0.24.0 angekuendigte Rueckbau der Altformen
 folgt in einer spaeteren Version (nicht 0.25.0).
 
 **Regel (hell und dunkel).** Eine Kennzahl zeigt ihre vorhandene Bewertung als Kasten. **Hell:** dezente
@@ -24,14 +24,20 @@ Delta) ist 30 % zur Textfarbe `grey.700` gezogen, damit sie 4,5:1 haelt. **Dunke
 Kasten bleibt grau wie jede Karte, schmaler Rand (2 px) und nur die Aussage-Schrift (der Wert) in der
 Statusfarbe. Die Farbe steht nie allein (Wort und Zeichen bleiben).
 
-- **Tokens** `color.status.{success,warning,error}-surface` (Aliase: `success-bg`, `accent.warm.soft`,
-  `error-bg`), `color.status.{success,warning,error}-edge` (Aliase: `status.success`,
-  `accent.warm.strong` — `status.warning` laege auf der Toenung unter 3:1 —, `status.error`),
-  `color.status.text-muted-on-surface` `#5b6372` (grey.500 70 % + grey.700 30 %),
-  `color.status.success-on-surface` `#316b3b`, `color.status.error-on-surface` `#a43439` (je 70 % Ton +
-  30 % grey.700), `color.dark.status-{success,warning,error}` `#5cb68d` · `#e19d4e` · `#f15f97`
-  (emerald.base · accent.warm.amber · crimson.base je 70 % + 30 % `dark.text`), `web.stroke.status-edge` 4px.
-  Werte = was mkn-desk bis 0.24.0 per `color-mix` selbst ableitete.
+- **Tokens**, Herkunft je Gruppe:
+  - `color.status.{success,warning,error}-surface` und `-edge` — Aliase auf die Tokens, die mkn-desk
+    schon direkt nutzt (Flaeche `status.success-bg` · `accent.warm.soft` · `status.error-bg`, Rand
+    `status.success` · `accent.warm.strong` · `status.error`); als Warn-Rand Kupfer `accent.warm.strong`,
+    weil `status.warning` auf der Toenung unter 3:1 laege (der Kupfer-Rand selbst: 4,51:1).
+  - `color.status.text-muted-on-surface` `#5b6372` (grey.500 70 % + grey.700 30 %) — der Ton, den
+    mkn-desk per `color-mix` ableitet.
+  - `color.status.success-on-surface` `#316b3b`, `color.status.error-on-surface` `#a43439` (je 70 % Ton +
+    30 % grey.700) — **neu im DS** (mkn-desk kennt kein Delta auf der Toenung; die rohen Toene laegen
+    dort teils unter 4,5:1).
+  - `color.dark.status-{success,warning,error}` `#5cb68d` · `#e19d4e` · `#f15f97` (emerald.base ·
+    accent.warm.amber · crimson.base je 70 % + 30 % `dark.text`) — die Dunkel-Statusfarben, die mkn-desk
+    per `color-mix` ableitet.
+  - `web.stroke.status-edge` 4px.
 - **KPI-Karte** `KpiCardInput.status` ∈ `ok | warn | bad | neutral` (Default `neutral` = heutiges Aussehen,
   HTML byte-gleich); Klasse `mn-kpi-card--<status>`. CSS ueber `render_kpi_card_css(status=True)`
   (Praezedenz `kompakt=True` aus 0.24.0). Dunkel ueber den Schema-Vertrag aus 0.24.0, zwei Wurzeln wie der

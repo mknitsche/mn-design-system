@@ -312,13 +312,28 @@ class TestKpiStatusflaeche:
     """0.25.0: was der Browser aus ``status`` macht — hell Toenung + 4-px-Rand + angehobene
     Nebenschrift, dunkel (gewaehlt oder automatisch) keine Toenung, 2-px-Rand, Wert in Statusfarbe."""
 
-    def _stil(self, browser, tmp_path, status, schema=None, system="light", **kw):
+    def _stil(
+        self,
+        browser,
+        tmp_path,
+        status,
+        schema=None,
+        system="light",
+        umgekehrt=False,
+        **kw,
+    ):
         html = render_kpi_card_html(
             KpiCardInput(
                 label="Ruhepuls", value="52", caption="7 Tage", status=status, **kw
             )
         )
-        seite = _seite(html, render_kpi_card_css(status=True))
+        css = render_kpi_card_css(status=True)
+        if (
+            umgekehrt
+        ):  # Statusregeln VOR dem Basis-CSS (Konsument ordnet Stylesheets anders)
+            basis = render_kpi_card_css()
+            css = css[len(basis) :] + "\n" + basis
+        seite = _seite(html, css)
         if schema:
             seite = seite.replace("<html ", f'<html data-schema="{schema}" ', 1)
         ctx = browser.new_context(color_scheme=system)
@@ -359,7 +374,9 @@ class TestKpiStatusflaeche:
     @pytest.mark.parametrize(
         ("schema", "system"), [("dunkel", "light"), (None, "dark"), ("dunkel", "dark")]
     )
-    @pytest.mark.parametrize(("status", "tok"), [("ok", "success"), ("bad", "error")])
+    @pytest.mark.parametrize(
+        ("status", "tok"), [("ok", "success"), ("warn", "warning"), ("bad", "error")]
+    )
     def test_dunkel_keine_flaeche_nur_schrift(
         self, browser, tmp_path, schema, system, status, tok
     ):
@@ -373,6 +390,18 @@ class TestKpiStatusflaeche:
         # Nebenschrift zurueck auf die Basis (der Konsument belegt sie im Dunkeln um)
         assert s["label"] == _rgb("color.light.text-muted")
         assert s["delta"] == _rgb("color.status.error")
+
+    @pytest.mark.parametrize("schema", [None, "dunkel"])
+    def test_reihenfolge_der_stylesheets_egal(self, browser, tmp_path, schema):
+        s = self._stil(browser, tmp_path, "warn", schema=schema, umgekehrt=True)
+        if schema is None:
+            assert _rgb("color.status.warning-surface") in s["bild"]
+            assert s["rand"] == "4px"
+            assert s["randfarbe"] == _rgb("color.status.warning-edge")
+        else:
+            assert s["bild"] == "none"
+            assert s["rand"] == "2px"
+            assert s["wert"] == _rgb("color.dark.status-warning")
 
     def test_wahl_hell_schlaegt_dunkles_system(self, browser, tmp_path):
         s = self._stil(browser, tmp_path, "ok", schema="hell", system="dark")

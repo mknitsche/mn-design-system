@@ -47,16 +47,16 @@
       "warning-tint": { "value": "#fffaf5", "comment": "Status-Header orange-tinted" },
       "info-tint":    { "value": "#f5f8ff", "comment": "Status-Header blau-tinted" },
 
-      "_meta_surface": { "value": "0.25.0 Statusflaeche (KT-1 2026-11-15, Herkunft mkn-desk claudeAI #1972): HELL dezente Toenung (*-surface) + farbiger Rand links (*-edge, Breite web.stroke.status-edge); jede Nebenschrift auf der Toenung 30 % zur Textfarbe grey.700 gezogen (*-on-surface). DUNKEL keine Flaeche: der Kasten bleibt grau, schmaler Rand und nur die Aussage-Schrift in color.dark.status-*. Kontraste: tests/test_tokens_status_surface.py, CHANGELOG 0.25.0." },
+      "_meta_surface": { "value": "0.25.0 Statusflaeche (KT-1 2026-11-15, Optik wie mkn-desk claudeAI #1972; *-surface/*-edge sind Aliase auf die Tokens, die mkn-desk direkt nutzt, text-muted-on-surface = dessen color-mix-Ton, success-/error-on-surface neu im DS): HELL dezente Toenung (*-surface) + farbiger Rand links (*-edge, Breite web.stroke.status-edge); jede Nebenschrift auf der Toenung 30 % zur Textfarbe grey.700 gezogen (*-on-surface). DUNKEL keine Flaeche: der Kasten bleibt grau, schmaler Rand und nur die Aussage-Schrift in color.dark.status-*. Kontraste: tests/test_tokens_status_surface.py, CHANGELOG 0.25.0." },
       "success-surface": { "value": "{color.status.success-bg.value}", "comment": "Statusflaeche ok, nur hell. Im Dunkeln keine Flaeche (KT-1: dunkel nicht faerben, nur Schrift in Statusfarbe)." },
       "warning-surface": { "value": "{color.accent.warm.soft.value}", "comment": "Statusflaeche warn, nur hell (amber-100; NICHT status.warning-bg). Im Dunkeln keine Flaeche (KT-1: dunkel nicht faerben, nur Schrift in Statusfarbe)." },
       "error-surface":   { "value": "{color.status.error-bg.value}", "comment": "Statusflaeche bad, nur hell. Im Dunkeln keine Flaeche (KT-1: dunkel nicht faerben, nur Schrift in Statusfarbe)." },
       "success-edge":    { "value": "{color.status.success.value}", "comment": "Rand links der Statusflaeche ok (Grafik >= 3:1 auf success-surface: 4,56)." },
-      "warning-edge":    { "value": "{color.accent.warm.strong.value}", "comment": "Rand links der Statusflaeche warn: Copper-800, weil status.warning auf der Toenung unter 3:1 laege (4,51)." },
-      "error-edge":      { "value": "{color.status.error.value}", "comment": "Rand links der Statusflaeche bad (4,36)." },
+      "warning-edge":    { "value": "{color.accent.warm.strong.value}", "comment": "Rand links der Statusflaeche warn: Copper-800, weil status.warning auf der Toenung unter 3:1 laege; der Kupfer-Rand erreicht 4,51:1 auf warning-surface." },
+      "error-edge":      { "value": "{color.status.error.value}", "comment": "Rand links der Statusflaeche bad (Grafik >= 3:1 auf error-surface: 4,36)." },
       "text-muted-on-surface": { "value": "#5b6372", "comment": "Gedaempfter Text auf jeder Statusflaeche: grey.500 70 % + grey.700 30 % (roh grey.500 nur 4,23-4,34:1, so >= 5,29:1)." },
-      "success-on-surface":    { "value": "#316b3b", "comment": "Erfolgsschrift (Delta) auf jeder Statusflaeche: status.success 70 % + grey.700 30 % (>= 5,57:1)." },
-      "error-on-surface":      { "value": "#a43439", "comment": "Fehlerschrift (Delta) auf jeder Statusflaeche: status.error 70 % + grey.700 30 % (roh 4,36:1, so >= 5,87:1)." }
+      "success-on-surface":    { "value": "#316b3b", "comment": "Erfolgsschrift (Delta) auf jeder Statusflaeche, neu im DS: status.success 70 % + grey.700 30 % (roh 4,49-4,60:1, so >= 5,57:1)." },
+      "error-on-surface":      { "value": "#a43439", "comment": "Fehlerschrift (Delta) auf jeder Statusflaeche, neu im DS: status.error 70 % + grey.700 30 % (roh 4,36:1, so >= 5,87:1)." }
     },
 
     "severity": {

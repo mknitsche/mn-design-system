@@ -106,7 +106,7 @@ vor Zurueckbauen — `archiv` entfaellt in einer spaeteren Version, sobald die K
 | `content_card` | Inhalts-Karte und Card-Grid, optional verlinkt und tier-getoent |
 | `tier_chip` | Kleines tier-getoentes Etikett |
 | `empty_state` | Ruhiger Leer-Zustand |
-| `kpi_card` | Kennzahl-Karte (Wert, Veraenderung, Sparkline); `status` ok/warn/bad (0.25.0): hell Toenung + Rand, dunkel keine Flaeche, nur Wert in Statusfarbe — CSS `render_kpi_card_css(status=True)` |
+| `kpi_card` | Kennzahl-Karte (Wert, Veraenderung, Sparkline); `status` ok/warn/bad (0.25.0): hell Toenung + Rand, dunkel keine Flaeche, nur Wert in Statusfarbe — CSS `render_kpi_card_css(status=True)`; Konsument ohne Dunkelmodus setzt `data-schema="hell"` (sonst dunkle Statusschrift auf weisser Karte) |
 | `sparkline` | Kleines Verlaufs-SVG |
 | `wetter_strip` | Wetter-Tabelle mit Phosphor-Icons |
 | `zeitraum_leiste` | Segment-Leiste aus Links (`?tage=30\|90\|365`), ohne Skript |

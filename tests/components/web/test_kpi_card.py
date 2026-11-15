@@ -428,7 +428,8 @@ class TestStatus:
                 f"var(--color-status-{s}-surface, {get(f'color.status.{s}-surface')})"
             )
             rand = f"var(--color-status-{s}-edge, {get(f'color.status.{s}-edge')})"
-            assert f".mn-kpi-card--{stufe} {{" in css
+            # 0,2,0 — unabhaengig von der Reihenfolge der Stylesheets (Critic B2)
+            assert f".mn-kpi-card.mn-kpi-card--{stufe} {{" in css
             assert f"background-image: linear-gradient({flaeche}, {flaeche});" in css
             assert (
                 f"border-left: var(--web-stroke-status-edge, 4px) solid {rand};" in css
@@ -446,3 +447,13 @@ class TestStatus:
             f':root[data-schema="dunkel"] .mn-kpi-card--ok .mn-kpi-card__value {{\n'
             f"  color: {dunkel};\n}}"
         ) in css
+
+    def test_inline_css_mit_status_bettet_die_statusregeln_ein(self):
+        html = render_kpi_card_html(
+            KpiCardInput(label="X", value="1", status="warn"), inline_css=True
+        )
+        assert f"<style>{render_kpi_card_css(status=True)}</style>" in html
+
+    def test_inline_css_neutral_byte_gleich(self):
+        html = render_kpi_card_html(KpiCardInput(label="X", value="1"), inline_css=True)
+        assert html.startswith(f"<style>{render_kpi_card_css()}</style>")
